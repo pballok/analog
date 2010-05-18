@@ -17,7 +17,7 @@ int main( int argc, char *argv[] )
 
     g_poDB     = new cQTMySQLConnection;
 
-    g_poPrefs  = new cPreferences( QString::fromAscii( "lara" ) );
+    g_poPrefs  = new cPreferences( QString::fromAscii( "laza" ) );
     g_poPrefs->setVersion( "0.0.1" );
 
     int r = 1;

@@ -20,6 +20,7 @@ private:
 
 private slots:
     void on_action_Preferences_triggered();
+    void on_action_Open_Log_triggered();
 };
 
 #endif

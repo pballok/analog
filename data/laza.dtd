@@ -1,0 +1,6 @@
+<!ELEMENT laza_actions (single_line)*>
+
+<!ELEMENT single_line EMPTY>
+<!ATTLIST single_line
+          name    CDATA  #REQUIRED
+          pattern CDATA  #REQUIRED>
