@@ -48,6 +48,4 @@ void cWndMain::on_action_Open_Log_triggered()
     obDlgFileOpen.setFileMode( QFileDialog::ExistingFile );
     QString qsFileName = "";
     if( obDlgFileOpen.exec() ) qsFileName = obDlgFileOpen.selectedFiles().at( 0 );
-
-    g_obLogger << cSeverity::DEBUG << qsFileName.toStdString() << cQTLogger::EOM;
 }
