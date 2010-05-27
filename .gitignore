@@ -5,7 +5,7 @@ src/Makefile
 src/dbconnection.o
 src/dlglogs.o
 src/dlgpreferences.o
-src/dslogfile.o
+src/logtablemodel.o
 src/main.o
 src/preferences.o
 src/qtlogger.o
@@ -18,8 +18,8 @@ src/moc_dlglogs.cpp
 src/moc_dlglogs.o
 src/moc_dlgpreferences.cpp
 src/moc_dlgpreferences.o
-src/moc_dslogfile.cpp
-src/moc_dslogfile.o
+src/moc_logtablemodel.cpp
+src/moc_logtablemodel.o
 src/moc_qtmysqlquerymodel.cpp
 src/moc_qtmysqlquerymodel.o
 src/moc_wndmain.cpp

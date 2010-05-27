@@ -13,7 +13,7 @@ HEADERS = qtframework.h \
     wndmain.h \
     dlgpreferences.h \
     dlglogs.h \
-    dslogfile.h
+    logtablemodel.h
 SOURCES = tracer.cpp \
     dbconnection.cpp \
     qtmysqlconnection.cpp \
@@ -24,7 +24,7 @@ SOURCES = tracer.cpp \
     wndmain.cpp \
     dlgpreferences.cpp \
     dlglogs.cpp \
-    dslogfile.cpp
+    logtablemodel.cpp
 DESTDIR = ..
 QT += xml
 QT += sql
