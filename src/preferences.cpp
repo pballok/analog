@@ -50,63 +50,23 @@ QString cPreferences::getVersion() const
 }
 
 void cPreferences::setLogLevels( const unsigned int p_uiConLevel,
-                                 const unsigned int p_uiDBLevel,
-                                 const unsigned int p_uiGUILevel,
                                  bool p_boSaveNow )
 {
-    g_obLogger.setMinSeverityLevels( (cSeverity::teSeverity)p_uiConLevel,
-                                     (cSeverity::teSeverity)p_uiDBLevel,
-                                     (cSeverity::teSeverity)p_uiGUILevel );
+    g_obLogger.setMinSeverityLevels( (cSeverity::teSeverity)p_uiConLevel );
 
     if( p_boSaveNow )
     {
         QSettings  obPrefFile( m_qsFileName, QSettings::IniFormat );
         obPrefFile.setValue( QString::fromAscii( "LogLevels/ConsoleLogLevel" ), p_uiConLevel );
-        obPrefFile.setValue( QString::fromAscii( "LogLevels/DBLogLevel" ), p_uiDBLevel );
-        obPrefFile.setValue( QString::fromAscii( "LogLevels/GUILogLevel" ), p_uiGUILevel );
     }
 }
 
-void cPreferences::getLogLevels( unsigned int *p_poConLevel,
-                                 unsigned int *p_poDBLevel,
-                                 unsigned int *p_poGUILevel ) const
+void cPreferences::getLogLevels( unsigned int *p_poConLevel ) const
 {
     cSeverity::teSeverity  enConLevel = cSeverity::DEBUG;
-    cSeverity::teSeverity  enDBLevel  = cSeverity::DEBUG;
-    cSeverity::teSeverity  enGUILevel = cSeverity::DEBUG;
-    g_obLogger.getMinSeverityLevels( &enConLevel, &enDBLevel, &enGUILevel );
+    g_obLogger.getMinSeverityLevels( &enConLevel );
 
     if( p_poConLevel ) *p_poConLevel = enConLevel;
-    if( p_poDBLevel )  *p_poDBLevel  = enDBLevel;
-    if( p_poGUILevel ) *p_poGUILevel = enGUILevel;
-}
-
-void cPreferences::setDBAccess( const QString &p_qsHost, const QString &p_qsDB,
-                                const QString &p_qsUser, const QString &p_qsPwd,
-                                const bool p_boSaveNow )
-{
-    g_poDB->setHostName( p_qsHost );
-    g_poDB->setDatabaseName( p_qsDB );
-    g_poDB->setUserName( p_qsUser );
-    g_poDB->setPassword( p_qsPwd );
-
-    if( p_boSaveNow )
-    {
-        QSettings  obPrefFile( m_qsFileName, QSettings::IniFormat );
-        obPrefFile.setValue( QString::fromAscii( "DB/Host" ), g_poDB->getHostName() );
-        obPrefFile.setValue( QString::fromAscii( "DB/Name" ), g_poDB->getDatabaseName() );
-        obPrefFile.setValue( QString::fromAscii( "DB/User" ), g_poDB->getUserName() );
-        obPrefFile.setValue( QString::fromAscii( "DB/Password" ), g_poDB->getPassword() );
-    }
-}
-
-void cPreferences::getDBAccess( QString *p_poHost, QString *p_poDB,
-                                QString *p_poUser, QString *p_poPwd ) const
-{
-    if( p_poHost ) *p_poHost = g_poDB->getHostName();
-    if( p_poDB )   *p_poDB   = g_poDB->getDatabaseName();
-    if( p_poUser ) *p_poUser = g_poDB->getUserName();
-    if( p_poPwd )  *p_poPwd  = g_poDB->getPassword();
 }
 
 QString cPreferences::getDefInputDir() const
@@ -152,38 +112,7 @@ void cPreferences::load()
             g_obLogger << cQTLogger::EOM;
         }
 
-        unsigned int uiDBLevel = obPrefFile.value( QString::fromAscii( "LogLevels/DBLogLevel" ), cSeverity::ERROR ).toUInt();
-        if( (uiDBLevel >= cSeverity::MAX) &&
-            (uiDBLevel <= cSeverity::MIN) )
-        {
-            uiDBLevel = cSeverity::DEBUG;
-
-            g_obLogger << cSeverity::WARNING;
-            g_obLogger << "Invalid DBLogLevel in preferences file: " << m_qsFileName.toStdString();
-            g_obLogger << cQTLogger::EOM;
-        }
-
-        unsigned int uiGUILevel = obPrefFile.value( QString::fromAscii( "LogLevels/GUILogLevel" ), cSeverity::ERROR ).toUInt();
-        if( (uiGUILevel >= cSeverity::MAX) &&
-            (uiGUILevel <= cSeverity::MIN) )
-        {
-            uiGUILevel = cSeverity::DEBUG;
-
-            g_obLogger << cSeverity::WARNING;
-            g_obLogger << "Invalid GUILogLevel in preferences file: " << m_qsFileName.toStdString();
-            g_obLogger << cQTLogger::EOM;
-        }
-
-        setLogLevels( uiConsoleLevel, uiDBLevel, uiGUILevel );
-
-        QString qsDBHost     = obPrefFile.value( QString::fromAscii( "DB/Host" ), "" ).toString();
-        QString qsDBName     = obPrefFile.value( QString::fromAscii( "DB/Name" ), "" ).toString();
-        QString qsDBUser     = obPrefFile.value( QString::fromAscii( "DB/User" ), "" ).toString();
-        QString qsDBPassword = obPrefFile.value( QString::fromAscii( "DB/Password" ), "" ).toString();
-        g_poDB->setHostName( qsDBHost );
-        g_poDB->setDatabaseName( qsDBName );
-        g_poDB->setUserName( qsDBUser );
-        g_poDB->setPassword( qsDBPassword );
+        setLogLevels( uiConsoleLevel );
 
         m_qsDefInputDir = obPrefFile.value( QString::fromAscii( "Directories/InputDir" ), "" ).toString();
         m_qsDefOutputDir = obPrefFile.value( QString::fromAscii( "Directories/OutputDir" ), "" ).toString();
@@ -194,16 +123,9 @@ void cPreferences::save() const
 {
     QSettings  obPrefFile( m_qsFileName, QSettings::IniFormat );
 
-    unsigned int  uiConLevel, uiDBLevel, uiGUILevel;
-    getLogLevels( &uiConLevel, &uiDBLevel, &uiGUILevel );
+    unsigned int  uiConLevel;
+    getLogLevels( &uiConLevel );
     obPrefFile.setValue( QString::fromAscii( "LogLevels/ConsoleLogLevel" ), uiConLevel );
-    obPrefFile.setValue( QString::fromAscii( "LogLevels/DBLogLevel" ), uiDBLevel );
-    obPrefFile.setValue( QString::fromAscii( "LogLevels/GUILogLevel" ), uiGUILevel );
-
-    obPrefFile.setValue( QString::fromAscii( "DB/Host" ), g_poDB->getHostName() );
-    obPrefFile.setValue( QString::fromAscii( "DB/Name" ), g_poDB->getDatabaseName() );
-    obPrefFile.setValue( QString::fromAscii( "DB/User" ), g_poDB->getUserName() );
-    obPrefFile.setValue( QString::fromAscii( "DB/Password" ), g_poDB->getPassword() );
 
     obPrefFile.setValue( QString::fromAscii( "Directories/InputDir" ), m_qsDefInputDir );
     obPrefFile.setValue( QString::fromAscii( "Directories/OutputDir" ), m_qsDefOutputDir );

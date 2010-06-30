@@ -1,7 +1,6 @@
 #include <iostream>
 #include <iomanip>
 #include <sstream>
-#include <QMessageBox>
 
 #include "qtlogger.h"
 
@@ -11,13 +10,6 @@ cQTLogger::cQTLogger()
     init();
 }
 
-cQTLogger::cQTLogger( cDBConnection *p_poDB )
-{
-    init();
-
-    m_poDB = p_poDB;
-}
-
 cQTLogger::~cQTLogger()
 {
 }
@@ -25,36 +17,21 @@ cQTLogger::~cQTLogger()
 void cQTLogger::init( void ) throw ()
 {
     m_enMinConsoleSeverityLevel = cSeverity::NONE;
-    m_enMinDBSeverityLevel      = cSeverity::NONE;
-    m_enMinGUISeverityLevel     = cSeverity::NONE;
     m_enNextSeverityLevel       = cSeverity::NONE;
 }
 
-void cQTLogger::setDBConnection( cDBConnection * const p_poDB )
-{
-    m_poDB = p_poDB;
-}
-
 void cQTLogger::setMinSeverityLevels(
-    const cSeverity::teSeverity p_enConsoleLevel = cSeverity::DEBUG,
-    const cSeverity::teSeverity p_enDBLevel = cSeverity::DEBUG,
-    const cSeverity::teSeverity p_enGUILevel = cSeverity::DEBUG )
+    const cSeverity::teSeverity p_enConsoleLevel = cSeverity::DEBUG )
     throw()
 {
     m_enMinConsoleSeverityLevel = p_enConsoleLevel;
-    m_enMinDBSeverityLevel      = p_enDBLevel;
-    m_enMinGUISeverityLevel     = p_enGUILevel;
 }
 
 void cQTLogger::getMinSeverityLevels(
-    cSeverity::teSeverity *p_poConsoleLevel,
-    cSeverity::teSeverity *p_poDBLevel,
-    cSeverity::teSeverity *p_poGUILevel ) const
+    cSeverity::teSeverity *p_poConsoleLevel ) const
     throw()
 {
     *p_poConsoleLevel = m_enMinConsoleSeverityLevel;
-    *p_poDBLevel      = m_enMinDBSeverityLevel;
-    *p_poGUILevel     = m_enMinGUISeverityLevel;
 }
 
 void cQTLogger::logMessage( const cSeverity::teSeverity  p_enLevel,
@@ -65,10 +42,6 @@ void cQTLogger::logMessage( const cSeverity::teSeverity  p_enLevel,
     {
         if( p_enLevel <= m_enMinConsoleSeverityLevel )
             logToConsole( p_enLevel, p_stMessage );
-        if( p_enLevel <= m_enMinDBSeverityLevel )
-            logToDB( p_enLevel, p_stMessage );
-        if( p_enLevel <= m_enMinGUISeverityLevel )
-            logToGUI( p_enLevel, p_stMessage );
     }
     catch( cSevException &e )
     {
@@ -94,53 +67,4 @@ void cQTLogger::logToConsole( const cSeverity::teSeverity  p_enLevel,
     cerr << cSeverity::toStr( p_enLevel );
     if( p_stMessage != "" ) cerr << " " << p_stMessage;
     cerr << endl << flush;
-}
-
- void cQTLogger::logToDB( const cSeverity::teSeverity  p_enLevel,
-                         const string                &p_stMessage )
-     throw( cSevException )
-{
-    if( m_poDB && m_poDB->isOpen() )
-    {
-        stringstream  ssSql;
-        ssSql << "INSERT INTO logs ( ";
-        ssSql << "`severity`";
-        if( p_stMessage != "" ) ssSql << ", `message`";
-        ssSql << " ) VALUES ( ";
-        ssSql << (int)p_enLevel;
-        if( p_stMessage != "" ) ssSql << ", \"" << p_stMessage << "\"";
-        ssSql << " )";
-
-        m_poDB->executeQuery( ssSql.str() );
-    }
-}
-
-void cQTLogger::logToGUI( const cSeverity::teSeverity  p_enLevel,
-                          const string                &p_stMessage )
-     throw()
-{
-    QMessageBox::Icon  enIcon  = QMessageBox::NoIcon;
-    QString            obTitle = "";
-    switch( p_enLevel )
-    {
-        case cSeverity::ERROR:   enIcon  = QMessageBox::Critical;
-                                 obTitle = "Error";
-                                 break;
-        case cSeverity::WARNING: enIcon  = QMessageBox::Warning;
-                                 obTitle = "Warning";
-                                 break;
-        case cSeverity::INFO:    enIcon  = QMessageBox::Information;
-                                 obTitle = "Information";
-                                 break;
-        case cSeverity::DEBUG:   enIcon  = QMessageBox::Information;
-                                 obTitle = "Debug message";
-                                 break;
-        default:                 enIcon  = QMessageBox::NoIcon;
-                                 obTitle = "Message";
-    }
-
-    QMessageBox obMsg( enIcon, obTitle,
-                       QString::fromStdString( p_stMessage ),
-                       QMessageBox::Ok );
-    obMsg.exec();
 }

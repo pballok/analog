@@ -15,17 +15,8 @@ public:
     void                       setVersion( const QString &p_qsVersion );
     QString                    getVersion() const;
     void                       setLogLevels( const unsigned int p_uiConLevel,
-                                             const unsigned int p_uiDBLevel,
-                                             const unsigned int p_uiGUILevel,
                                              bool p_boSaveNow = false );
-    void                       getLogLevels( unsigned int *p_poConLevel = NULL,
-                                             unsigned int *p_poDBLevel = NULL,
-                                             unsigned int *p_poGUILevel = NULL ) const;
-    void                       setDBAccess( const QString &p_qsHost, const QString &p_qsDB,
-                                            const QString &p_qsUser, const QString &p_qsPwd,
-                                            const bool p_boSaveNow );
-    void                       getDBAccess( QString *p_poHost = NULL, QString *p_poDB = NULL,
-                                            QString *p_poUser = NULL, QString *p_poPwd = NULL) const;
+    void                       getLogLevels( unsigned int *p_poConLevel = NULL ) const;
     void                       setDefInputDir( const QString &p_qsDir );
     QString                    getDefInputDir() const;
     void                       setDefOutputDir( const QString &p_qsDir );

@@ -5,7 +5,6 @@
 #include <sstream>
 
 #include "sevexception.h"
-#include "dbconnection.h"
 
 using namespace std;
 
@@ -22,18 +21,11 @@ public:
     };
 
     cQTLogger();
-    cQTLogger( cDBConnection *p_poDB );
     ~cQTLogger();
 
-    void setDBConnection( cDBConnection * const p_poDB );
-
-    void setMinSeverityLevels( const cSeverity::teSeverity  p_enConsoleLevel,
-                               const cSeverity::teSeverity  p_enDBLevel,
-                               const cSeverity::teSeverity  p_enGUILevel )
+    void setMinSeverityLevels( const cSeverity::teSeverity  p_enConsoleLevel )
             throw();
-    void getMinSeverityLevels( cSeverity::teSeverity *p_poConsoleLevel,
-                               cSeverity::teSeverity *p_poDBLevel,
-                               cSeverity::teSeverity *p_poGUILevel ) const
+    void getMinSeverityLevels( cSeverity::teSeverity *p_poConsoleLevel ) const
             throw();
 
     void logMessage( const cSeverity::teSeverity  p_enLevel,
@@ -69,22 +61,13 @@ public:
     }
 
 private:
-    cDBConnection         *m_poDB;
     cSeverity::teSeverity  m_enMinConsoleSeverityLevel;
-    cSeverity::teSeverity  m_enMinDBSeverityLevel;
-    cSeverity::teSeverity  m_enMinGUISeverityLevel;
     cSeverity::teSeverity  m_enNextSeverityLevel;
     stringstream           m_ssMessage;
 
     void init( void ) throw ();
     void logToConsole( const cSeverity::teSeverity  p_enLevel,
                        const string                &p_stMessage )
-            throw();
-    void logToDB( const cSeverity::teSeverity  p_enLevel,
-                  const string                &p_stMessage )
-            throw( cSevException );
-    void logToGUI( const cSeverity::teSeverity  p_enLevel,
-                   const string                &p_stMessage )
             throw();
 };
 
