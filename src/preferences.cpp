@@ -21,11 +21,12 @@ cPreferences::~cPreferences()
 
 void cPreferences::init()
 {
-    m_qsAppName         = "";
-    m_qsFileName        = "";
-    m_qsVersion         = "";
-    m_qsDefInputDir     = "";
-    m_qsDefOutputDir    = "";
+    m_qsAppName      = "";
+    m_qsFileName     = "";
+    m_qsVersion      = "";
+    m_qsInputDir     = "";
+    m_qsOutputDir    = "";
+    m_qsTempDir      = "";
 }
 
 void cPreferences::setAppName( const QString &p_qsAppName )
@@ -69,24 +70,34 @@ void cPreferences::getLogLevels( unsigned int *p_poConLevel ) const
     if( p_poConLevel ) *p_poConLevel = enConLevel;
 }
 
-QString cPreferences::getDefInputDir() const
+QString cPreferences::getInputDir() const
 {
-    return m_qsDefInputDir;
+    return m_qsInputDir;
 }
 
-void cPreferences::setDefInputDir( const QString &p_qsDir )
+void cPreferences::setInputDir( const QString &p_qsDir )
 {
-    m_qsDefInputDir = p_qsDir;
+    m_qsInputDir = p_qsDir;
 }
 
-QString cPreferences::getDefOutputDir() const
+QString cPreferences::getOutputDir() const
 {
-    return m_qsDefOutputDir;
+    return m_qsOutputDir;
 }
 
-void cPreferences::setDefOutputDir( const QString &p_qsDir )
+void cPreferences::setOutputDir( const QString &p_qsDir )
 {
-    m_qsDefOutputDir = p_qsDir;
+    m_qsOutputDir = p_qsDir;
+}
+
+QString cPreferences::getTempDir() const
+{
+    return m_qsTempDir;
+}
+
+void cPreferences::setTempDir( const QString &p_qsDir )
+{
+    m_qsTempDir = p_qsDir;
 }
 
 void cPreferences::load()
@@ -114,8 +125,9 @@ void cPreferences::load()
 
         setLogLevels( uiConsoleLevel );
 
-        m_qsDefInputDir = obPrefFile.value( QString::fromAscii( "Directories/InputDir" ), "" ).toString();
-        m_qsDefOutputDir = obPrefFile.value( QString::fromAscii( "Directories/OutputDir" ), "" ).toString();
+        m_qsInputDir = obPrefFile.value( QString::fromAscii( "Directories/InputDir" ), "." ).toString();
+        m_qsOutputDir = obPrefFile.value( QString::fromAscii( "Directories/OutputDir" ), "." ).toString();
+        m_qsTempDir = obPrefFile.value( QString::fromAscii( "Directories/TempDir" ), "." ).toString();
     }
 }
 
@@ -127,6 +139,7 @@ void cPreferences::save() const
     getLogLevels( &uiConLevel );
     obPrefFile.setValue( QString::fromAscii( "LogLevels/ConsoleLogLevel" ), uiConLevel );
 
-    obPrefFile.setValue( QString::fromAscii( "Directories/InputDir" ), m_qsDefInputDir );
-    obPrefFile.setValue( QString::fromAscii( "Directories/OutputDir" ), m_qsDefOutputDir );
+    obPrefFile.setValue( QString::fromAscii( "Directories/InputDir" ), m_qsInputDir );
+    obPrefFile.setValue( QString::fromAscii( "Directories/OutputDir" ), m_qsOutputDir );
+    obPrefFile.setValue( QString::fromAscii( "Directories/TempDir" ), m_qsTempDir );
 }

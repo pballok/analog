@@ -1,15 +1,26 @@
+#include <QDir>
+
 #include "loganalyzer.h"
 #include "qtframework.h"
 
-cLogAnalyzer::cLogAnalyzer( const string &p_stPrefix, const string &p_stFiles, const string &p_stActions )
+cLogAnalyzer::cLogAnalyzer( const QString &p_qsPrefix, const QString &p_qsFiles, const QString &p_qsActions )
 {
-    cTracer  obTracer( "cLogAnalyser::cLogAnalyser", "prefix: \"" + p_stPrefix + "\", files: \"" + p_stFiles + "\", actions: \"" + p_stActions + "\"" );
+    string stParams = "prefix: \"" + p_qsPrefix.toStdString();
+    stParams += "\", files: \"" + p_qsFiles.toStdString();
+    stParams += "\", actions: \"" + p_qsActions.toStdString();
+    stParams += "\"";
+    cTracer  obTracer( "cLogAnalyser::cLogAnalyser", stParams );
 
-    m_stPrefix = p_stPrefix;
-    m_stFiles = p_stFiles;
-    m_stActions = p_stActions;
+    QString qsInputDir = g_poPrefs->getInputDir();
+    qsInputDir += QDir::separator();
+    qsInputDir += p_qsPrefix;
+    qsInputDir += QDir::separator();
+    qsInputDir = QDir::cleanPath( qsInputDir );
+
+    m_poDataSource = new cLogDataSource( qsInputDir, p_qsFiles );
 }
 
 cLogAnalyzer::~cLogAnalyzer()
 {
+    delete m_poDataSource;
 }

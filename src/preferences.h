@@ -17,10 +17,12 @@ public:
     void                       setLogLevels( const unsigned int p_uiConLevel,
                                              bool p_boSaveNow = false );
     void                       getLogLevels( unsigned int *p_poConLevel = NULL ) const;
-    void                       setDefInputDir( const QString &p_qsDir );
-    QString                    getDefInputDir() const;
-    void                       setDefOutputDir( const QString &p_qsDir );
-    QString                    getDefOutputDir() const;
+    void                       setInputDir( const QString &p_qsDir );
+    QString                    getInputDir() const;
+    void                       setOutputDir( const QString &p_qsDir );
+    QString                    getOutputDir() const;
+    void                       setTempDir( const QString &p_qsDir );
+    QString                    getTempDir() const;
 
     void                       load();
     void                       save() const;
@@ -29,8 +31,9 @@ private:
     QString                    m_qsAppName;
     QString                    m_qsFileName;
     QString                    m_qsVersion;
-    QString                    m_qsDefInputDir;
-    QString                    m_qsDefOutputDir;
+    QString                    m_qsInputDir;
+    QString                    m_qsOutputDir;
+    QString                    m_qsTempDir;
 
     void init();
 };

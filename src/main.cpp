@@ -10,14 +10,12 @@
 cQTLogger             g_obLogger;
 cPreferences         *g_poPrefs;
 
-void printUsage()
+class cParamError : public cSevException
 {
-    cerr << "Usage: laza -h -p <dir prefix> -f <input files> -a <actions file>" << endl;
-    cerr << "          -h: Displays this helps message then exits." << endl;
-    cerr << "          -p: directory prefix that is used to construct the full path to the input files" << endl;
-    cerr << "          -f: input file names" << endl;
-    cerr << "          -a: name of the XML file describing the actions" << endl;
-}
+public:
+    cParamError() : cSevException( cSeverity::ERROR, "Parameter error." ) { }
+    virtual ~cParamError() throw() { }
+};
 
 int main( int argc, char *argv[] )
 {
@@ -26,36 +24,40 @@ int main( int argc, char *argv[] )
     g_poPrefs  = new cPreferences( QString::fromAscii( "laza" ) );
     g_poPrefs->setVersion( "0.0.1" );
 
+    g_obLogger << cSeverity::INFO;
+    g_obLogger << g_poPrefs->getAppName().toStdString() << " Version " << g_poPrefs->getVersion().toStdString() << " started.";
+    g_obLogger << cQTLogger::EOM;
+
     int inRet = 0;
     try
     {
-        g_obLogger << cSeverity::INFO;
-        g_obLogger << g_poPrefs->getAppName().toStdString() << " Version " << g_poPrefs->getVersion().toStdString() << " started.";
-        g_obLogger << cQTLogger::EOM;
-
-        string stDirPrefix = "";
-        string stLogFiles  = "";
-        string stActions   = "";
+        QString qsDirPrefix = "";
+        QString qsLogFiles  = "";
+        QString qsActions   = "";
 
         int inIdx = 0;
         QStringList obArgs = QCoreApplication::arguments();
 
         inIdx = obArgs.indexOf( "-p" );
-        if( inIdx != -1 && inIdx < obArgs.size() - 1 ) stDirPrefix = obArgs.at( inIdx + 1 ).toStdString();
+        if( inIdx != -1 && inIdx < obArgs.size() - 1 ) qsDirPrefix = obArgs.at( inIdx + 1 );
 
         inIdx = obArgs.indexOf( "-f" );
-        if( inIdx != -1 && inIdx < obArgs.size() - 1 ) stLogFiles = obArgs.at( inIdx + 1 ).toStdString();
+        if( inIdx != -1 && inIdx < obArgs.size() - 1 ) qsLogFiles = obArgs.at( inIdx + 1 );
 
         inIdx = obArgs.indexOf( "-a" );
-        if( inIdx != -1 && inIdx < obArgs.size() - 1 ) stActions = obArgs.at( inIdx + 1 ).toStdString();
+        if( inIdx != -1 && inIdx < obArgs.size() - 1 ) qsActions = obArgs.at( inIdx + 1 );
 
-        if( obArgs.indexOf( "-h" ) != -1 || stDirPrefix == "" || stLogFiles == "" || stActions == "" ) printUsage();
+        if( obArgs.indexOf( "-h" ) != -1 || qsDirPrefix == "" || qsLogFiles == "" || qsActions == "" ) throw cParamError();
 
-        cLogAnalyzer  obAnalyzer( stDirPrefix, stLogFiles, stActions );
-
-        g_obLogger << cSeverity::INFO;
-        g_obLogger << g_poPrefs->getAppName().toStdString() << " Version " << g_poPrefs->getVersion().toStdString() << " ended.";
-        g_obLogger << cQTLogger::EOM;
+        cLogAnalyzer  obAnalyzer( qsDirPrefix, qsLogFiles, qsActions );
+    }
+    catch( cParamError &e )
+    {
+        cerr << "Usage: laza -h -p <dir prefix> -f <input files> -a <actions file>" << endl;
+        cerr << "          -h: Displays this helps message then exits." << endl;
+        cerr << "          -p: directory prefix that is used to construct the full path to the input files" << endl;
+        cerr << "          -f: input file names" << endl;
+        cerr << "          -a: name of the XML file describing the actions" << endl;
     }
     catch( cSevException &e )
     {
@@ -65,6 +67,10 @@ int main( int argc, char *argv[] )
 
         inRet = 1;
     }
+
+    g_obLogger << cSeverity::INFO;
+    g_obLogger << g_poPrefs->getAppName().toStdString() << " Version " << g_poPrefs->getVersion().toStdString() << " ended.";
+    g_obLogger << cQTLogger::EOM;
 
     delete g_poPrefs;
 

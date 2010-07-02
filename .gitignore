@@ -1,8 +1,10 @@
 laza
 laza.ini
+test/output
 src/laza.pro.user
 src/Makefile
 src/loganalyzer.o
+src/logdatasource.o
 src/main.o
 src/preferences.o
 src/qtlogger.o
