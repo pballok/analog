@@ -1,6 +1,7 @@
-#include <QStringList>
-#include <QFileInfoList>
 #include <QDir>
+#include <QFile>
+#include <QString>
+#include <QStringList>
 
 #include "logdatasource.h"
 #include "qtframework.h"
@@ -12,14 +13,19 @@ cLogDataSource::cLogDataSource( const QString &p_qsInputDir, const QString &p_qs
     stParams += "\"";
     cTracer  obTracer( "cLogDataSource::cLogDataSource",  stParams );
 
-    parseFileNames( p_qsInputDir, p_qsFiles );
+    QStringList slOriginalFiles = parseFileNames( p_qsInputDir, p_qsFiles );
+    prepareFiles( slOriginalFiles );
 }
 
 cLogDataSource::~cLogDataSource()
 {
+    for( int i = 0; i < m_slTempFiles.size(); i++ )
+    {
+        QFile::remove( m_slTempFiles.at( i ) );
+    }
 }
 
-void cLogDataSource::parseFileNames( const QString &p_qsInputDir, const QString &p_qsFiles )
+QStringList cLogDataSource::parseFileNames( const QString &p_qsInputDir, const QString &p_qsFiles ) throw()
 {
     string stParams = "inputdir: \"" + p_qsInputDir.toStdString();
     stParams += "\", files: \"" + p_qsFiles.toStdString();
@@ -60,11 +66,69 @@ void cLogDataSource::parseFileNames( const QString &p_qsInputDir, const QString 
         }
     }
 
+    return slRealFiles;
+}
 
-    // Now each item in slRealFiles contain only a file name. These must be replaced
-    // with a full, absolute path.
-    for( int i = 0; i < slRealFiles.size(); i++ )
+void cLogDataSource::prepareFiles( const QStringList &p_slFiles ) throw()
+{
+    cTracer  obTracer( "cLogDataSource::prepareFiles" );
+
+    for( int i = 0; i < p_slFiles.size(); i++ )
     {
-        g_obLogger << slRealFiles.at( i ).toStdString() << cQTLogger::EOM;
+        try
+        {
+            if( p_slFiles.at( i ).indexOf( ".zip", p_slFiles.at( i ).size() - 4, Qt::CaseInsensitive ) != -1 )
+            {
+                unzipFile( p_slFiles.at( i ) );
+                continue;
+            }
+
+            if( p_slFiles.at( i ).indexOf( ".gz", p_slFiles.at( i ).size() - 3, Qt::CaseInsensitive ) != -1 )
+            {
+                gunzipFile( p_slFiles.at( i ) );
+                continue;
+            }
+
+            copyFile( p_slFiles.at( i ) );
+        }
+        catch( cSevException &e )
+        {
+            g_obLogger << e.severity();
+            g_obLogger << e.what();
+            g_obLogger << cQTLogger::EOM;
+        }
     }
+}
+
+void cLogDataSource::unzipFile( const QString &p_stFileName ) throw( cSevException )
+{
+
+}
+
+void cLogDataSource::gunzipFile( const QString &p_stFileName ) throw( cSevException )
+{
+
+}
+
+void cLogDataSource::copyFile( const QString &p_stFileName ) throw( cSevException )
+{
+    cTracer  obTracer( "cLogDataSource::copyFile", p_stFileName.toStdString() );
+
+    QString qsTempFileName = g_poPrefs->getTempDir();
+    if( (qsTempFileName.at( qsTempFileName.length() - 1 ) != '/') &&
+        (qsTempFileName.at( qsTempFileName.length() - 1 ) != '\\') )
+    {
+        qsTempFileName.append( QDir::separator() );
+    }
+    qsTempFileName.append( p_stFileName.section( QRegExp( "[/\\\\]" ), -1, -1 ) );
+
+    QFile::remove( qsTempFileName );
+    if( !QFile::copy( p_stFileName, qsTempFileName ) )
+    {
+        throw cSevException( cSeverity::ERROR, "Cannot copy file " + p_stFileName.toStdString() + " to " + qsTempFileName.toStdString() );
+    }
+
+    m_slTempFiles.push_back( qsTempFileName );
+
+    obTracer << qsTempFileName.toStdString();
 }
