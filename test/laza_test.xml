@@ -1,9 +1,16 @@
 <?xml version="1.0"?>
-<!DOCTYPE LAZA_ACTIONS SYSTEM "../data/laza.dtd">
 
-<LAZA_ACTIONS>
-    <SINGLE_LINER name="APPLE"
+<laza_actions
+xmlns="lara"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:schemaLocation="../data/laza.xsd">
+
+    <single_liner name="APPLE"
                   pattern="Single Action Apple"
                   result="OK"
                   upload="NEVER"/>
-</LAZA_ACTIONS>
+
+
+    <bogus_action>Hi Mom</bogus_action>
+
+</laza_actions>

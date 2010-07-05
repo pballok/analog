@@ -3,6 +3,7 @@ laza.ini
 test/output
 src/laza.pro.user
 src/Makefile
+src/actions.o
 src/loganalyzer.o
 src/logdatasource.o
 src/main.o

@@ -65,6 +65,8 @@ int main( int argc, char *argv[] )
         g_obLogger << e.what();
         g_obLogger << cQTLogger::EOM;
 
+        cerr << "FATAL ERROR: " << e.what() << endl;
+
         inRet = 1;
     }
 

@@ -4,6 +4,7 @@
 #include "qtframework.h"
 
 cLogAnalyzer::cLogAnalyzer( const QString &p_qsPrefix, const QString &p_qsFiles, const QString &p_qsActions )
+        throw()
 {
     string stParams = "prefix: \"" + p_qsPrefix.toStdString();
     stParams += "\", files: \"" + p_qsFiles.toStdString();
@@ -18,9 +19,15 @@ cLogAnalyzer::cLogAnalyzer( const QString &p_qsPrefix, const QString &p_qsFiles,
     qsInputDir = QDir::cleanPath( qsInputDir );
 
     m_poDataSource = new cLogDataSource( qsInputDir, p_qsFiles );
+
+    m_poActions = new cActions( p_qsActions );
 }
 
 cLogAnalyzer::~cLogAnalyzer()
+        throw()
 {
+    cTracer  obTracer( "cLogAnalyser::~cLogAnalyser" );
+
+    delete m_poActions;
     delete m_poDataSource;
 }

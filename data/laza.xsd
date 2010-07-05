@@ -1,0 +1,47 @@
+<?xml version="1.0"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+targetNamespace="laza"
+xmlns="laza"
+elementFormDefault="qualified">
+
+<!-- Type Definitions -->
+
+  <xs:simpleType name="resultType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="OK"/>
+      <xs:enumeration value="FAILED"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+
+  <xs:simpleType name="uploadType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="OK"/>
+      <xs:enumeration value="FAILED"/>
+      <xs:enumeration value="ALWAYS"/>
+      <xs:enumeration value="NEVER"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+
+<!-- Element Definitions -->
+
+  <xs:element name="laza_actions">
+    <xs:complexType>
+      <xs:all>
+
+        <xs:element name="single_liner" maxOccurs="unbounded">
+          <xs:complexType>
+            <xs:attribute name="name"    type="xs:string"  use="required"/>
+            <xs:attribute name="pattern" type="xs:string"  use="required"/>
+            <xs:attribute name="result"  type="resultType" use="required"/>
+            <xs:attribute name="upload"  type="uploadType" use="required"/>
+          </xs:complexType>
+        </xs:element>
+
+      </xs:all>
+    </xs:complexType>
+  </xs:element>
+
+</xs:schema>
+

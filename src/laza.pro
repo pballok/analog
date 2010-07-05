@@ -5,13 +5,15 @@ HEADERS = qtframework.h \
     qtlogger.h \
     preferences.h \
     loganalyzer.h \
-    logdatasource.h
+    logdatasource.h \
+    actions.h
 SOURCES = tracer.cpp \
     qtlogger.cpp \
     preferences.cpp \
     main.cpp \
     loganalyzer.cpp \
-    logdatasource.cpp
+    logdatasource.cpp \
+    actions.cpp
 DESTDIR = ..
 QT -= gui
 QT += xml
