@@ -2,6 +2,7 @@
 #include <QFile>
 #include <QString>
 #include <QStringList>
+#include <cstdlib>
 
 #include "logdatasource.h"
 #include "qtframework.h"
@@ -79,17 +80,17 @@ void cLogDataSource::prepareFiles( const QStringList &p_slFiles ) throw()
         {
             if( p_slFiles.at( i ).indexOf( ".zip", p_slFiles.at( i ).size() - 4, Qt::CaseInsensitive ) != -1 )
             {
-                unzipFile( p_slFiles.at( i ) );
+                m_slTempFiles.push_back( unzipFile( p_slFiles.at( i ) ) );
                 continue;
             }
 
             if( p_slFiles.at( i ).indexOf( ".gz", p_slFiles.at( i ).size() - 3, Qt::CaseInsensitive ) != -1 )
             {
-                gunzipFile( p_slFiles.at( i ) );
+                m_slTempFiles.push_back( gunzipFile( p_slFiles.at( i ) ) );
                 continue;
             }
 
-            copyFile( p_slFiles.at( i ) );
+            m_slTempFiles.push_back( copyFile( p_slFiles.at( i ) ) );
         }
         catch( cSevException &e )
         {
@@ -100,17 +101,39 @@ void cLogDataSource::prepareFiles( const QStringList &p_slFiles ) throw()
     }
 }
 
-void cLogDataSource::unzipFile( const QString &p_stFileName ) throw( cSevException )
+QString cLogDataSource::unzipFile( const QString &p_stFileName ) throw( cSevException )
 {
+    cTracer  obTracer( "cLogDataSource::unzipFile", p_stFileName.toStdString() );
 
+    QString qsTempFileName = copyFile( p_stFileName );
+    QString qsCommand = "unzip " + qsTempFileName + " -o -d " + g_poPrefs->getTempDir();
+    system( qsCommand.toAscii() );
+
+    QFile::remove( qsTempFileName ); // Remove the .zip file since unzip leaves it there
+
+    qsTempFileName.chop( 4 );  // Remove the ".zip" from file-name
+
+    obTracer << qsTempFileName.toStdString();
+
+    return qsTempFileName;
 }
 
-void cLogDataSource::gunzipFile( const QString &p_stFileName ) throw( cSevException )
+QString cLogDataSource::gunzipFile( const QString &p_stFileName ) throw( cSevException )
 {
+    cTracer  obTracer( "cLogDataSource::gunzipFile", p_stFileName.toStdString() );
 
+    QString qsTempFileName = copyFile( p_stFileName );
+    QString qsCommand = "gunzip -q " + qsTempFileName;
+    system( qsCommand.toAscii() );
+
+    qsTempFileName.chop( 3 );  // Remove the ".gz" from file-name
+
+    obTracer << qsTempFileName.toStdString();
+
+    return qsTempFileName;
 }
 
-void cLogDataSource::copyFile( const QString &p_stFileName ) throw( cSevException )
+QString cLogDataSource::copyFile( const QString &p_stFileName ) throw( cSevException )
 {
     cTracer  obTracer( "cLogDataSource::copyFile", p_stFileName.toStdString() );
 
@@ -128,7 +151,7 @@ void cLogDataSource::copyFile( const QString &p_stFileName ) throw( cSevExceptio
         throw cSevException( cSeverity::ERROR, "Cannot copy file " + p_stFileName.toStdString() + " to " + qsTempFileName.toStdString() );
     }
 
-    m_slTempFiles.push_back( qsTempFileName );
-
     obTracer << qsTempFileName.toStdString();
+
+    return qsTempFileName;
 }

@@ -17,9 +17,9 @@ public:
 private:
     QStringList parseFileNames( const QString &p_qsInputDir, const QString &p_qsFiles ) throw();
     void prepareFiles( const QStringList &p_slFiles ) throw();
-    void unzipFile( const QString &p_stFileName ) throw( cSevException );
-    void gunzipFile( const QString &p_stFileName ) throw( cSevException );
-    void copyFile( const QString &p_stFileName ) throw( cSevException );
+    QString unzipFile( const QString &p_stFileName ) throw( cSevException );
+    QString gunzipFile( const QString &p_stFileName ) throw( cSevException );
+    QString copyFile( const QString &p_stFileName ) throw( cSevException );
 
     QStringList m_slTempFiles;
 };
