@@ -17,5 +17,6 @@ SOURCES = tracer.cpp \
 DESTDIR = ..
 QT -= gui
 QT += xml
+QT += xmlpatterns
 CONFIG += qt
 CONFIG += console

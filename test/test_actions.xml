@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<laza_actions>
+
+    <single_liner name="APPLE"
+                  pattern="Single Action Apple"
+                  result="OK"
+                  upload="NEVER"/>
+
+</laza_actions>
