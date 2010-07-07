@@ -2,7 +2,7 @@
 #define LOGANALYZER_H
 
 #include "logdatasource.h"
-#include "actions.h"
+#include "actionlist.h"
 
 #include <QString>
 
@@ -16,7 +16,7 @@ public:
 
 private:
     cLogDataSource  *m_poDataSource;
-    cActions        *m_poActions;
+    cActionList     *m_poActionList;
 };
 
 #endif // LOGANALYZER_H

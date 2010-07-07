@@ -6,14 +6,18 @@ HEADERS = qtframework.h \
     preferences.h \
     loganalyzer.h \
     logdatasource.h \
-    actions.h
+    actionsingleliner.h \
+    actionlist.h \
+    action.h
 SOURCES = tracer.cpp \
     qtlogger.cpp \
     preferences.cpp \
     main.cpp \
     loganalyzer.cpp \
     logdatasource.cpp \
-    actions.cpp
+    actionsingleliner.cpp \
+    actionlist.cpp \
+    action.cpp
 DESTDIR = ..
 QT -= gui
 QT += xml

@@ -2,8 +2,8 @@
 
 <laza_actions>
 
-    <single_liner name="APPLE"
-                  pattern="Single Action Apple"
+    <single_liner name="HOLY_HAND_GRENADE"
+                  pattern="Throwing the Holy Hand Grenade"
                   result="OK"
                   upload="NEVER"/>
 

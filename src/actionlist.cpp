@@ -1,4 +1,4 @@
-#include "actions.h"
+#include "actionlist.h"
 
 #include <QFile>
 #include <QXmlSchema>
@@ -6,18 +6,19 @@
 
 #include "qtframework.h"
 
-cActions::cActions( const QString &p_qsActionDefFile )
+cActionList::cActionList( const QString &p_qsActionDefFile )
         throw()
             : m_qsSchemaFileName( "data/laza.xsd" )
 
 {
-    cTracer  obTracer( "cActions::cActions", p_qsActionDefFile.toStdString() );
+    cTracer  obTracer( "cActionList::cActionList", p_qsActionDefFile.toStdString() );
 
     m_poActionsDoc = new QDomDocument( "actions " );
 
     try
     {
         validateActionDef( p_qsActionDefFile );
+        readActions();
     }
     catch( cSevException &e )
     {
@@ -27,17 +28,17 @@ cActions::cActions( const QString &p_qsActionDefFile )
     }
 }
 
-cActions::~cActions()
+cActionList::~cActionList()
         throw()
 {
-    cTracer  obTracer( "cActions::~cActions" );
+    cTracer  obTracer( "cActionList::~cActionList" );
 
     delete m_poActionsDoc;
 }
 
-void cActions::validateActionDef( const QString &p_qsActionDefFile ) throw( cSevException )
+void cActionList::validateActionDef( const QString &p_qsActionDefFile ) throw( cSevException )
 {
-    cTracer  obTracer( "cActions::validateActionDef", p_qsActionDefFile.toStdString() );
+    cTracer  obTracer( "cActionList::validateActionDef", p_qsActionDefFile.toStdString() );
 
     QFile obActionsFile( p_qsActionDefFile );
 
@@ -82,4 +83,27 @@ void cActions::validateActionDef( const QString &p_qsActionDefFile ) throw( cSev
 
         throw e;
     }
+}
+
+void cActionList::readActions() throw( cSevException )
+{
+    cTracer  obTracer( "cActionList::readActions" );
+
+    for( QDomElement obElem = m_poActionsDoc->documentElement().firstChildElement();
+         !obElem.isNull();
+         obElem = obElem.nextSiblingElement() )
+    {
+        if( obElem.tagName() == "single_liner" )
+        {
+            readSingleLiner( &obElem );
+            continue;
+        }
+    }
+}
+
+void cActionList::readSingleLiner( QDomElement *p_poElement ) throw( cSevException )
+{
+    cTracer  obTracer( "cActionList::readSingleLiner" );
+
+    obTracer << p_poElement->attribute( "name" ).toStdString();
 }
