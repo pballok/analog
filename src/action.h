@@ -66,8 +66,13 @@ class cAction
 {
 public:
     cAction();
-    cAction( QDomElement &p_obElem );
+    cAction( QDomElement *p_poElem );
     ~cAction();
+
+    QString                  name()   const throw();
+    cActionResult::teResult  result() const throw();
+    cActionUpload::teUpload  upload() const throw();
+
 
 private:
     QString                  m_qsName;

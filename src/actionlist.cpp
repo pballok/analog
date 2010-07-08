@@ -1,10 +1,11 @@
-#include "actionlist.h"
 
 #include <QFile>
 #include <QXmlSchema>
 #include <QXmlSchemaValidator>
 
+#include "actionlist.h"
 #include "qtframework.h"
+
 
 cActionList::cActionList( const QString &p_qsActionDefFile )
         throw()
@@ -105,5 +106,8 @@ void cActionList::readSingleLiner( QDomElement *p_poElement ) throw( cSevExcepti
 {
     cTracer  obTracer( "cActionList::readSingleLiner" );
 
-    obTracer << p_poElement->attribute( "name" ).toStdString();
+    cActionSingleLiner  *poAction = new cActionSingleLiner( p_poElement );
+    m_veSingleLinerList.push_back( poAction );
+
+    obTracer << poAction->name().toStdString();
 }
