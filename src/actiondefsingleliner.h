@@ -1,17 +1,17 @@
-#ifndef ACTIONSINGLELINER_H
-#define ACTIONSINGLELINER_H
+#ifndef ACTIONDEFSINGLELINER_H
+#define ACTIONDEFSINGLELINER_H
 
 #include <QString>
 #include <QDomElement>
 
-#include "action.h"
+#include "actiondef.h"
 
-class cActionSingleLiner : public cAction
+class cActionDefSingleLiner : public cActionDef
 {
 public:
-    cActionSingleLiner();
-    cActionSingleLiner( QDomElement *p_poElem );
-    ~cActionSingleLiner();
+    cActionDefSingleLiner();
+    cActionDefSingleLiner( QDomElement *p_poElem );
+    ~cActionDefSingleLiner();
 
     QString  pattern() const throw();
 
@@ -19,4 +19,4 @@ private:
     QString  m_qsPattern;
 };
 
-#endif // ACTIONSINGLELINER_H
+#endif // ACTIONDEFSINGLELINER_H

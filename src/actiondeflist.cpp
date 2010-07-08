@@ -3,23 +3,23 @@
 #include <QXmlSchema>
 #include <QXmlSchemaValidator>
 
-#include "actionlist.h"
+#include "actiondeflist.h"
 #include "qtframework.h"
 
 
-cActionList::cActionList( const QString &p_qsActionDefFile )
+cActionDefList::cActionDefList( const QString &p_qsActionDefFile )
         throw()
             : m_qsSchemaFileName( "data/laza.xsd" )
 
 {
-    cTracer  obTracer( "cActionList::cActionList", p_qsActionDefFile.toStdString() );
+    cTracer  obTracer( "cActionDefList::cActionDefList", p_qsActionDefFile.toStdString() );
 
     m_poActionsDoc = new QDomDocument( "actions " );
 
     try
     {
         validateActionDef( p_qsActionDefFile );
-        readActions();
+        parseActionDef();
     }
     catch( cSevException &e )
     {
@@ -29,15 +29,15 @@ cActionList::cActionList( const QString &p_qsActionDefFile )
     }
 }
 
-cActionList::~cActionList()
+cActionDefList::~cActionDefList()
         throw()
 {
-    cTracer  obTracer( "cActionList::~cActionList" );
+    cTracer  obTracer( "cActionDefList::~cActionDefList" );
 
     delete m_poActionsDoc;
 }
 
-void cActionList::validateActionDef( const QString &p_qsActionDefFile ) throw( cSevException )
+void cActionDefList::validateActionDef( const QString &p_qsActionDefFile ) throw( cSevException )
 {
     cTracer  obTracer( "cActionList::validateActionDef", p_qsActionDefFile.toStdString() );
 
@@ -86,9 +86,9 @@ void cActionList::validateActionDef( const QString &p_qsActionDefFile ) throw( c
     }
 }
 
-void cActionList::readActions() throw( cSevException )
+void cActionDefList::parseActionDef() throw( cSevException )
 {
-    cTracer  obTracer( "cActionList::readActions" );
+    cTracer  obTracer( "cActionDefList::parseActionDef" );
 
     for( QDomElement obElem = m_poActionsDoc->documentElement().firstChildElement();
          !obElem.isNull();
@@ -102,11 +102,11 @@ void cActionList::readActions() throw( cSevException )
     }
 }
 
-void cActionList::readSingleLiner( QDomElement *p_poElement ) throw( cSevException )
+void cActionDefList::readSingleLiner( QDomElement *p_poElement ) throw( cSevException )
 {
-    cTracer  obTracer( "cActionList::readSingleLiner" );
+    cTracer  obTracer( "cActionDefList::readSingleLiner" );
 
-    cActionSingleLiner  *poAction = new cActionSingleLiner( p_poElement );
+    cActionDefSingleLiner  *poAction = new cActionDefSingleLiner( p_poElement );
     m_veSingleLinerList.push_back( poAction );
 
     obTracer << poAction->name().toStdString();

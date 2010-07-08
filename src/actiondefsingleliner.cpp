@@ -1,20 +1,20 @@
-#include "actionsingleliner.h"
+#include "actiondefsingleliner.h"
 
-cActionSingleLiner::cActionSingleLiner() : cAction()
+cActionDefSingleLiner::cActionDefSingleLiner() : cActionDef()
 {
     m_qsPattern = "";
 }
 
-cActionSingleLiner::cActionSingleLiner( QDomElement *p_poElem ) : cAction( p_poElem )
+cActionDefSingleLiner::cActionDefSingleLiner( QDomElement *p_poElem ) : cActionDef( p_poElem )
 {
     m_qsPattern = p_poElem->attribute( "pattern", "" );
 }
 
-cActionSingleLiner::~cActionSingleLiner()
+cActionDefSingleLiner::~cActionDefSingleLiner()
 {
 }
 
-QString cActionSingleLiner::pattern() const throw()
+QString cActionDefSingleLiner::pattern() const throw()
 {
     return m_qsPattern;
 }

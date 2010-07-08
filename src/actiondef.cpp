@@ -1,13 +1,13 @@
-#include "action.h"
+#include "actiondef.h"
 
-cAction::cAction()
+cActionDef::cActionDef()
 {
     m_qsName   = "";
     m_enResult = cActionResult::MIN;
     m_enUpload = cActionUpload::MIN;
 }
 
-cAction::cAction( QDomElement *p_poElem )
+cActionDef::cActionDef( QDomElement *p_poElem )
 {
     m_qsName = p_poElem->attribute( "name", "" );
     m_enResult = cActionResult::fromStr( p_poElem->attribute( "result", "MIN" ).toAscii() );
@@ -15,21 +15,21 @@ cAction::cAction( QDomElement *p_poElem )
 
 }
 
-cAction::~cAction()
+cActionDef::~cActionDef()
 {
 }
 
-QString cAction::name()   const throw()
+QString cActionDef::name()   const throw()
 {
     return m_qsName;
 }
 
-cActionResult::teResult cAction::result() const throw()
+cActionResult::teResult cActionDef::result() const throw()
 {
     return m_enResult;
 }
 
-cActionUpload::teUpload cAction::upload() const throw()
+cActionUpload::teUpload cActionDef::upload() const throw()
 {
     return m_enUpload;
 }

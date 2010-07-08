@@ -20,7 +20,7 @@ cLogAnalyzer::cLogAnalyzer( const QString &p_qsPrefix, const QString &p_qsFiles,
 
     m_poDataSource = new cLogDataSource( qsInputDir, p_qsFiles );
 
-    m_poActionList = new cActionList( p_qsActions );
+    m_poActionDefList = new cActionDefList( p_qsActions );
 }
 
 cLogAnalyzer::~cLogAnalyzer()
@@ -28,6 +28,6 @@ cLogAnalyzer::~cLogAnalyzer()
 {
     cTracer  obTracer( "cLogAnalyser::~cLogAnalyser" );
 
-    delete m_poActionList;
+    delete m_poActionDefList;
     delete m_poDataSource;
 }

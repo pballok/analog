@@ -1,5 +1,5 @@
-#ifndef ACTION_H
-#define ACTION_H
+#ifndef ACTIONDEF_H
+#define ACTIONDEF_H
 
 #include <QString>
 #include <QDomElement>
@@ -62,12 +62,12 @@ public:
     }
 };
 
-class cAction
+class cActionDef
 {
 public:
-    cAction();
-    cAction( QDomElement *p_poElem );
-    ~cAction();
+    cActionDef();
+    cActionDef( QDomElement *p_poElem );
+    ~cActionDef();
 
     QString                  name()   const throw();
     cActionResult::teResult  result() const throw();
@@ -80,4 +80,4 @@ private:
     cActionUpload::teUpload  m_enUpload;
 };
 
-#endif // ACTION_H
+#endif // ACTIONDEF_H

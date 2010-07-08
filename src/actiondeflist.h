@@ -1,23 +1,23 @@
-#ifndef ACTIONLIST_H
-#define ACTIONLIST_H
+#ifndef ACTIONDEFLIST_H
+#define ACTIONDEFLIST_H
 
 #include <QString>
 #include <QDomDocument>
 #include <vector>
 
-#include "actionsingleliner.h"
+#include "actiondefsingleliner.h"
 #include "sevexception.h"
 
 using namespace std;
 
-class cActionList
+class cActionDefList
 {
 public:
-    typedef vector<cActionSingleLiner*>  tvSingleLinerList;
-    typedef tvSingleLinerList::iterator  tiSingleLinerList;
+    typedef vector<cActionDefSingleLiner*>  tvSingleLinerList;
+    typedef tvSingleLinerList::iterator     tiSingleLinerList;
 
-    cActionList( const QString &p_qsActionDefFile ) throw();
-    ~cActionList() throw();
+    cActionDefList( const QString &p_qsActionDefFile ) throw();
+    ~cActionDefList() throw();
 
 private:
     const QString      m_qsSchemaFileName;
@@ -25,8 +25,8 @@ private:
     tvSingleLinerList  m_veSingleLinerList;
 
     void validateActionDef( const QString &p_qsActionDefFile ) throw( cSevException );
-    void readActions() throw( cSevException );
+    void parseActionDef() throw( cSevException );
     void readSingleLiner( QDomElement *p_poElement ) throw( cSevException );
 };
 
-#endif // ACTIONS_H
+#endif // ACTIONDEFLIST_H
