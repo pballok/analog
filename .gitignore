@@ -3,9 +3,9 @@ laza.ini
 test/output
 src/laza.pro.user
 src/Makefile
-src/action.o
-src/actionlist.o
-src/actionsingleliner.o
+src/actiondef.o
+src/actiondeflist.o
+src/actiondefsingleliner.o
 src/loganalyzer.o
 src/logdatasource.o
 src/main.o
