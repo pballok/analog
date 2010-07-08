@@ -66,7 +66,7 @@ class cActionDef
 {
 public:
     cActionDef();
-    cActionDef( QDomElement *p_poElem );
+    cActionDef( const QDomElement *p_poElem );
     ~cActionDef();
 
     QString                  name()   const throw();

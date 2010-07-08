@@ -2,8 +2,11 @@
 
 <laza_actions>
 
+    <pattern name="PAT_HOLY_HAND_GRENADE"
+             regexp="Throwing the Holy Hand Grenade" />
+             
     <single_liner name="HOLY_HAND_GRENADE"
-                  pattern="Throwing the Holy Hand Grenade"
+                  pattern="PAT_HOLY_HAND_GRENADE"
                   result="OK"
                   upload="NEVER"/>
 

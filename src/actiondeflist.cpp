@@ -35,6 +35,16 @@ cActionDefList::~cActionDefList()
     cTracer  obTracer( "cActionDefList::~cActionDefList" );
 
     delete m_poActionsDoc;
+
+    for( tiPatternList i = m_vePatternList.begin();
+         i != m_vePatternList.end();
+         i++ )
+        delete *i;
+
+    for( tiSingleLinerList i = m_veSingleLinerList.begin();
+         i != m_veSingleLinerList.end();
+         i++ )
+        delete *i;
 }
 
 void cActionDefList::validateActionDef( const QString &p_qsActionDefFile ) throw( cSevException )
@@ -94,20 +104,18 @@ void cActionDefList::parseActionDef() throw( cSevException )
          !obElem.isNull();
          obElem = obElem.nextSiblingElement() )
     {
+        if( obElem.tagName() == "pattern" )
+        {
+            cPattern *poPattern = new cPattern( &obElem );
+            m_vePatternList.push_back( poPattern );
+            continue;
+        }
+
         if( obElem.tagName() == "single_liner" )
         {
-            readSingleLiner( &obElem );
+            cActionDefSingleLiner  *poAction = new cActionDefSingleLiner( &obElem );
+            m_veSingleLinerList.push_back( poAction );
             continue;
         }
     }
-}
-
-void cActionDefList::readSingleLiner( QDomElement *p_poElement ) throw( cSevException )
-{
-    cTracer  obTracer( "cActionDefList::readSingleLiner" );
-
-    cActionDefSingleLiner  *poAction = new cActionDefSingleLiner( p_poElement );
-    m_veSingleLinerList.push_back( poAction );
-
-    obTracer << poAction->name().toStdString();
 }

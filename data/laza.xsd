@@ -28,6 +28,13 @@ elementFormDefault="qualified">
     <xs:complexType>
       <xs:sequence>
 
+        <xs:element name="pattern" minOccurs="0" maxOccurs="unbounded">
+          <xs:complexType>
+            <xs:attribute name="name"    type="xs:string"  use="required"/>
+            <xs:attribute name="regexp"  type="xs:string"  use="required"/>
+          </xs:complexType>
+        </xs:element>
+
         <xs:element name="single_liner" minOccurs="0" maxOccurs="unbounded">
           <xs:complexType>
             <xs:attribute name="name"    type="xs:string"  use="required"/>

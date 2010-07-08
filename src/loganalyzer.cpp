@@ -17,8 +17,7 @@ cLogAnalyzer::cLogAnalyzer( const QString &p_qsPrefix, const QString &p_qsFiles,
     qsInputDir += p_qsPrefix;
     qsInputDir += QDir::separator();
     qsInputDir = QDir::cleanPath( qsInputDir );
-
-    m_poDataSource = new cLogDataSource( qsInputDir, p_qsFiles );
+    m_poDataSource    = new cLogDataSource( qsInputDir, p_qsFiles );
 
     m_poActionDefList = new cActionDefList( p_qsActions );
 }
@@ -30,4 +29,10 @@ cLogAnalyzer::~cLogAnalyzer()
 
     delete m_poActionDefList;
     delete m_poDataSource;
+}
+
+void cLogAnalyzer::analyze() throw( cSevException )
+{
+    cTracer  obTracer( "cLogAnalyser::analyze" );
+
 }

@@ -8,7 +8,8 @@ HEADERS = qtframework.h \
     logdatasource.h \
     actiondefsingleliner.h \
     actiondeflist.h \
-    actiondef.h
+    actiondef.h \
+    pattern.h
 SOURCES = tracer.cpp \
     qtlogger.cpp \
     preferences.cpp \
@@ -17,7 +18,8 @@ SOURCES = tracer.cpp \
     logdatasource.cpp \
     actiondefsingleliner.cpp \
     actiondeflist.cpp \
-    actiondef.cpp
+    actiondef.cpp \
+    pattern.cpp
 DESTDIR = ..
 QT -= gui
 QT += xml

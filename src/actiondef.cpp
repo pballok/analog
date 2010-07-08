@@ -7,7 +7,7 @@ cActionDef::cActionDef()
     m_enUpload = cActionUpload::MIN;
 }
 
-cActionDef::cActionDef( QDomElement *p_poElem )
+cActionDef::cActionDef( const QDomElement *p_poElem )
 {
     m_qsName = p_poElem->attribute( "name", "" );
     m_enResult = cActionResult::fromStr( p_poElem->attribute( "result", "MIN" ).toAscii() );

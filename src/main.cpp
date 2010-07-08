@@ -50,6 +50,7 @@ int main( int argc, char *argv[] )
         if( obArgs.indexOf( "-h" ) != -1 || qsDirPrefix == "" || qsLogFiles == "" || qsActions == "" ) throw cParamError();
 
         cLogAnalyzer  obAnalyzer( qsDirPrefix, qsLogFiles, qsActions );
+        obAnalyzer.analyze();
     }
     catch( cParamError &e )
     {

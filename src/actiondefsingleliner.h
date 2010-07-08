@@ -10,7 +10,7 @@ class cActionDefSingleLiner : public cActionDef
 {
 public:
     cActionDefSingleLiner();
-    cActionDefSingleLiner( QDomElement *p_poElem );
+    cActionDefSingleLiner( const QDomElement *p_poElem );
     ~cActionDefSingleLiner();
 
     QString  pattern() const throw();

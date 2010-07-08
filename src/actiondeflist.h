@@ -6,6 +6,7 @@
 #include <vector>
 
 #include "actiondefsingleliner.h"
+#include "pattern.h"
 #include "sevexception.h"
 
 using namespace std;
@@ -13,8 +14,11 @@ using namespace std;
 class cActionDefList
 {
 public:
-    typedef vector<cActionDefSingleLiner*>  tvSingleLinerList;
-    typedef tvSingleLinerList::iterator     tiSingleLinerList;
+    typedef vector<cPattern*>                  tvPatternList;
+    typedef tvPatternList::const_iterator      tiPatternList;
+
+    typedef vector<cActionDefSingleLiner*>     tvSingleLinerList;
+    typedef tvSingleLinerList::const_iterator  tiSingleLinerList;
 
     cActionDefList( const QString &p_qsActionDefFile ) throw();
     ~cActionDefList() throw();
@@ -22,11 +26,11 @@ public:
 private:
     const QString      m_qsSchemaFileName;
     QDomDocument      *m_poActionsDoc;
+    tvPatternList      m_vePatternList;
     tvSingleLinerList  m_veSingleLinerList;
 
     void validateActionDef( const QString &p_qsActionDefFile ) throw( cSevException );
     void parseActionDef() throw( cSevException );
-    void readSingleLiner( QDomElement *p_poElement ) throw( cSevException );
 };
 
 #endif // ACTIONDEFLIST_H
