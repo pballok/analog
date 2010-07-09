@@ -14,7 +14,7 @@ cPattern::cPattern( const QDomElement *p_poElem )
     cTracer  obTracer( "cPattern::cPattern", p_poElem->attribute( "name" ).toStdString() );
 
     m_qsName = p_poElem->attribute( "name" );
-    m_obRegExp.setPattern( p_poElem->attribute( "pattern" ) );
+    m_obRegExp.setPattern( p_poElem->attribute( "regexp" ) );
 }
 
 cPattern::~cPattern()

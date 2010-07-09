@@ -4,13 +4,24 @@ elementFormDefault="qualified">
 
 <!-- Type Definitions -->
 
+  <xs:simpleType name="timestampPartType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="YEAR"/>
+      <xs:enumeration value="MONTH"/>
+      <xs:enumeration value="DAY"/>
+      <xs:enumeration value="HOUR"/>
+      <xs:enumeration value="MINUTE"/>
+      <xs:enumeration value="SECOND"/>
+      <xs:enumeration value="MSECOND"/>
+    </xs:restriction>
+  </xs:simpleType>
+
   <xs:simpleType name="resultType">
     <xs:restriction base="xs:string">
       <xs:enumeration value="OK"/>
       <xs:enumeration value="FAILED"/>
     </xs:restriction>
   </xs:simpleType>
-
 
   <xs:simpleType name="uploadType">
     <xs:restriction base="xs:string">
@@ -26,6 +37,7 @@ elementFormDefault="qualified">
 
   <xs:element name="laza_actions">
     <xs:complexType>
+
       <xs:sequence>
 
         <xs:element name="pattern" minOccurs="0" maxOccurs="unbounded">
@@ -45,6 +57,16 @@ elementFormDefault="qualified">
         </xs:element>
 
       </xs:sequence>
+      
+      <xs:attribute name="timestamp_regexp" type="xs:string" use="required"/>
+      <xs:attribute name="param_1" type="timestampPartType" use="required"/>
+      <xs:attribute name="param_2" type="timestampPartType" use="required"/>
+      <xs:attribute name="param_3" type="timestampPartType" use="required"/>
+      <xs:attribute name="param_4" type="timestampPartType" use="required"/>
+      <xs:attribute name="param_5" type="timestampPartType" use="required"/>
+      <xs:attribute name="param_6" type="timestampPartType" use="required"/>
+      <xs:attribute name="param_7" type="timestampPartType" use="required"/>
+      
     </xs:complexType>
   </xs:element>
 

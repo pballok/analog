@@ -19,6 +19,8 @@ public:
 private:
     cLogDataSource  *m_poDataSource;
     cActionDefList  *m_poActionDefList;
+
+    void findPatterns( const QString &p_qsFileName ) throw( cSevException );
 };
 
 #endif // LOGANALYZER_H

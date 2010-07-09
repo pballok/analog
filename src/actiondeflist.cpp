@@ -35,16 +35,26 @@ cActionDefList::~cActionDefList()
     cTracer  obTracer( "cActionDefList::~cActionDefList" );
 
     delete m_poActionsDoc;
+}
 
-    for( tiPatternList i = m_vePatternList.begin();
-         i != m_vePatternList.end();
-         i++ )
-        delete *i;
+cActionDefList::tiPatternList cActionDefList::patternBegin() const throw()
+{
+    return m_vePatternList.begin();
+}
 
-    for( tiSingleLinerList i = m_veSingleLinerList.begin();
-         i != m_veSingleLinerList.end();
-         i++ )
-        delete *i;
+cActionDefList::tiPatternList cActionDefList::patternEnd() const throw()
+{
+    return m_vePatternList.end();
+}
+
+cActionDefList::tiSingleLinerList cActionDefList::singleLinerBegin() const throw()
+{
+    return m_veSingleLinerList.begin();
+}
+
+cActionDefList::tiSingleLinerList cActionDefList::singleLinerEnd() const throw()
+{
+    return m_veSingleLinerList.end();
 }
 
 void cActionDefList::validateActionDef( const QString &p_qsActionDefFile ) throw( cSevException )
@@ -100,21 +110,26 @@ void cActionDefList::parseActionDef() throw( cSevException )
 {
     cTracer  obTracer( "cActionDefList::parseActionDef" );
 
-    for( QDomElement obElem = m_poActionsDoc->documentElement().firstChildElement();
+    QDomElement obRootElement = m_poActionsDoc->documentElement();
+    m_obTimeStampRegExp.setPattern( obRootElement.attribute( "timestamp_regexp", "" ) );
+    for( int i = cTimeStampPart::MIN + 1; i < cTimeStampPart::MAX; i++ )
+    {
+        m_poTimeStampParts[i - 1] = cTimeStampPart::fromStr( obRootElement.attribute( QString( "param_%1" ).arg( i ), "MIN" ).toAscii() );
+    }
+
+    for( QDomElement obElem = obRootElement.firstChildElement();
          !obElem.isNull();
          obElem = obElem.nextSiblingElement() )
     {
         if( obElem.tagName() == "pattern" )
         {
-            cPattern *poPattern = new cPattern( &obElem );
-            m_vePatternList.push_back( poPattern );
+            m_vePatternList.push_back( cPattern( &obElem ) );
             continue;
         }
 
         if( obElem.tagName() == "single_liner" )
         {
-            cActionDefSingleLiner  *poAction = new cActionDefSingleLiner( &obElem );
-            m_veSingleLinerList.push_back( poAction );
+            m_veSingleLinerList.push_back( cActionDefSingleLiner( &obElem ) );
             continue;
         }
     }

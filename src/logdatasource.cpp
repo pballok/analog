@@ -20,14 +20,18 @@ cLogDataSource::cLogDataSource( const QString &p_qsInputDir, const QString &p_qs
 }
 
 cLogDataSource::~cLogDataSource()
-        throw()
 {
     cTracer  obTracer( "cLogDataSource::~cLogDataSource" );
 
     for( int i = 0; i < m_slTempFiles.size(); i++ )
     {
-        QFile::remove( m_slTempFiles.at( i ) );
+//        QFile::remove( m_slTempFiles.at( i ) );
     }
+}
+
+QStringList cLogDataSource::logFileList() const throw()
+{
+    return m_slTempFiles;
 }
 
 QStringList cLogDataSource::parseFileNames( const QString &p_qsInputDir, const QString &p_qsFiles )

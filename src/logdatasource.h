@@ -12,7 +12,9 @@ class cLogDataSource
 {
 public:
     cLogDataSource( const QString &p_qsInputDir, const QString &p_qsFiles ) throw();
-    ~cLogDataSource() throw();
+    ~cLogDataSource();
+
+    QStringList logFileList() const throw();
 
 private:
     QStringList parseFileNames( const QString &p_qsInputDir, const QString &p_qsFiles ) throw();

@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<laza_actions>
+<laza_actions timestamp_regexp="^(\d*)-(\d*)-(\d*) (\d*):(\d*):(\d*)\.(\d*) .*$"
+              param_1 = "YEAR"
+              param_2 = "MONTH"
+              param_3 = "DAY"
+              param_4 = "HOUR"
+              param_5 = "MINUTE"
+              param_6 = "SECOND"
+              param_7 = "MSECOND">
 
     <pattern name="PAT_HOLY_HAND_GRENADE"
              regexp="Throwing the Holy Hand Grenade" />
