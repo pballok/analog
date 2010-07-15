@@ -7,8 +7,15 @@
 
 #include <iostream>
 
-cQTLogger             g_obLogger;
-cPreferences         *g_poPrefs;
+cQTLogger                 g_obLogger;
+cPreferences             *g_poPrefs;
+
+extern const unsigned long long  g_ulMSecPerYear   = 32140800000;
+extern const unsigned long long  g_ulMSecPerMonth  = 2678400000;
+extern const unsigned long long  g_ulMSecPerDay    = 86400000;
+extern const unsigned long long  g_ulMSecPerHour   = 3600000;
+extern const unsigned long long  g_ulMSecPerMinute = 60000;
+extern const unsigned long long  g_ulMSecPerSec    = 1000;
 
 class cParamError : public cSevException
 {
@@ -50,6 +57,7 @@ int main( int argc, char *argv[] )
         if( obArgs.indexOf( "-h" ) != -1 || qsDirPrefix == "" || qsLogFiles == "" || qsActions == "" ) throw cParamError();
 
         cLogAnalyzer  obAnalyzer( qsDirPrefix, qsLogFiles, qsActions );
+        obAnalyzer.analyze();
     }
     catch( cParamError &e )
     {
@@ -64,6 +72,8 @@ int main( int argc, char *argv[] )
         g_obLogger << e.severity();
         g_obLogger << e.what();
         g_obLogger << cQTLogger::EOM;
+
+        cerr << "FATAL ERROR: " << e.what() << endl;
 
         inRet = 1;
     }

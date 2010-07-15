@@ -1,9 +1,0 @@
-<?xml version="1.0"?>
-<!DOCTYPE LAZA_ACTIONS SYSTEM "../data/laza.dtd">
-
-<LAZA_ACTIONS>
-    <SINGLE_LINER name="APPLE"
-                  pattern="Single Action Apple"
-                  result="OK"
-                  upload="NEVER"/>
-</LAZA_ACTIONS>

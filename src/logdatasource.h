@@ -11,8 +11,10 @@ using namespace std;
 class cLogDataSource
 {
 public:
-    cLogDataSource( const QString &p_qsInputDir, const QString &p_qsFiles );
+    cLogDataSource( const QString &p_qsInputDir, const QString &p_qsFiles ) throw();
     ~cLogDataSource();
+
+    QStringList logFileList() const throw();
 
 private:
     QStringList parseFileNames( const QString &p_qsInputDir, const QString &p_qsFiles ) throw();

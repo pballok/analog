@@ -8,6 +8,7 @@
 #include "qtframework.h"
 
 cLogDataSource::cLogDataSource( const QString &p_qsInputDir, const QString &p_qsFiles )
+        throw()
 {
     string stParams = "inputdir: \"" + p_qsInputDir.toStdString();
     stParams += "\", files: \"" + p_qsFiles.toStdString();
@@ -20,13 +21,21 @@ cLogDataSource::cLogDataSource( const QString &p_qsInputDir, const QString &p_qs
 
 cLogDataSource::~cLogDataSource()
 {
+    cTracer  obTracer( "cLogDataSource::~cLogDataSource" );
+
     for( int i = 0; i < m_slTempFiles.size(); i++ )
     {
-        QFile::remove( m_slTempFiles.at( i ) );
+//        QFile::remove( m_slTempFiles.at( i ) );
     }
 }
 
-QStringList cLogDataSource::parseFileNames( const QString &p_qsInputDir, const QString &p_qsFiles ) throw()
+QStringList cLogDataSource::logFileList() const throw()
+{
+    return m_slTempFiles;
+}
+
+QStringList cLogDataSource::parseFileNames( const QString &p_qsInputDir, const QString &p_qsFiles )
+        throw()
 {
     string stParams = "inputdir: \"" + p_qsInputDir.toStdString();
     stParams += "\", files: \"" + p_qsFiles.toStdString();
@@ -70,7 +79,8 @@ QStringList cLogDataSource::parseFileNames( const QString &p_qsInputDir, const Q
     return slRealFiles;
 }
 
-void cLogDataSource::prepareFiles( const QStringList &p_slFiles ) throw()
+void cLogDataSource::prepareFiles( const QStringList &p_slFiles )
+        throw()
 {
     cTracer  obTracer( "cLogDataSource::prepareFiles" );
 
@@ -101,7 +111,8 @@ void cLogDataSource::prepareFiles( const QStringList &p_slFiles ) throw()
     }
 }
 
-QString cLogDataSource::unzipFile( const QString &p_stFileName ) throw( cSevException )
+QString cLogDataSource::unzipFile( const QString &p_stFileName )
+        throw( cSevException )
 {
     cTracer  obTracer( "cLogDataSource::unzipFile", p_stFileName.toStdString() );
 
@@ -118,12 +129,13 @@ QString cLogDataSource::unzipFile( const QString &p_stFileName ) throw( cSevExce
     return qsTempFileName;
 }
 
-QString cLogDataSource::gunzipFile( const QString &p_stFileName ) throw( cSevException )
+QString cLogDataSource::gunzipFile( const QString &p_stFileName )
+        throw( cSevException )
 {
     cTracer  obTracer( "cLogDataSource::gunzipFile", p_stFileName.toStdString() );
 
     QString qsTempFileName = copyFile( p_stFileName );
-    QString qsCommand = "gunzip -q " + qsTempFileName;
+    QString qsCommand = "gunzip -q -f " + qsTempFileName;
     system( qsCommand.toAscii() );
 
     qsTempFileName.chop( 3 );  // Remove the ".gz" from file-name
@@ -133,7 +145,8 @@ QString cLogDataSource::gunzipFile( const QString &p_stFileName ) throw( cSevExc
     return qsTempFileName;
 }
 
-QString cLogDataSource::copyFile( const QString &p_stFileName ) throw( cSevException )
+QString cLogDataSource::copyFile( const QString &p_stFileName )
+        throw( cSevException )
 {
     cTracer  obTracer( "cLogDataSource::copyFile", p_stFileName.toStdString() );
 
