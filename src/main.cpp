@@ -7,8 +7,15 @@
 
 #include <iostream>
 
-cQTLogger             g_obLogger;
-cPreferences         *g_poPrefs;
+cQTLogger                 g_obLogger;
+cPreferences             *g_poPrefs;
+
+extern const unsigned long long  g_ulMSecPerYear   = 32140800000;
+extern const unsigned long long  g_ulMSecPerMonth  = 2678400000;
+extern const unsigned long long  g_ulMSecPerDay    = 86400000;
+extern const unsigned long long  g_ulMSecPerHour   = 3600000;
+extern const unsigned long long  g_ulMSecPerMinute = 60000;
+extern const unsigned long long  g_ulMSecPerSec    = 1000;
 
 class cParamError : public cSevException
 {

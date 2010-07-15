@@ -38,7 +38,7 @@ public:
             case HOUR:    return "HOUR";    break;
             case MINUTE:  return "MINUTE";  break;
             case SECOND:  return "SECOND";  break;
-            case MSECOND: return "MSCEOND"; break;
+            case MSECOND: return "MSECOND"; break;
             default:      return "INVALID";
         }
     }
@@ -51,7 +51,7 @@ public:
         if( strcmp( p_poStr, "HOUR" ) == 0 )    return HOUR;
         if( strcmp( p_poStr, "MINUTE" ) == 0 )  return MINUTE;
         if( strcmp( p_poStr, "SECOND" ) == 0 )  return SECOND;
-        if( strcmp( p_poStr, "MSCEOND" ) == 0 ) return MSECOND;
+        if( strcmp( p_poStr, "MSECOND" ) == 0 ) return MSECOND;
         return MIN;
     }
 };
@@ -68,10 +68,13 @@ public:
     cActionDefList( const QString &p_qsActionDefFile ) throw();
     ~cActionDefList() throw();
 
-    tiPatternList      patternBegin() const throw();
-    tiPatternList      patternEnd() const throw();
-    tiSingleLinerList  singleLinerBegin() const throw();
-    tiSingleLinerList  singleLinerEnd() const throw();
+    tiPatternList                    patternBegin() const throw();
+    tiPatternList                    patternEnd() const throw();
+    tiSingleLinerList                singleLinerBegin() const throw();
+    tiSingleLinerList                singleLinerEnd() const throw();
+
+    QRegExp                          timeStampRegExp() const throw();
+    cTimeStampPart::teTimeStampPart  timeStampPart( const unsigned int p_uiIndex ) const throw();
 
 private:
     const QString                    m_qsSchemaFileName;

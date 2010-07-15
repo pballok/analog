@@ -57,6 +57,19 @@ cActionDefList::tiSingleLinerList cActionDefList::singleLinerEnd() const throw()
     return m_veSingleLinerList.end();
 }
 
+QRegExp cActionDefList::timeStampRegExp() const throw()
+{
+    return m_obTimeStampRegExp;
+}
+
+cTimeStampPart::teTimeStampPart cActionDefList::timeStampPart( const unsigned int p_uiIndex ) const throw()
+{
+    if( p_uiIndex >= cTimeStampPart::MAX - 1 )
+        return cTimeStampPart::MIN;
+    else
+        return m_poTimeStampParts[p_uiIndex];
+}
+
 void cActionDefList::validateActionDef( const QString &p_qsActionDefFile ) throw( cSevException )
 {
     cTracer  obTracer( "cActionList::validateActionDef", p_qsActionDefFile.toStdString() );
