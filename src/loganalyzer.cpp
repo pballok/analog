@@ -91,7 +91,6 @@ void cLogAnalyzer::storePattern( const unsigned int p_uiFileId, const QString &p
 
     QStringList    slTimeStampParts = obTimeStampRegExp.capturedTexts();
     tsFoundPattern suFoundPattern;
-    suFoundPattern.qsTimeStamp = slTimeStampParts.at( 0 );
 
     suFoundPattern.ulTimeStamp = 0;
     for( int i = 1; i < slTimeStampParts.size(); i++ )
@@ -117,5 +116,32 @@ void cLogAnalyzer::storePattern( const unsigned int p_uiFileId, const QString &p
 
 void cLogAnalyzer::identifySingleLinerActions() throw()
 {
+    cTracer  obTracer( "cLogAnalyser::identifySingleLinerActions" );
 
+    for( cActionDefList::tiSingleLinerList itSingleLiner = m_poActionDefList->singleLinerBegin();
+         itSingleLiner != m_poActionDefList->singleLinerEnd();
+         itSingleLiner++ )
+    {
+        tmActionList::iterator  itLastAction = m_maActions.begin();
+
+        pair<tiFoundPatternList,tiFoundPatternList> paFoundActionPatterns = m_maFoundPatterns.equal_range( itSingleLiner->pattern() );
+        for( tiFoundPatternList  itFoundPattern = paFoundActionPatterns.first;
+             itFoundPattern != paFoundActionPatterns.second;
+             itFoundPattern++ )
+        {
+            storeAction( itSingleLiner->name(), &itLastAction );
+        }
+    }
+
+    obTracer << "Found " << m_maActions.size() << " actions";
+}
+
+void cLogAnalyzer::storeAction( const QString &p_qsName,
+                                tmActionList::iterator *p_poLastAction ) throw()
+{
+    cTracer  obTracer( "cLogAnalyser::storeAction", p_qsName.toStdString() );
+
+    cAction obAction;
+    obAction.setName( p_qsName );
+    *p_poLastAction = m_maActions.insert( *p_poLastAction, pair<QString, cAction>( p_qsName, obAction ) );
 }

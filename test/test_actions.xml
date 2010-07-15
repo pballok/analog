@@ -12,7 +12,15 @@
     <pattern name="PAT_HOLY_HAND_GRENADE"
              regexp="Throwing the Holy Hand Grenade" />
 
+    <pattern name="PAT_WHITE_RABBIT"
+             regexp="Spotted a White Furry Rabbit" />
+
     <single_liner name="HOLY_HAND_GRENADE"
+                  pattern="PAT_HOLY_HAND_GRENADE"
+                  result="OK"
+                  upload="NEVER"/>
+
+    <single_liner name="WHITE_RABBIT"
                   pattern="PAT_HOLY_HAND_GRENADE"
                   result="OK"
                   upload="NEVER"/>

@@ -3,6 +3,7 @@
 
 #include "logdatasource.h"
 #include "actiondeflist.h"
+#include "action.h"
 
 #include <QString>
 #include <map>
@@ -16,12 +17,14 @@ public:
     {
         unsigned int        uiFileId;
         unsigned long       ulLineNum;
-        QString             qsTimeStamp;
         unsigned long long  ulTimeStamp;
     } tsFoundPattern;
 
     typedef multimap<QString, tsFoundPattern>   tmFoundPatternList;
     typedef tmFoundPatternList::const_iterator  tiFoundPatternList;
+
+    typedef multimap<QString, cAction>          tmActionList;
+    typedef tmActionList::const_iterator        tiActionList;
 
     cLogAnalyzer( const QString &p_qsPrefix, const QString &p_qsFiles, const QString &p_qsActions ) throw();
     ~cLogAnalyzer() throw();
@@ -32,11 +35,14 @@ private:
     cLogDataSource      *m_poDataSource;
     cActionDefList      *m_poActionDefList;
     tmFoundPatternList   m_maFoundPatterns;
+    tmActionList         m_maActions;
 
     void findPatterns( const unsigned int p_uiFileId, const QString &p_qsFileName ) throw( cSevException );
     void storePattern( const unsigned int p_uiFileId, const QString &p_qsActionName, const QString &p_qsLogLine,
                        tmFoundPatternList::iterator  *p_poInsertPos ) throw( cSevException );
     void identifySingleLinerActions() throw();
+    void storeAction( const QString &p_qsName,
+                      tmActionList::iterator *p_poLastAction ) throw();
 };
 
 #endif // LOGANALYZER_H

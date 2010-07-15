@@ -3,6 +3,7 @@ laza.ini
 test/output
 src/laza.pro.user
 src/Makefile
+src/action.o
 src/actiondef.o
 src/actiondeflist.o
 src/actiondefsingleliner.o
