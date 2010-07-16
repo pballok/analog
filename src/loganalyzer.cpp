@@ -3,6 +3,7 @@
 #include <stdio.h>
 
 #include "loganalyzer.h"
+#include "outputcreator.h"
 #include "qtframework.h"
 
 extern const unsigned long long g_ulMSecPerYear;
@@ -49,6 +50,8 @@ void cLogAnalyzer::analyze() throw( cSevException )
     }
 
     identifySingleLinerActions();
+
+    cOutputCreator obOutputCreator( m_poDataSource, &m_maActions );
 }
 
 void cLogAnalyzer::findPatterns( const unsigned int p_uiFileId, const QString &p_qsFileName ) throw( cSevException )

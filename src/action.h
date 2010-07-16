@@ -2,8 +2,11 @@
 #define ACTION_H
 
 #include <QString>
+#include <map>
 
 #include "actiondef.h"
+
+using namespace std;
 
 class cAction
 {
@@ -29,5 +32,8 @@ private:
     cActionResult::teResult  m_enResult;
     cActionUpload::teUpload  m_enUpload;
 };
+
+typedef multimap<QString, cAction>          tmActionList;
+typedef tmActionList::const_iterator        tiActionList;
 
 #endif // ACTION_H

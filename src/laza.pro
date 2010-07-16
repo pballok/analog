@@ -10,7 +10,8 @@ HEADERS = qtframework.h \
     actiondeflist.h \
     actiondef.h \
     pattern.h \
-    action.h
+    action.h \
+    outputcreator.h
 SOURCES = tracer.cpp \
     qtlogger.cpp \
     preferences.cpp \
@@ -21,7 +22,8 @@ SOURCES = tracer.cpp \
     actiondeflist.cpp \
     actiondef.cpp \
     pattern.cpp \
-    action.cpp
+    action.cpp \
+    outputcreator.cpp
 DESTDIR = ..
 QT -= gui
 QT += xml

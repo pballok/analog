@@ -10,6 +10,7 @@ src/actiondefsingleliner.o
 src/loganalyzer.o
 src/logdatasource.o
 src/main.o
+src/outputcreator.o
 src/pattern.o
 src/preferences.o
 src/qtlogger.o
