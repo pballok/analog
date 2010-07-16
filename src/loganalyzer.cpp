@@ -29,12 +29,15 @@ cLogAnalyzer::cLogAnalyzer( const QString &p_qsPrefix, const QString &p_qsFiles,
     m_poDataSource    = new cLogDataSource( qsInputDir, p_qsFiles );
 
     m_poActionDefList = new cActionDefList( p_qsActions );
+
+    m_poOutputCreator = new cOutputCreator( m_poDataSource, &m_maActions, p_qsPrefix );
 }
 
 cLogAnalyzer::~cLogAnalyzer() throw()
 {
     cTracer  obTracer( "cLogAnalyser::~cLogAnalyser" );
 
+    delete m_poOutputCreator;
     delete m_poActionDefList;
     delete m_poDataSource;
 }
@@ -51,7 +54,8 @@ void cLogAnalyzer::analyze() throw( cSevException )
 
     identifySingleLinerActions();
 
-    cOutputCreator obOutputCreator( m_poDataSource, &m_maActions );
+    m_poOutputCreator->countActions();
+    m_poOutputCreator->generateActionSummary();
 }
 
 void cLogAnalyzer::findPatterns( const unsigned int p_uiFileId, const QString &p_qsFileName ) throw( cSevException )

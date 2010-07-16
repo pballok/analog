@@ -21,7 +21,7 @@
                   upload="NEVER"/>
 
     <single_liner name="WHITE_RABBIT"
-                  pattern="PAT_HOLY_HAND_GRENADE"
+                  pattern="PAT_WHITE_RABBIT"
                   result="OK"
                   upload="NEVER"/>
 

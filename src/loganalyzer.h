@@ -3,6 +3,7 @@
 
 #include "logdatasource.h"
 #include "actiondeflist.h"
+#include "outputcreator.h"
 #include "action.h"
 
 #include <QString>
@@ -32,6 +33,7 @@ public:
 private:
     cLogDataSource      *m_poDataSource;
     cActionDefList      *m_poActionDefList;
+    cOutputCreator      *m_poOutputCreator;
     tmFoundPatternList   m_maFoundPatterns;
     tmActionList         m_maActions;
 
