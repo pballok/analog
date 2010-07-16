@@ -1,7 +1,3 @@
-- Run all greps for individual TempFiles, collect the grep results and sort them by timestamp.
-- For each grep result, the following data needs to be stored:
-      - id of TempFile
-      - line number
-      - timestamp
-      - name of action
-      - type of pattern (single, multi_start, multi_end, etc)
+Generate output file in the following format:
+<timestamp> <action_name> <result> <Filename:Line>
+
