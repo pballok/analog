@@ -17,6 +17,7 @@ public:
     {
         unsigned int        uiFileId;
         unsigned long       ulLineNum;
+        QString             qsTimeStamp;
         unsigned long long  ulTimeStamp;
     } tsFoundPattern;
 
@@ -41,8 +42,6 @@ private:
     void storePattern( const unsigned int p_uiFileId, const QString &p_qsActionName, const QString &p_qsLogLine,
                        tmFoundPatternList::iterator  *p_poInsertPos ) throw( cSevException );
     void identifySingleLinerActions() throw();
-    void storeAction( const QString &p_qsName,
-                      tmActionList::iterator *p_poLastAction ) throw();
 };
 
 #endif // LOGANALYZER_H
