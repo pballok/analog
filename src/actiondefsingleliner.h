@@ -13,10 +13,12 @@ public:
     cActionDefSingleLiner( const QDomElement *p_poElem );
     ~cActionDefSingleLiner();
 
-    QString  pattern() const throw();
+    QString                  pattern() const throw();
+    cActionResult::teResult  result() const throw();
 
 private:
-    QString  m_qsPattern;
+    QString                  m_qsPattern;
+    cActionResult::teResult  m_enResult;
 };
 
 #endif // ACTIONDEFSINGLELINER_H

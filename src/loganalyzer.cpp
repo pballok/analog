@@ -92,6 +92,8 @@ void cLogAnalyzer::storePattern( const unsigned int p_uiFileId, const QString &p
     QStringList    slTimeStampParts = obTimeStampRegExp.capturedTexts();
     tsFoundPattern suFoundPattern;
 
+    suFoundPattern.qsTimeStamp = slTimeStampParts.at( 0 );
+
     suFoundPattern.ulTimeStamp = 0;
     for( int i = 1; i < slTimeStampParts.size(); i++ )
     {
@@ -129,19 +131,12 @@ void cLogAnalyzer::identifySingleLinerActions() throw()
              itFoundPattern != paFoundActionPatterns.second;
              itFoundPattern++ )
         {
-            storeAction( itSingleLiner->name(), &itLastAction );
+            cAction  obAction( itSingleLiner->name(), itFoundPattern->second.qsTimeStamp,
+                               itFoundPattern->second.uiFileId, itFoundPattern->second.ulLineNum,
+                               itSingleLiner->result(), itSingleLiner->upload() );
+            itLastAction = m_maActions.insert( itLastAction, pair<QString, cAction>( itSingleLiner->name(), obAction ) );
         }
     }
 
     obTracer << "Found " << m_maActions.size() << " actions";
-}
-
-void cLogAnalyzer::storeAction( const QString &p_qsName,
-                                tmActionList::iterator *p_poLastAction ) throw()
-{
-    cTracer  obTracer( "cLogAnalyser::storeAction", p_qsName.toStdString() );
-
-    cAction obAction;
-    obAction.setName( p_qsName );
-    *p_poLastAction = m_maActions.insert( *p_poLastAction, pair<QString, cAction>( p_qsName, obAction ) );
 }

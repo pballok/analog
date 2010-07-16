@@ -76,13 +76,11 @@ public:
     ~cActionDef();
 
     QString                  name()   const throw();
-    cActionResult::teResult  result() const throw();
     cActionUpload::teUpload  upload() const throw();
 
 
 private:
     QString                  m_qsName;
-    cActionResult::teResult  m_enResult;
     cActionUpload::teUpload  m_enUpload;
 };
 
