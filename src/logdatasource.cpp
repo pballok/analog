@@ -15,8 +15,8 @@ cLogDataSource::cLogDataSource( const QString &p_qsInputDir, const QString &p_qs
     stParams += "\"";
     cTracer  obTracer( "cLogDataSource::cLogDataSource",  stParams );
 
-    QStringList slOriginalFiles = parseFileNames( p_qsInputDir, p_qsFiles );
-    prepareFiles( slOriginalFiles );
+    parseFileNames( p_qsInputDir, p_qsFiles );
+    prepareFiles();
 }
 
 cLogDataSource::~cLogDataSource()
@@ -25,7 +25,7 @@ cLogDataSource::~cLogDataSource()
 
     for( int i = 0; i < m_slTempFiles.size(); i++ )
     {
-//        QFile::remove( m_slTempFiles.at( i ) );
+        QFile::remove( m_slTempFiles.at( i ) );
     }
 }
 
@@ -34,7 +34,12 @@ QStringList cLogDataSource::logFileList() const throw()
     return m_slTempFiles;
 }
 
-QStringList cLogDataSource::parseFileNames( const QString &p_qsInputDir, const QString &p_qsFiles )
+QStringList cLogDataSource::origFileList() const throw()
+{
+    return m_slOrigFiles;
+}
+
+void cLogDataSource::parseFileNames( const QString &p_qsInputDir, const QString &p_qsFiles )
         throw()
 {
     string stParams = "inputdir: \"" + p_qsInputDir.toStdString();
@@ -50,8 +55,7 @@ QStringList cLogDataSource::parseFileNames( const QString &p_qsInputDir, const Q
     // Each of these must be appended to the p_qsInputDir string, and the wild-cards
     // must be resolved. This will potentially result in multiple real file names for
     // each item in the slFiles list. The result will be a new list that contains one
-    // item for each real file (slRealFiles).
-    QStringList  slRealFiles;
+    // item for each real file (m_slOrigFiles).
     QString      qsInputDir = p_qsInputDir;
     if( (qsInputDir.at( qsInputDir.length() - 1 ) != '/') && (qsInputDir.at( qsInputDir.length() - 1 ) != '\\') )
     {
@@ -72,35 +76,34 @@ QStringList cLogDataSource::parseFileNames( const QString &p_qsInputDir, const Q
         QStringList slEntryList  = obDir.entryList( QDir::Files | QDir::NoSymLinks | QDir::NoDotAndDotDot );
         for( int j = 0; j < slEntryList.size(); j++ )
         {
-            slRealFiles.push_back( obDir.absoluteFilePath( slEntryList.at( j ) ) );
+            m_slOrigFiles.push_back( obDir.absoluteFilePath( slEntryList.at( j ) ) );
         }
     }
-
-    return slRealFiles;
 }
 
-void cLogDataSource::prepareFiles( const QStringList &p_slFiles )
+void cLogDataSource::prepareFiles()
         throw()
 {
     cTracer  obTracer( "cLogDataSource::prepareFiles" );
 
-    for( int i = 0; i < p_slFiles.size(); i++ )
+    for( int i = 0; i < m_slOrigFiles.size(); i++ )
     {
         try
         {
-            if( p_slFiles.at( i ).indexOf( ".zip", p_slFiles.at( i ).size() - 4, Qt::CaseInsensitive ) != -1 )
+            QString qsFileName = m_slOrigFiles.at( i );
+            if( qsFileName.indexOf( ".zip", qsFileName.size() - 4, Qt::CaseInsensitive ) != -1 )
             {
-                m_slTempFiles.push_back( unzipFile( p_slFiles.at( i ) ) );
+                m_slTempFiles.push_back( unzipFile( qsFileName ) );
                 continue;
             }
 
-            if( p_slFiles.at( i ).indexOf( ".gz", p_slFiles.at( i ).size() - 3, Qt::CaseInsensitive ) != -1 )
+            if( qsFileName.indexOf( ".gz", qsFileName.size() - 3, Qt::CaseInsensitive ) != -1 )
             {
-                m_slTempFiles.push_back( gunzipFile( p_slFiles.at( i ) ) );
+                m_slTempFiles.push_back( gunzipFile( qsFileName ) );
                 continue;
             }
 
-            m_slTempFiles.push_back( copyFile( p_slFiles.at( i ) ) );
+            m_slTempFiles.push_back( copyFile( qsFileName ) );
         }
         catch( cSevException &e )
         {

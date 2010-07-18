@@ -3,6 +3,7 @@
 
 #include "logdatasource.h"
 #include "actiondeflist.h"
+#include "outputcreator.h"
 #include "action.h"
 
 #include <QString>
@@ -24,9 +25,6 @@ public:
     typedef multimap<QString, tsFoundPattern>   tmFoundPatternList;
     typedef tmFoundPatternList::const_iterator  tiFoundPatternList;
 
-    typedef multimap<QString, cAction>          tmActionList;
-    typedef tmActionList::const_iterator        tiActionList;
-
     cLogAnalyzer( const QString &p_qsPrefix, const QString &p_qsFiles, const QString &p_qsActions ) throw();
     ~cLogAnalyzer() throw();
 
@@ -35,6 +33,7 @@ public:
 private:
     cLogDataSource      *m_poDataSource;
     cActionDefList      *m_poActionDefList;
+    cOutputCreator      *m_poOutputCreator;
     tmFoundPatternList   m_maFoundPatterns;
     tmActionList         m_maActions;
 
