@@ -66,7 +66,7 @@ void cLogAnalyzer::findPatterns( const unsigned int p_uiFileId, const QString &p
          itPattern != m_poActionDefList->patternEnd();
          itPattern++ )
     {
-        QString qsCommand = QString( "grep -n \"%1\" %2" ).arg( itPattern->pattern() ).arg( p_qsFileName );
+        QString qsCommand = QString( "grep -n -E \"%1\" %2" ).arg( itPattern->pattern() ).arg( p_qsFileName );
         tmFoundPatternList::iterator itLastPattern = m_maFoundPatterns.begin();
 
         FILE*  poGrepOutput = popen( qsCommand.toAscii(), "r" );
@@ -74,7 +74,7 @@ void cLogAnalyzer::findPatterns( const unsigned int p_uiFileId, const QString &p
         while( !feof( poGrepOutput ) )
         {
             if( fgets( poLogLine, 1000, poGrepOutput ) )
-                storePattern( p_uiFileId, itPattern->name(), QString::fromAscii( poLogLine ), &itLastPattern );
+                storePattern( p_uiFileId, itPattern, QString::fromAscii( poLogLine ), &itLastPattern );
         }
 
         pclose( poGrepOutput );
@@ -84,10 +84,10 @@ void cLogAnalyzer::findPatterns( const unsigned int p_uiFileId, const QString &p
     obTracer << "Found " << m_maFoundPatterns.size() << " patterns";
 }
 
-void cLogAnalyzer::storePattern( const unsigned int p_uiFileId, const QString &p_qsPatternName, const QString &p_qsLogLine,
+void cLogAnalyzer::storePattern( const unsigned int p_uiFileId, cActionDefList::tiPatternList p_itPattern, const QString &p_qsLogLine,
                                  tmFoundPatternList::iterator  *p_poInsertPos ) throw( cSevException )
 {
-    cTracer  obTracer( "cLogAnalyser::storePattern", p_qsPatternName.toStdString() );
+    cTracer  obTracer( "cLogAnalyser::storePattern", p_itPattern->name().toStdString() );
 
     QString qsLogLine = p_qsLogLine.section( ':', 1 ); //Remove line number from front
     qsLogLine.chop( 1 );                               // and the new line character from end
@@ -120,7 +120,18 @@ void cLogAnalyzer::storePattern( const unsigned int p_uiFileId, const QString &p
     suFoundPattern.uiFileId = p_uiFileId;
     suFoundPattern.ulLineNum = p_qsLogLine.section( ':', 0, 0 ).toULong();
 
-    *p_poInsertPos = m_maFoundPatterns.insert( *p_poInsertPos, pair<QString, tsFoundPattern>( p_qsPatternName, suFoundPattern ) );
+    QStringList  slCaptures = p_itPattern->captures();
+    if( slCaptures.size() )
+    {
+        QStringList  slCapturedTexts = p_itPattern->capturedTexts( qsLogLine );
+        for( int i = 0; i < slCaptures.size(); i++ )
+        {
+            if( i < slCapturedTexts.size() - 1 )
+                suFoundPattern.maCaptures.insert( pair<QString,QString>( slCaptures.at( i ), slCapturedTexts.at( i + 1 ) ) );
+        }
+    }
+
+    *p_poInsertPos = m_maFoundPatterns.insert( *p_poInsertPos, pair<QString, tsFoundPattern>( p_itPattern->name(), suFoundPattern ) );
 }
 
 void cLogAnalyzer::identifySingleLinerActions() throw()
@@ -141,6 +152,16 @@ void cLogAnalyzer::identifySingleLinerActions() throw()
             cAction  obAction( itSingleLiner->name(), itFoundPattern->second.qsTimeStamp,
                                itFoundPattern->second.uiFileId, itFoundPattern->second.ulLineNum,
                                itSingleLiner->result(), itSingleLiner->upload() );
+            if( itFoundPattern->second.maCaptures.size() )
+            {
+                for( tiActionCapturedTexts itCapture = itFoundPattern->second.maCaptures.begin();
+                     itCapture != itFoundPattern->second.maCaptures.end();
+                     itCapture++ )
+                {
+                    obAction.addCapturedText( itCapture->first, itCapture->second );
+                }
+            }
+
             itLastAction = m_maActions.insert( itLastAction, pair<QString, cAction>( itSingleLiner->name(), obAction ) );
         }
     }

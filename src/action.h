@@ -8,9 +8,13 @@
 
 using namespace std;
 
+typedef map<QString,QString>                   tmActionCapturedTexts;
+typedef tmActionCapturedTexts::const_iterator  tiActionCapturedTexts;
+
 class cAction
 {
 public:
+
     cAction( const QString &p_qsName = "", const QString &p_qsTimeStamp = "",
              const unsigned int p_uiFileId = 0, const unsigned long p_ulLineNum = 0,
              const cActionResult::teResult p_enResult = cActionResult::MIN,
@@ -23,6 +27,9 @@ public:
     unsigned long            lineNum() const throw();
     cActionResult::teResult  result() const throw();
     cActionUpload::teUpload  upload() const throw();
+    void                     addCapturedText( const QString &p_qsTextName, const QString &p_qsTextValue ) throw();
+    tiActionCapturedTexts    capturedTextsBegin() const throw();
+    tiActionCapturedTexts    capturedTextsEnd() const throw();
 
 private:
     QString                  m_qsName;
@@ -31,9 +38,10 @@ private:
     unsigned long            m_ulLineNum;
     cActionResult::teResult  m_enResult;
     cActionUpload::teUpload  m_enUpload;
+    tmActionCapturedTexts    m_maCapturedTexts;
 };
 
-typedef multimap<QString, cAction>          tmActionList;
-typedef tmActionList::const_iterator        tiActionList;
+typedef multimap<QString, cAction>             tmActionList;
+typedef tmActionList::const_iterator           tiActionList;
 
 #endif // ACTION_H

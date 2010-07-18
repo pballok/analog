@@ -9,19 +9,25 @@
               param_6 = "SECOND"
               param_7 = "MSECOND">
 
+<!-- ***************** PATTERNS ****************** -->
     <pattern name="PAT_HOLY_HAND_GRENADE"
-             regexp="Throwing the Holy Hand Grenade" />
+             regexp="Throwing the Holy Hand Grenade">
+    </pattern>
 
-    <pattern name="PAT_WHITE_RABBIT"
-             regexp="Spotted a White Furry Rabbit" />
+    <pattern name="PAT_TARGET_SPOTTED"
+             regexp="Spotted a (.*)$">
+        <capture name="target"/>
+    </pattern>
 
+
+<!-- *************** SINGLE LINERS *************** -->
     <single_liner name="HOLY_HAND_GRENADE"
                   pattern="PAT_HOLY_HAND_GRENADE"
                   result="OK"
                   upload="NEVER"/>
 
-    <single_liner name="WHITE_RABBIT"
-                  pattern="PAT_WHITE_RABBIT"
+    <single_liner name="NEW_TARGET"
+                  pattern="PAT_TARGET_SPOTTED"
                   result="OK"
                   upload="NEVER"/>
 

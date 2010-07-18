@@ -84,7 +84,14 @@ void cOutputCreator::generateActionSummary() const throw( cSevException )
         obActionSummaryFile.write( itAction->second.name().toAscii() + " " );
         obActionSummaryFile.write( cActionResult::toStr( itAction->second.result() ) );
         obActionSummaryFile.write( " " + slInputFiles.at( itAction->second.fileId() ).toAscii() + ":" );
-        obActionSummaryFile.write( QString::number( itAction->second.lineNum() ).toAscii() + "\n" );
+        obActionSummaryFile.write( QString::number( itAction->second.lineNum() ).toAscii() );
+        for( tiActionCapturedTexts itCapturedText = itAction->second.capturedTextsBegin();
+             itCapturedText != itAction->second.capturedTextsEnd();
+             itCapturedText++ )
+        {
+            obActionSummaryFile.write( " " + itCapturedText->first.toAscii() + "=\"" + itCapturedText->second.toAscii() + "\"" );
+        }
+        obActionSummaryFile.write( "\n" );
     }
 
     obActionSummaryFile.write( "\n" );
