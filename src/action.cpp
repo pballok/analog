@@ -48,3 +48,18 @@ cActionUpload::teUpload cAction::upload() const throw()
 {
     return m_enUpload;
 }
+
+void cAction::addCapturedText( const QString &p_qsTextName, const QString &p_qsTextValue ) throw()
+{
+    m_maCapturedTexts.insert( pair<QString,QString>( p_qsTextName, p_qsTextValue ) );
+}
+
+tiActionCapturedTexts cAction::capturedTextsBegin() const throw()
+{
+    return m_maCapturedTexts.begin();
+}
+
+tiActionCapturedTexts cAction::capturedTextsEnd() const throw()
+{
+    return m_maCapturedTexts.end();
+}

@@ -16,10 +16,11 @@ class cLogAnalyzer
 public:
     typedef struct
     {
-        unsigned int        uiFileId;
-        unsigned long       ulLineNum;
-        QString             qsTimeStamp;
-        unsigned long long  ulTimeStamp;
+        unsigned int           uiFileId;
+        unsigned long          ulLineNum;
+        QString                qsTimeStamp;
+        unsigned long long     ulTimeStamp;
+        tmActionCapturedTexts  maCaptures;
     } tsFoundPattern;
 
     typedef multimap<QString, tsFoundPattern>   tmFoundPatternList;
@@ -38,8 +39,8 @@ private:
     tmActionList         m_maActions;
 
     void findPatterns( const unsigned int p_uiFileId, const QString &p_qsFileName ) throw( cSevException );
-    void storePattern( const unsigned int p_uiFileId, const QString &p_qsActionName, const QString &p_qsLogLine,
-                       tmFoundPatternList::iterator  *p_poInsertPos ) throw( cSevException );
+    void storePattern( const unsigned int p_uiFileId, cActionDefList::tiPatternList p_itPattern,
+                       const QString &p_qsLogLine, tmFoundPatternList::iterator  *p_poInsertPos ) throw( cSevException );
     void identifySingleLinerActions() throw();
 };
 

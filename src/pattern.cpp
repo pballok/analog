@@ -37,3 +37,14 @@ QString cPattern::pattern() const throw()
 {
     return m_obRegExp.pattern();
 }
+
+QStringList cPattern::captures() const throw()
+{
+    return m_slCaptures;
+}
+
+QStringList cPattern::capturedTexts( const QString &p_qsLogLine ) const throw()
+{
+    m_obRegExp.indexIn( p_qsLogLine );
+    return m_obRegExp.capturedTexts();
+}

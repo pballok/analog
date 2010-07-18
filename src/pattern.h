@@ -13,8 +13,10 @@ public:
     cPattern( const QDomElement *p_poElem );
     ~cPattern();
 
-    QString  name() const throw();
-    QString  pattern() const throw();
+    QString      name() const throw();
+    QString      pattern() const throw();
+    QStringList  captures() const throw();
+    QStringList  capturedTexts( const QString &p_qsLogLine ) const throw();
 
 private:
 

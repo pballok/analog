@@ -15,7 +15,7 @@
     </pattern>
 
     <pattern name="PAT_TARGET_SPOTTED"
-             regexp="Spotted a \(.*\)">
+             regexp="Spotted a (.*)$">
         <capture name="target"/>
     </pattern>
 
