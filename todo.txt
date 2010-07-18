@@ -1,3 +1,7 @@
-Generate output file in the following format:
-<timestamp> <action_name> <result> <Filename:Line>
+Patterns should have a list of "captured texts"
+  each captured text has a name defined in the action definition file.
+  when these texts are captured using the regular expression match, their
+  value must appear in the result file as well.
+  For each identified action in the result file, a list of captured text
+  must appear as well.
 
