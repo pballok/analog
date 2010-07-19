@@ -67,6 +67,7 @@ void cLogAnalyzer::findPatterns( const unsigned int p_uiFileId, const QString &p
          itPattern++ )
     {
         QString qsCommand = QString( "grep -n -E \"%1\" %2" ).arg( itPattern->pattern() ).arg( p_qsFileName );
+
         tmFoundPatternList::iterator itLastPattern = m_maFoundPatterns.begin();
 
         FILE*  poGrepOutput = popen( qsCommand.toAscii(), "r" );

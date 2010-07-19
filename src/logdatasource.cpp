@@ -120,12 +120,13 @@ QString cLogDataSource::unzipFile( const QString &p_stFileName )
     cTracer  obTracer( "cLogDataSource::unzipFile", p_stFileName.toStdString() );
 
     QString qsTempFileName = copyFile( p_stFileName );
-    QString qsCommand = "unzip " + qsTempFileName + " -o -d " + g_poPrefs->getTempDir();
+    QString qsCommand = QString( "unzip -o -d %1 %2" ).arg( g_poPrefs->getTempDir() ).arg( qsTempFileName );
     system( qsCommand.toAscii() );
 
     QFile::remove( qsTempFileName ); // Remove the .zip file since unzip leaves it there
 
     qsTempFileName.chop( 4 );  // Remove the ".zip" from file-name
+    qsTempFileName.append( ".log" );
 
     obTracer << qsTempFileName.toStdString();
 
