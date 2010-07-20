@@ -66,7 +66,7 @@ void cLogAnalyzer::findPatterns( const unsigned int p_uiFileId, const QString &p
          itPattern != m_poActionDefList->patternEnd();
          itPattern++ )
     {
-        QString qsCommand = QString( "grep -n -E \"%1\" %2" ).arg( itPattern->pattern() ).arg( p_qsFileName );
+        QString qsCommand = QString( "pcregrep -n \"%1\" %2" ).arg( itPattern->pattern() ).arg( p_qsFileName );
 
         tmFoundPatternList::iterator itLastPattern = m_maFoundPatterns.begin();
 
