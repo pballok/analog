@@ -1,6 +1,7 @@
 laza
 laza.ini
 test/output
+data/pf_cycler.xml
 src/laza.pro.user
 src/Makefile
 src/action.o
