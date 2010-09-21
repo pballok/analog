@@ -2,9 +2,9 @@
 #include <cstdlib>
 #include <stdio.h>
 
+#include "lara.h"
 #include "loganalyzer.h"
 #include "outputcreator.h"
-#include "qtframework.h"
 
 extern const unsigned long long g_ulMSecPerYear;
 extern const unsigned long long g_ulMSecPerMonth;
@@ -15,16 +15,12 @@ extern const unsigned long long g_ulMSecPerSec;
 
 cLogAnalyzer::cLogAnalyzer( const QString &p_qsPrefix, const QString &p_qsFiles, const QString &p_qsActions ) throw()
 {
-    string stParams = "prefix: \"" + p_qsPrefix.toStdString();
-    stParams += "\", files: \"" + p_qsFiles.toStdString();
-    stParams += "\", actions: \"" + p_qsActions.toStdString();
-    stParams += "\"";
-    cTracer  obTracer( "cLogAnalyser::cLogAnalyser", stParams );
+    cTracer obTracer( &g_obLogger, "cLogAnalyser::cLogAnalyser",
+                      QString( "prefix: \"%1\", files: \"%2\", actions:\"%3\"" ).arg( p_qsPrefix ).arg( p_qsFiles ).arg( p_qsActions ).toStdString() );
 
-    QString qsInputDir = g_poPrefs->getInputDir();
+    QString qsInputDir = g_poPrefs->inputDir();
     qsInputDir += QDir::separator();
     qsInputDir += p_qsPrefix;
-    qsInputDir += QDir::separator();
     qsInputDir = QDir::cleanPath( qsInputDir );
     m_poDataSource    = new cLogDataSource( qsInputDir, p_qsFiles );
 
@@ -35,7 +31,7 @@ cLogAnalyzer::cLogAnalyzer( const QString &p_qsPrefix, const QString &p_qsFiles,
 
 cLogAnalyzer::~cLogAnalyzer() throw()
 {
-    cTracer  obTracer( "cLogAnalyser::~cLogAnalyser" );
+    cTracer  obTracer( &g_obLogger, "cLogAnalyser::~cLogAnalyser" );
 
     delete m_poOutputCreator;
     delete m_poActionDefList;
@@ -44,7 +40,7 @@ cLogAnalyzer::~cLogAnalyzer() throw()
 
 void cLogAnalyzer::analyze() throw( cSevException )
 {
-    cTracer  obTracer( "cLogAnalyser::analyze" );
+    cTracer  obTracer( &g_obLogger, "cLogAnalyser::analyze" );
 
     QStringList slLogFiles = m_poDataSource->logFileList();
     for( int i = 0; i < slLogFiles.size(); i++ )
@@ -60,7 +56,7 @@ void cLogAnalyzer::analyze() throw( cSevException )
 
 void cLogAnalyzer::findPatterns( const unsigned int p_uiFileId, const QString &p_qsFileName ) throw( cSevException )
 {
-    cTracer  obTracer( "cLogAnalyser::findPatterns", p_qsFileName.toStdString() );
+    cTracer  obTracer( &g_obLogger, "cLogAnalyser::findPatterns", p_qsFileName.toStdString() );
 
     for( cActionDefList::tiPatternList itPattern = m_poActionDefList->patternBegin();
          itPattern != m_poActionDefList->patternEnd();
@@ -88,7 +84,7 @@ void cLogAnalyzer::findPatterns( const unsigned int p_uiFileId, const QString &p
 void cLogAnalyzer::storePattern( const unsigned int p_uiFileId, cActionDefList::tiPatternList p_itPattern, const QString &p_qsLogLine,
                                  tmFoundPatternList::iterator  *p_poInsertPos ) throw( cSevException )
 {
-    cTracer  obTracer( "cLogAnalyser::storePattern", p_itPattern->name().toStdString() );
+    cTracer  obTracer( &g_obLogger, "cLogAnalyser::storePattern", p_itPattern->name().toStdString() );
 
     QString qsLogLine = p_qsLogLine.section( ':', 1 ); //Remove line number from front
     qsLogLine.chop( 1 );                               // and the new line character from end
@@ -137,7 +133,7 @@ void cLogAnalyzer::storePattern( const unsigned int p_uiFileId, cActionDefList::
 
 void cLogAnalyzer::identifySingleLinerActions() throw()
 {
-    cTracer  obTracer( "cLogAnalyser::identifySingleLinerActions" );
+    cTracer  obTracer( &g_obLogger, "cLogAnalyser::identifySingleLinerActions" );
 
     for( cActionDefList::tiSingleLinerList itSingleLiner = m_poActionDefList->singleLinerBegin();
          itSingleLiner != m_poActionDefList->singleLinerEnd();

@@ -4,9 +4,7 @@
 #include <QString>
 #include <QStringList>
 
-#include "sevexception.h"
-
-using namespace std;
+#include <sevexception.h>
 
 class cLogDataSource
 {

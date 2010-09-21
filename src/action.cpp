@@ -1,11 +1,11 @@
+#include "lara.h"
 #include "action.h"
-#include "qtframework.h"
 
 cAction::cAction( const QString &p_qsName, const QString &p_qsTimeStamp,
                   const unsigned int p_uiFileId, const unsigned long p_ulLineNum,
                   const cActionResult::teResult p_enResult, const cActionUpload::teUpload p_enUpload )
 {
-    cTracer  obTracer( "cAction::cAction", p_qsName.toStdString() );
+    cTracer  obTracer( &g_obLogger, "cAction::cAction", p_qsName.toStdString() );
 
     m_qsName      = p_qsName;
     m_qsTimeStamp = p_qsTimeStamp;

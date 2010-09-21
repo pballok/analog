@@ -1,8 +1,11 @@
 TEMPLATE = app
-HEADERS = qtframework.h \
-    sevexception.h \
-    tracer.h \
-    qtlogger.h \
+INCLUDEPATH += ../../qtframework
+HEADERS = ../../qtframework/sevexception.h \
+    ../../qtframework/logger.h \
+    ../../qtframework/consolewriter.h \
+    ../../qtframework/logmessage.h \
+    ../../qtframework/tracer.h \
+    lara.h \
     preferences.h \
     loganalyzer.h \
     logdatasource.h \
@@ -12,8 +15,10 @@ HEADERS = qtframework.h \
     pattern.h \
     action.h \
     outputcreator.h
-SOURCES = tracer.cpp \
-    qtlogger.cpp \
+SOURCES = ../../qtframework/logger.cpp \
+    ../../qtframework/consolewriter.cpp \
+    ../../qtframework/logmessage.cpp \
+    ../../qtframework/tracer.cpp \
     preferences.cpp \
     main.cpp \
     loganalyzer.cpp \

@@ -6,11 +6,10 @@
 #include <QRegExp>
 #include <vector>
 
+#include <sevexception.h>
+
 #include "actiondefsingleliner.h"
 #include "pattern.h"
-#include "sevexception.h"
-
-using namespace std;
 
 class cTimeStampPart
 {

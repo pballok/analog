@@ -4,16 +4,14 @@
 #include <QStringList>
 #include <cstdlib>
 
+#include "lara.h"
 #include "logdatasource.h"
-#include "qtframework.h"
 
 cLogDataSource::cLogDataSource( const QString &p_qsInputDir, const QString &p_qsFiles )
         throw()
 {
-    string stParams = "inputdir: \"" + p_qsInputDir.toStdString();
-    stParams += "\", files: \"" + p_qsFiles.toStdString();
-    stParams += "\"";
-    cTracer  obTracer( "cLogDataSource::cLogDataSource",  stParams );
+    cTracer obTracer( &g_obLogger, "cLogDataSource::cLogDataSource",
+                      QString( "inputdir: \"%1\", files: \"%2\"" ).arg( p_qsInputDir ).arg( p_qsFiles ).toStdString() );
 
     parseFileNames( p_qsInputDir, p_qsFiles );
     prepareFiles();
@@ -21,7 +19,7 @@ cLogDataSource::cLogDataSource( const QString &p_qsInputDir, const QString &p_qs
 
 cLogDataSource::~cLogDataSource()
 {
-    cTracer  obTracer( "cLogDataSource::~cLogDataSource" );
+    cTracer  obTracer( &g_obLogger, "cLogDataSource::~cLogDataSource" );
 
     for( int i = 0; i < m_slTempFiles.size(); i++ )
     {
@@ -42,10 +40,8 @@ QStringList cLogDataSource::origFileList() const throw()
 void cLogDataSource::parseFileNames( const QString &p_qsInputDir, const QString &p_qsFiles )
         throw()
 {
-    string stParams = "inputdir: \"" + p_qsInputDir.toStdString();
-    stParams += "\", files: \"" + p_qsFiles.toStdString();
-    stParams += "\"";
-    cTracer  obTracer( "cLogDataSource::parseFileNames",  stParams );
+    cTracer obTracer( &g_obLogger, "cLogDataSource::parseFileNames",
+                      QString( "inputdir: \"%1\", files: \"%2\"" ).arg( p_qsInputDir ).arg( p_qsFiles ).toStdString() );
 
     // The parameter p_qsFiles is a simple string that can contain multiple file names,
     // separated by a ';' character, so first it needs to be split up into a list.
@@ -84,7 +80,7 @@ void cLogDataSource::parseFileNames( const QString &p_qsInputDir, const QString 
 void cLogDataSource::prepareFiles()
         throw()
 {
-    cTracer  obTracer( "cLogDataSource::prepareFiles" );
+    cTracer  obTracer( &g_obLogger, "cLogDataSource::prepareFiles" );
 
     for( int i = 0; i < m_slOrigFiles.size(); i++ )
     {
@@ -107,9 +103,7 @@ void cLogDataSource::prepareFiles()
         }
         catch( cSevException &e )
         {
-            g_obLogger << e.severity();
-            g_obLogger << e.what();
-            g_obLogger << cQTLogger::EOM;
+            g_obLogger << e;
         }
     }
 }
@@ -117,10 +111,10 @@ void cLogDataSource::prepareFiles()
 QString cLogDataSource::unzipFile( const QString &p_stFileName )
         throw( cSevException )
 {
-    cTracer  obTracer( "cLogDataSource::unzipFile", p_stFileName.toStdString() );
+    cTracer  obTracer( &g_obLogger, "cLogDataSource::unzipFile", p_stFileName.toStdString() );
 
     QString qsTempFileName = copyFile( p_stFileName );
-    QString qsCommand = QString( "unzip -o -d %1 %2" ).arg( g_poPrefs->getTempDir() ).arg( qsTempFileName );
+    QString qsCommand = QString( "unzip -o -d %1 %2" ).arg( g_poPrefs->tempDir() ).arg( qsTempFileName );
     system( qsCommand.toAscii() );
 
     QFile::remove( qsTempFileName ); // Remove the .zip file since unzip leaves it there
@@ -136,7 +130,7 @@ QString cLogDataSource::unzipFile( const QString &p_stFileName )
 QString cLogDataSource::gunzipFile( const QString &p_stFileName )
         throw( cSevException )
 {
-    cTracer  obTracer( "cLogDataSource::gunzipFile", p_stFileName.toStdString() );
+    cTracer  obTracer( &g_obLogger, "cLogDataSource::gunzipFile", p_stFileName.toStdString() );
 
     QString qsTempFileName = copyFile( p_stFileName );
     QString qsCommand = "gunzip -q -f " + qsTempFileName;
@@ -152,9 +146,9 @@ QString cLogDataSource::gunzipFile( const QString &p_stFileName )
 QString cLogDataSource::copyFile( const QString &p_stFileName )
         throw( cSevException )
 {
-    cTracer  obTracer( "cLogDataSource::copyFile", p_stFileName.toStdString() );
+    cTracer  obTracer( &g_obLogger, "cLogDataSource::copyFile", p_stFileName.toStdString() );
 
-    QString qsTempFileName = g_poPrefs->getTempDir();
+    QString qsTempFileName = g_poPrefs->tempDir();
     if( (qsTempFileName.at( qsTempFileName.length() - 1 ) != '/') &&
         (qsTempFileName.at( qsTempFileName.length() - 1 ) != '\\') )
     {

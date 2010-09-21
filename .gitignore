@@ -1,7 +1,11 @@
-laza
-laza.ini
+lara
+lara.ini
 test/output
-src/laza.pro.user
+src/consolewriter.o
+src/logger.o
+src/logmessage.o
+src/tracer.o
+src/lara.pro.user
 src/Makefile
 src/action.o
 src/actiondef.o
@@ -13,5 +17,5 @@ src/main.o
 src/outputcreator.o
 src/pattern.o
 src/preferences.o
-src/qtlogger.o
-src/tracer.o
+data/*.xml
+

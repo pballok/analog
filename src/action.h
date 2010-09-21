@@ -6,8 +6,6 @@
 
 #include "actiondef.h"
 
-using namespace std;
-
 typedef map<QString,QString>                   tmActionCapturedTexts;
 typedef tmActionCapturedTexts::const_iterator  tiActionCapturedTexts;
 

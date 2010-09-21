@@ -1,6 +1,8 @@
 #ifndef OUTPUTCREATOR_H
 #define OUTPUTCREATOR_H
 
+#include <sevexception.h>
+
 #include "logdatasource.h"
 #include "action.h"
 

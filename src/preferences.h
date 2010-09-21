@@ -3,29 +3,28 @@
 
 #include <QString>
 
+#include <consolewriter.h>
+#include <sevexception.h>
+
 class cPreferences
 {
 public:
-    cPreferences();
-    cPreferences( const QString &p_qsFileName );
+    cPreferences( const QString &p_qsAppName, const QString &p_qsVersion, cConsoleWriter *p_poConsoleWriter );
     ~cPreferences();
 
-    void                       setAppName( const QString &p_qsFileName );
-    QString                    getAppName() const;
-    void                       setVersion( const QString &p_qsVersion );
-    QString                    getVersion() const;
-    void                       setLogLevels( const unsigned int p_uiConLevel,
-                                             bool p_boSaveNow = false );
-    void                       getLogLevels( unsigned int *p_poConLevel = NULL ) const;
+    QString                    appName() const;
+    QString                    version() const;
+    void                       setConsoleLogLevel( const cSeverity::teSeverity p_enLevel );
+    cSeverity::teSeverity      consoleLogLevel() const;
+    QString                    inputDir() const;
     void                       setInputDir( const QString &p_qsDir );
-    QString                    getInputDir() const;
+    QString                    outputDir() const;
     void                       setOutputDir( const QString &p_qsDir );
-    QString                    getOutputDir() const;
+    QString                    tempDir() const;
     void                       setTempDir( const QString &p_qsDir );
-    QString                    getTempDir() const;
 
-    void                       load();
-    void                       save() const;
+    void                       load() throw(cSevException);
+    void                       save() const throw(cSevException);
 
 private:
     QString                    m_qsAppName;
@@ -35,7 +34,7 @@ private:
     QString                    m_qsOutputDir;
     QString                    m_qsTempDir;
 
-    void init();
+    cConsoleWriter*            m_poConsoleWriter;
 };
 
 #endif
