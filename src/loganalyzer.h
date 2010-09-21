@@ -1,15 +1,15 @@
 #ifndef LOGANALYZER_H
 #define LOGANALYZER_H
 
+#include <QString>
+#include <map>
+
+#include <sevexception.h>
+
 #include "logdatasource.h"
 #include "actiondeflist.h"
 #include "outputcreator.h"
 #include "action.h"
-
-#include <QString>
-#include <map>
-
-using namespace std;
 
 class cLogAnalyzer
 {

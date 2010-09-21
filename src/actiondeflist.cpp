@@ -1,20 +1,18 @@
-
 #include <QFile>
 #include <QXmlSchema>
 #include <QXmlSchemaValidator>
 
+#include "lara.h"
 #include "actiondeflist.h"
-#include "qtframework.h"
-
 
 cActionDefList::cActionDefList( const QString &p_qsActionDefFile )
         throw()
-            : m_qsSchemaFileName( "data/laza.xsd" )
+            : m_qsSchemaFileName( "data/lara.xsd" )
 
 {
-    cTracer  obTracer( "cActionDefList::cActionDefList", p_qsActionDefFile.toStdString() );
+    cTracer  obTracer( &g_obLogger, "cActionDefList::cActionDefList", p_qsActionDefFile.toStdString() );
 
-    m_poActionsDoc = new QDomDocument( "actions " );
+    m_poActionsDoc = new QDomDocument( "actions" );
 
     try
     {
@@ -23,16 +21,14 @@ cActionDefList::cActionDefList( const QString &p_qsActionDefFile )
     }
     catch( cSevException &e )
     {
-        g_obLogger << e.severity();
-        g_obLogger << e.what();
-        g_obLogger << cQTLogger::EOM;
+        g_obLogger << e;
     }
 }
 
 cActionDefList::~cActionDefList()
         throw()
 {
-    cTracer  obTracer( "cActionDefList::~cActionDefList" );
+    cTracer  obTracer( &g_obLogger, "cActionDefList::~cActionDefList" );
 
     delete m_poActionsDoc;
 }
@@ -72,7 +68,7 @@ cTimeStampPart::teTimeStampPart cActionDefList::timeStampPart( const unsigned in
 
 void cActionDefList::validateActionDef( const QString &p_qsActionDefFile ) throw( cSevException )
 {
-    cTracer  obTracer( "cActionList::validateActionDef", p_qsActionDefFile.toStdString() );
+    cTracer  obTracer( &g_obLogger, "cActionList::validateActionDef", p_qsActionDefFile.toStdString() );
 
     QFile obActionsFile( p_qsActionDefFile );
 
@@ -80,8 +76,7 @@ void cActionDefList::validateActionDef( const QString &p_qsActionDefFile ) throw
     {
         if( !obActionsFile.open( QIODevice::ReadOnly ) )
         {
-            QString qsMsg = QString( "Cannot open Actions file: %1" ).arg( p_qsActionDefFile );
-            throw cSevException( cSeverity::ERROR, qsMsg.toStdString() );
+            throw cSevException( cSeverity::ERROR, QString( "Cannot open Actions file: %1" ).arg( p_qsActionDefFile ).toStdString() );
         }
 
         QXmlSchema obSchema;
@@ -89,15 +84,14 @@ void cActionDefList::validateActionDef( const QString &p_qsActionDefFile ) throw
 
         if( !obSchema.isValid() )
         {
-            QString qsMsg =  QString( "Schema %1 is not valid" ).arg( m_qsSchemaFileName );
-            throw cSevException( cSeverity::ERROR, qsMsg.toStdString() );
+            throw cSevException( cSeverity::ERROR, QString( "Schema %1 is not valid" ).arg( m_qsSchemaFileName ).toStdString() );
         }
 
         QXmlSchemaValidator obValidator( obSchema );
         if( !obValidator.validate( &obActionsFile, QUrl::fromLocalFile( p_qsActionDefFile ) ) )
         {
-            QString qsMsg =  QString( "Action definition file %1 is not valid according to Schema %2" ).arg( p_qsActionDefFile ).arg( m_qsSchemaFileName );
-            throw cSevException( cSeverity::ERROR, qsMsg.toStdString() );
+            throw cSevException( cSeverity::ERROR,
+                                 QString( "Action definition file %1 is not valid according to Schema %2" ).arg( p_qsActionDefFile ).arg( m_qsSchemaFileName ).toStdString() );
         }
 
         QString      qsErrorMsg  = "";
@@ -105,8 +99,8 @@ void cActionDefList::validateActionDef( const QString &p_qsActionDefFile ) throw
         obActionsFile.seek( 0 );
         if( !m_poActionsDoc->setContent( &obActionsFile, &qsErrorMsg, &inErrorLine ) )
         {
-            QString qsMsg = QString( "Parsing Actions file: %1 - Error in line %2: %3" ).arg( p_qsActionDefFile ).arg( inErrorLine ).arg( qsErrorMsg );
-            throw cSevException( cSeverity::ERROR, qsMsg.toStdString() );
+            throw cSevException( cSeverity::ERROR,
+                                 QString( "Parsing Actions file: %1 - Error in line %2: %3" ).arg( p_qsActionDefFile ).arg( inErrorLine ).arg( qsErrorMsg ).toStdString() );
         }
 
         obActionsFile.close();
@@ -121,7 +115,7 @@ void cActionDefList::validateActionDef( const QString &p_qsActionDefFile ) throw
 
 void cActionDefList::parseActionDef() throw( cSevException )
 {
-    cTracer  obTracer( "cActionDefList::parseActionDef" );
+    cTracer  obTracer( &g_obLogger, "cActionDefList::parseActionDef" );
 
     QDomElement obRootElement = m_poActionsDoc->documentElement();
     m_obTimeStampRegExp.setPattern( obRootElement.attribute( "timestamp_regexp", "" ) );

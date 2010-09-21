@@ -1,76 +1,52 @@
-#include "preferences.h"
-#include "qtframework.h"
-
 #include <QSettings>
 
-cPreferences::cPreferences()
-{
-    init();
-}
+#include "lara.h"
+#include "preferences.h"
 
-cPreferences::cPreferences( const QString &p_qsFileName )
+cPreferences::cPreferences( const QString &p_qsAppName, const QString &p_qsVersion, cConsoleWriter *p_poConsoleWriter  )
+    : m_qsAppName( p_qsAppName ),
+      m_qsVersion( p_qsVersion ),
+      m_poConsoleWriter( p_poConsoleWriter )
 {
-    init();
-    setAppName( p_qsFileName );
-    load();
+    m_qsInputDir  = "";
+    m_qsOutputDir = "";
+    m_qsTempDir   = "";
+    m_qsFileName  = QString( "./%1.ini" ).arg( p_qsAppName );
+
+    try
+    {
+        load();
+    } catch( cSevException &e )
+    {
+        g_obLogger << e;
+    }
 }
 
 cPreferences::~cPreferences()
 {
 }
 
-void cPreferences::init()
-{
-    m_qsAppName      = "";
-    m_qsFileName     = "";
-    m_qsVersion      = "";
-    m_qsInputDir     = "";
-    m_qsOutputDir    = "";
-    m_qsTempDir      = "";
-}
-
-void cPreferences::setAppName( const QString &p_qsAppName )
-{
-    m_qsAppName = p_qsAppName;
-    m_qsFileName = QString( "./%1.ini" ).arg( p_qsAppName );
-}
-
-QString cPreferences::getAppName() const
+QString cPreferences::appName() const
 {
     return m_qsAppName;
 }
 
-void cPreferences::setVersion( const QString &p_qsVersion )
-{
-    m_qsVersion = p_qsVersion;
-}
-
-QString cPreferences::getVersion() const
+QString cPreferences::version() const
 {
     return m_qsVersion;
 }
 
-void cPreferences::setLogLevels( const unsigned int p_uiConLevel,
-                                 bool p_boSaveNow )
+void cPreferences::setConsoleLogLevel( const cSeverity::teSeverity p_enLevel )
 {
-    g_obLogger.setMinSeverityLevels( (cSeverity::teSeverity)p_uiConLevel );
-
-    if( p_boSaveNow )
-    {
-        QSettings  obPrefFile( m_qsFileName, QSettings::IniFormat );
-        obPrefFile.setValue( QString::fromAscii( "LogLevels/ConsoleLogLevel" ), p_uiConLevel );
-    }
+    m_poConsoleWriter->setMinSeverity( p_enLevel );
 }
 
-void cPreferences::getLogLevels( unsigned int *p_poConLevel ) const
+cSeverity::teSeverity cPreferences::consoleLogLevel() const
 {
-    cSeverity::teSeverity  enConLevel = cSeverity::DEBUG;
-    g_obLogger.getMinSeverityLevels( &enConLevel );
-
-    if( p_poConLevel ) *p_poConLevel = enConLevel;
+    return m_poConsoleWriter->minSeverity();
 }
 
-QString cPreferences::getInputDir() const
+QString cPreferences::inputDir() const
 {
     return m_qsInputDir;
 }
@@ -80,7 +56,7 @@ void cPreferences::setInputDir( const QString &p_qsDir )
     m_qsInputDir = p_qsDir;
 }
 
-QString cPreferences::getOutputDir() const
+QString cPreferences::outputDir() const
 {
     return m_qsOutputDir;
 }
@@ -90,7 +66,7 @@ void cPreferences::setOutputDir( const QString &p_qsDir )
     m_qsOutputDir = p_qsDir;
 }
 
-QString cPreferences::getTempDir() const
+QString cPreferences::tempDir() const
 {
     return m_qsTempDir;
 }
@@ -100,43 +76,38 @@ void cPreferences::setTempDir( const QString &p_qsDir )
     m_qsTempDir = p_qsDir;
 }
 
-void cPreferences::load()
+void cPreferences::load() throw(cSevException)
 {
     QSettings obPrefFile( m_qsFileName, QSettings::IniFormat );
-
     if( obPrefFile.status() != QSettings::NoError )
     {
-        g_obLogger << cSeverity::WARNING;
-        g_obLogger << "Failed to load preferences from file: " << m_qsFileName.toStdString();
-        g_obLogger << cQTLogger::EOM;
+        throw cSevException( cSeverity::WARNING, QString( "Failed to open preferences file: %1" ).arg( m_qsFileName ).toStdString() );
     }
-    else
+
+    unsigned int uiConsoleLevel = obPrefFile.value( QString::fromAscii( "LogLevels/ConsoleLogLevel" ), cSeverity::ERROR ).toUInt();
+    if( (uiConsoleLevel >= cSeverity::MAX) ||
+        (uiConsoleLevel <= cSeverity::MIN) )
     {
-        unsigned int uiConsoleLevel = obPrefFile.value( QString::fromAscii( "LogLevels/ConsoleLogLevel" ), cSeverity::ERROR ).toUInt();
-        if( (uiConsoleLevel >= cSeverity::MAX) ||
-            (uiConsoleLevel <= cSeverity::MIN) )
-        {
-            uiConsoleLevel = cSeverity::DEBUG;
-
-            g_obLogger << cSeverity::WARNING;
-            g_obLogger << "Invalid ConsoleLogLevel in preferences file: " << m_qsFileName.toStdString();
-            g_obLogger << cQTLogger::EOM;
-        }
-
-        setLogLevels( uiConsoleLevel );
-
-        m_qsInputDir = obPrefFile.value( QString::fromAscii( "Directories/InputDir" ), "." ).toString();
-        m_qsOutputDir = obPrefFile.value( QString::fromAscii( "Directories/OutputDir" ), "." ).toString();
-        m_qsTempDir = obPrefFile.value( QString::fromAscii( "Directories/TempDir" ), "." ).toString();
+        uiConsoleLevel = cSeverity::NONE;
+        throw cSevException( cSeverity::WARNING, QString( "Invalid ConsoleLogLevel in preferences file: %1" ).arg( m_qsFileName ).toStdString() );
     }
+
+    setConsoleLogLevel( (cSeverity::teSeverity)uiConsoleLevel );
+
+    m_qsInputDir = obPrefFile.value( QString::fromAscii( "Directories/InputDir" ), "." ).toString();
+    m_qsOutputDir = obPrefFile.value( QString::fromAscii( "Directories/OutputDir" ), "." ).toString();
+    m_qsTempDir = obPrefFile.value( QString::fromAscii( "Directories/TempDir" ), "." ).toString();
 }
 
-void cPreferences::save() const
+void cPreferences::save() const throw(cSevException)
 {
     QSettings  obPrefFile( m_qsFileName, QSettings::IniFormat );
+    if( obPrefFile.status() != QSettings::NoError )
+    {
+        throw cSevException( cSeverity::WARNING, QString( "Failed to write to preferences file: %1" ).arg( m_qsFileName ).toStdString() );
+    }
 
-    unsigned int  uiConLevel;
-    getLogLevels( &uiConLevel );
+    unsigned int  uiConLevel = consoleLogLevel();
     obPrefFile.setValue( QString::fromAscii( "LogLevels/ConsoleLogLevel" ), uiConLevel );
 
     obPrefFile.setValue( QString::fromAscii( "Directories/InputDir" ), m_qsInputDir );

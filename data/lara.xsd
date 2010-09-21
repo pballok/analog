@@ -35,7 +35,7 @@ elementFormDefault="qualified">
 
 <!-- Element Definitions -->
 
-  <xs:element name="laza_actions">
+  <xs:element name="lara_actions">
     <xs:complexType>
 
       <xs:sequence>
@@ -64,7 +64,7 @@ elementFormDefault="qualified">
         </xs:element>
 
       </xs:sequence>
-      
+
       <xs:attribute name="timestamp_regexp" type="xs:string" use="required"/>
       <xs:attribute name="param_1" type="timestampPartType" use="required"/>
       <xs:attribute name="param_2" type="timestampPartType" use="required"/>
@@ -73,7 +73,7 @@ elementFormDefault="qualified">
       <xs:attribute name="param_5" type="timestampPartType" use="required"/>
       <xs:attribute name="param_6" type="timestampPartType" use="required"/>
       <xs:attribute name="param_7" type="timestampPartType" use="required"/>
-      
+
     </xs:complexType>
   </xs:element>
 

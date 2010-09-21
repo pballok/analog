@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<laza_actions timestamp_regexp="(\d*)-(\d*)-(\d*) (\d*):(\d*):(\d*)\.(\d*)"
+<lara_actions timestamp_regexp="(\d*)-(\d*)-(\d*) (\d*):(\d*):(\d*)\.(\d*)"
               param_1 = "YEAR"
               param_2 = "MONTH"
               param_3 = "DAY"
@@ -31,4 +31,4 @@
                   result="OK"
                   upload="NEVER"/>
 
-</laza_actions>
+</lara_actions>

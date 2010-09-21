@@ -1,9 +1,9 @@
+#include "lara.h"
 #include "pattern.h"
-#include "qtframework.h"
 
 cPattern::cPattern()
 {
-    cTracer  obTracer( "cPattern::cPattern" );
+    cTracer  obTracer( &g_obLogger, "cPattern::cPattern" );
 
     m_qsName = "";
     m_obRegExp.setPattern( "" );
@@ -11,7 +11,7 @@ cPattern::cPattern()
 
 cPattern::cPattern( const QDomElement *p_poElem )
 {
-    cTracer  obTracer( "cPattern::cPattern", p_poElem->attribute( "name" ).toStdString() );
+    cTracer obTracer( &g_obLogger, "cPattern::cPattern", p_poElem->attribute( "name" ).toStdString() );
 
     m_qsName = p_poElem->attribute( "name" );
     m_obRegExp.setPattern( p_poElem->attribute( "regexp" ) );

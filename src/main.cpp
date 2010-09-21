@@ -1,14 +1,17 @@
-#include "qtlogger.h"
-#include "preferences.h"
-#include "loganalyzer.h"
-
 #include <QCoreApplication>
 #include <QStringList>
 
 #include <iostream>
 
-cQTLogger                 g_obLogger;
-cPreferences             *g_poPrefs;
+#include <logger.h>
+#include <consolewriter.h>
+
+#include "preferences.h"
+#include "loganalyzer.h"
+
+
+cLogger                 g_obLogger;
+cPreferences           *g_poPrefs;
 
 extern const unsigned long long  g_ulMSecPerYear   = 32140800000;
 extern const unsigned long long  g_ulMSecPerMonth  = 2678400000;
@@ -28,12 +31,14 @@ int main( int argc, char *argv[] )
 {
     QCoreApplication  apMainApp( argc, argv );
 
-    g_poPrefs  = new cPreferences( QString::fromAscii( "laza" ) );
-    g_poPrefs->setVersion( "0.0.1" );
+    cConsoleWriter  obConsoleWriter;
+    g_obLogger.registerWriter( &obConsoleWriter );
 
-    g_obLogger << cSeverity::INFO;
-    g_obLogger << g_poPrefs->getAppName().toStdString() << " Version " << g_poPrefs->getVersion().toStdString() << " started.";
-    g_obLogger << cQTLogger::EOM;
+    g_poPrefs  = new cPreferences( "lara", "0.0.2", &obConsoleWriter );
+
+    g_obLogger << cSeverity::INFO
+               << g_poPrefs->appName().toStdString() << " Version " << g_poPrefs->version().toStdString() << " started."
+               << cLogMessage::EOM;
 
     int inRet = 0;
     try
@@ -59,9 +64,9 @@ int main( int argc, char *argv[] )
         cLogAnalyzer  obAnalyzer( qsDirPrefix, qsLogFiles, qsActions );
         obAnalyzer.analyze();
     }
-    catch( cParamError &e )
+    catch( cParamError & )
     {
-        cerr << "Usage: laza -h -p <dir prefix> -f <input files> -a <actions file>" << endl;
+        cerr << "Usage: lara -h -p <dir prefix> -f <input files> -a <actions file>" << endl;
         cerr << "          -h: Displays this helps message then exits." << endl;
         cerr << "          -p: directory prefix that is used to construct the full path to the input files" << endl;
         cerr << "          -f: input file names" << endl;
@@ -69,18 +74,15 @@ int main( int argc, char *argv[] )
     }
     catch( cSevException &e )
     {
-        g_obLogger << e.severity();
-        g_obLogger << e.what();
-        g_obLogger << cQTLogger::EOM;
-
-        cerr << "FATAL ERROR: " << e.what() << endl;
+        g_obLogger << cSeverity::ERROR << "WHOA just caught an unhandled exception!" << cLogMessage::EOM;
+        g_obLogger << e;
 
         inRet = 1;
     }
 
-    g_obLogger << cSeverity::INFO;
-    g_obLogger << g_poPrefs->getAppName().toStdString() << " Version " << g_poPrefs->getVersion().toStdString() << " ended.";
-    g_obLogger << cQTLogger::EOM;
+    g_obLogger << cSeverity::INFO
+               << g_poPrefs->appName().toStdString() << " Version " << g_poPrefs->version().toStdString() << " ended."
+               << cLogMessage::EOM;
 
     delete g_poPrefs;
 
