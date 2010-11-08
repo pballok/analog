@@ -5,13 +5,11 @@
 #include "lara.h"
 #include "actiondeflist.h"
 
-cActionDefList::cActionDefList( const QString &p_qsActionDefFile )
-        throw()
-            : m_qsSchemaFileName( "data/lara.xsd" )
-
+cActionDefList::cActionDefList( const QString &p_qsActionDefFile, const QString &p_qsSchemaFile ) throw()
 {
     cTracer  obTracer( &g_obLogger, "cActionDefList::cActionDefList", p_qsActionDefFile.toStdString() );
 
+    m_qsSchemaFileName = p_qsSchemaFile;
     m_poActionsDoc = new QDomDocument( "actions" );
 
     try
@@ -51,6 +49,16 @@ cActionDefList::tiSingleLinerList cActionDefList::singleLinerBegin() const throw
 cActionDefList::tiSingleLinerList cActionDefList::singleLinerEnd() const throw()
 {
     return m_veSingleLinerList.end();
+}
+
+cActionDefList::tiCountActionList cActionDefList::countActionBegin() const throw()
+{
+    return m_veCountActionList.begin();
+}
+
+cActionDefList::tiCountActionList cActionDefList::countActionEnd() const throw()
+{
+    return m_veCountActionList.end();
 }
 
 QRegExp cActionDefList::timeStampRegExp() const throw()
@@ -137,6 +145,12 @@ void cActionDefList::parseActionDef() throw( cSevException )
         if( obElem.tagName() == "single_liner" )
         {
             m_veSingleLinerList.push_back( cActionDefSingleLiner( &obElem ) );
+            continue;
+        }
+
+        if( obElem.tagName() == "count_action" )
+        {
+            m_veCountActionList.push_back( cCountAction( &obElem ) );
             continue;
         }
     }

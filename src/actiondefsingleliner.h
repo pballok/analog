@@ -14,11 +14,13 @@ public:
     ~cActionDefSingleLiner();
 
     QString                  pattern() const throw();
-    cActionResult::teResult  result() const throw();
+    cActionResult::teResult  result()  const throw();
 
-private:
+protected:
     QString                  m_qsPattern;
     cActionResult::teResult  m_enResult;
+
+    virtual void             init()    throw();
 };
 
 #endif // ACTIONDEFSINGLELINER_H

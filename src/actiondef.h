@@ -73,15 +73,17 @@ class cActionDef
 public:
     cActionDef();
     cActionDef( const QDomElement *p_poElem );
-    ~cActionDef();
+    virtual ~cActionDef();
 
     QString                  name()   const throw();
     cActionUpload::teUpload  upload() const throw();
 
 
-private:
+protected:
     QString                  m_qsName;
     cActionUpload::teUpload  m_enUpload;
+
+    virtual void             init()   throw();
 };
 
 #endif // ACTIONDEF_H

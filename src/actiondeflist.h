@@ -8,8 +8,9 @@
 
 #include <sevexception.h>
 
-#include "actiondefsingleliner.h"
 #include "pattern.h"
+#include "actiondefsingleliner.h"
+#include "countaction.h"
 
 class cTimeStampPart
 {
@@ -64,24 +65,30 @@ public:
     typedef vector<cActionDefSingleLiner>      tvSingleLinerList;
     typedef tvSingleLinerList::const_iterator  tiSingleLinerList;
 
-    cActionDefList( const QString &p_qsActionDefFile ) throw();
+    typedef vector<cCountAction>               tvCountActionList;
+    typedef tvCountActionList::const_iterator  tiCountActionList;
+
+    cActionDefList( const QString &p_qsActionDefFile, const QString &p_qsSchemaFile ) throw();
     ~cActionDefList() throw();
 
     tiPatternList                    patternBegin() const throw();
     tiPatternList                    patternEnd() const throw();
     tiSingleLinerList                singleLinerBegin() const throw();
     tiSingleLinerList                singleLinerEnd() const throw();
+    tiCountActionList                countActionBegin() const throw();
+    tiCountActionList                countActionEnd() const throw();
 
     QRegExp                          timeStampRegExp() const throw();
     cTimeStampPart::teTimeStampPart  timeStampPart( const unsigned int p_uiIndex ) const throw();
 
 private:
-    const QString                    m_qsSchemaFileName;
+    QString                          m_qsSchemaFileName;
     QDomDocument                    *m_poActionsDoc;
     QRegExp                          m_obTimeStampRegExp;
     cTimeStampPart::teTimeStampPart  m_poTimeStampParts[cTimeStampPart::MAX - 1];
     tvPatternList                    m_vePatternList;
     tvSingleLinerList                m_veSingleLinerList;
+    tvCountActionList                m_veCountActionList;
 
     void validateActionDef( const QString &p_qsActionDefFile ) throw( cSevException );
     void parseActionDef() throw( cSevException );

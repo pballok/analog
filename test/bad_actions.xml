@@ -24,7 +24,7 @@
     <single_liner name="HOLY_HAND_GRENADE"
                   pattern="PAT_HOLY_HAND_GRENADE"
                   result="OK"
-                  upload="NEVER"/>
+                  upload="NEVER"
 
     <single_liner name="NEW_TARGET"
                   pattern="PAT_TARGET_SPOTTED"

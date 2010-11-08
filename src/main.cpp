@@ -74,7 +74,7 @@ int main( int argc, char *argv[] )
     }
     catch( cSevException &e )
     {
-        g_obLogger << cSeverity::ERROR << "WHOA just caught an unhandled exception!" << cLogMessage::EOM;
+        g_obLogger << cSeverity::ERROR << "WHOA... Just caught an unhandled exception!" << cLogMessage::EOM;
         g_obLogger << e;
 
         inRet = 1;

@@ -2,14 +2,18 @@
 
 cActionDef::cActionDef()
 {
-    m_qsName   = "";
-    m_enUpload = cActionUpload::MIN;
+    init();
 }
 
 cActionDef::cActionDef( const QDomElement *p_poElem )
 {
-    m_qsName = p_poElem->attribute( "name", "" );
-    m_enUpload = cActionUpload::fromStr( p_poElem->attribute( "upload", "MIN" ).toAscii() );
+    init();
+
+    if( p_poElem )
+    {
+        m_qsName = p_poElem->attribute( "name", "" );
+        m_enUpload = cActionUpload::fromStr( p_poElem->attribute( "upload", "MIN" ).toAscii() );
+    }
 
 }
 
@@ -25,4 +29,10 @@ QString cActionDef::name()   const throw()
 cActionUpload::teUpload cActionDef::upload() const throw()
 {
     return m_enUpload;
+}
+
+void cActionDef::init()   throw()
+{
+    m_qsName   = "";
+    m_enUpload = cActionUpload::MIN;
 }

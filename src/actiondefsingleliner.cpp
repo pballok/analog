@@ -3,18 +3,18 @@
 
 cActionDefSingleLiner::cActionDefSingleLiner() : cActionDef()
 {
-    cTracer  obTracer( &g_obLogger, "cActionDefSingleLiner::cActionDefSingleLiner" );
-
-    m_qsPattern = "";
-    m_enResult  = cActionResult::MIN;
+    init();
 }
 
 cActionDefSingleLiner::cActionDefSingleLiner( const QDomElement *p_poElem ) : cActionDef( p_poElem )
 {
-    cTracer  obTracer( &g_obLogger, "cActionDefSingleLiner::cActionDefSingleLiner", p_poElem->attribute( "name" ).toStdString() );
+    init();
 
-    m_qsPattern = p_poElem->attribute( "pattern", "" );
-    m_enResult  = cActionResult::fromStr( p_poElem->attribute( "result", "MIN" ).toAscii() );
+    if( p_poElem )
+    {
+        m_qsPattern = p_poElem->attribute( "pattern", "" );
+        m_enResult  = cActionResult::fromStr( p_poElem->attribute( "result", "MIN" ).toAscii() );
+    }
 }
 
 cActionDefSingleLiner::~cActionDefSingleLiner()
@@ -31,3 +31,8 @@ cActionResult::teResult cActionDefSingleLiner::result() const throw()
     return m_enResult;
 }
 
+void cActionDefSingleLiner::init() throw()
+{
+    m_qsPattern = "";
+    m_enResult  = cActionResult::MIN;
+}

@@ -1,21 +1,12 @@
 lara
 lara.ini
 test/output
-src/consolewriter.o
-src/logger.o
-src/logmessage.o
-src/tracer.o
+test/*.o
+test/laratest
+test/laratest.pro.user
+test/Makefile
+src/*.o
 src/lara.pro.user
 src/Makefile
-src/action.o
-src/actiondef.o
-src/actiondeflist.o
-src/actiondefsingleliner.o
-src/loganalyzer.o
-src/logdatasource.o
-src/main.o
-src/outputcreator.o
-src/pattern.o
-src/preferences.o
 data/*.xml
 

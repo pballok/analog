@@ -6,7 +6,7 @@
 
 #include "actiondef.h"
 
-typedef map<QString,QString>                   tmActionCapturedTexts;
+typedef std::map<QString,QString>              tmActionCapturedTexts;
 typedef tmActionCapturedTexts::const_iterator  tiActionCapturedTexts;
 
 class cAction
@@ -39,7 +39,7 @@ private:
     tmActionCapturedTexts    m_maCapturedTexts;
 };
 
-typedef multimap<QString, cAction>             tmActionList;
+typedef std::multimap<QString, cAction>        tmActionList;
 typedef tmActionList::const_iterator           tiActionList;
 
 #endif // ACTION_H
