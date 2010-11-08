@@ -33,7 +33,8 @@
 
 
 <!-- *************** COUNT ACTIONS *************** -->
-    <count_action name="nbTargets">
+    <count_action name="nbActions">
+        <action name="HOLY_HAND_GRENADE"/>
         <action name="NEW_TARGET"/>
     </count_action>
 
