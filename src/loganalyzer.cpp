@@ -24,7 +24,7 @@ cLogAnalyzer::cLogAnalyzer( const QString &p_qsPrefix, const QString &p_qsFiles,
     qsInputDir = QDir::cleanPath( qsInputDir );
     m_poDataSource    = new cLogDataSource( qsInputDir, p_qsFiles );
 
-    m_poActionDefList = new cActionDefList( p_qsActions );
+    m_poActionDefList = new cActionDefList( p_qsActions, "data/lara.xsd" );
 
     m_poOutputCreator = new cOutputCreator( m_poDataSource, &m_maActions, p_qsPrefix );
 }

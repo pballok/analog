@@ -142,8 +142,10 @@ void cActionTest::testActionDefList() throw()
         {
             case 1: testCase( "ActionDefList Pattern 1 Name", "PAT_HOLY_HAND_GRENADE", itPattern->name().toStdString() );
                     testCase( "ActionDefList Pattern 1 Regexp", "Throwing the Holy Hand Grenade", itPattern->pattern().toStdString() );
-                    itt tartok break;
-            case 2: testCase( "ActionDefList Pattern 2 Name", "PAT_TARGET_SPOTTED", itPattern->name().toStdString() ); break;
+                    break;
+            case 2: testCase( "ActionDefList Pattern 2 Name", "PAT_TARGET_SPOTTED", itPattern->name().toStdString() );
+                    testCase( "ActionDefList Pattern 2 Regexp", "Spotted a (.*)$", itPattern->pattern().toStdString() );
+                    break;
         }
     }
 
@@ -156,8 +158,16 @@ void cActionTest::testActionDefList() throw()
     {
         switch( ++uiSingleLinerCount )
         {
-            case 1: testCase( "ActionDefList SingleLiner 1 Name", "HOLY_HAND_GRENADE", itSingleLiner->name().toStdString() ); break;
-            case 2: testCase( "ActionDefList SingleLiner 2 Name", "NEW_TARGET", itSingleLiner->name().toStdString() ); break;
+            case 1: testCase( "ActionDefList SingleLiner 1 Name", "HOLY_HAND_GRENADE", itSingleLiner->name().toStdString() );
+                    testCase( "ActionDefList SingleLiner 1 Pattern", "PAT_HOLY_HAND_GRENADE", itSingleLiner->pattern().toStdString() );
+                    testCase( "ActionDefList SingleLiner 1 Result", cActionResult::OK, itSingleLiner->result() );
+                    testCase( "ActionDefList SingleLiner 1 Upload", cActionUpload::NEVER, itSingleLiner->upload() );
+                    break;
+            case 2: testCase( "ActionDefList SingleLiner 2 Name", "NEW_TARGET", itSingleLiner->name().toStdString() );
+                    testCase( "ActionDefList SingleLiner 2 Pattern", "PAT_TARGET_SPOTTED", itSingleLiner->pattern().toStdString() );
+                    testCase( "ActionDefList SingleLiner 2 Result", cActionResult::OK, itSingleLiner->result() );
+                    testCase( "ActionDefList SingleLiner 2 Upload", cActionUpload::NEVER, itSingleLiner->upload() );
+                    break;
         }
     }
 
@@ -170,7 +180,8 @@ void cActionTest::testActionDefList() throw()
     {
         switch( ++uiCountActionCount )
         {
-            case 1: testCase( "ActionDefList Count Action 1 Name", "nbTargets", itCountAction->name().toStdString() ); break;
+            case 1: testCase( "ActionDefList Count Action 1 Name", "nbTargets", itCountAction->name().toStdString() );
+                    break;
         }
     }
 

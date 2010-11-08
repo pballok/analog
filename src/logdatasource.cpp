@@ -115,7 +115,7 @@ QString cLogDataSource::unzipFile( const QString &p_stFileName )
 
     QString qsTempFileName = copyFile( p_stFileName );
     QString qsCommand = QString( "unzip -o -d %1 %2" ).arg( g_poPrefs->tempDir() ).arg( qsTempFileName );
-    system( qsCommand.toAscii() );
+    if( system( qsCommand.toAscii() ) != 0 ) throw cSevException( cSeverity::ERROR, "Error in unzip command" );
 
     QFile::remove( qsTempFileName ); // Remove the .zip file since unzip leaves it there
 
@@ -134,7 +134,7 @@ QString cLogDataSource::gunzipFile( const QString &p_stFileName )
 
     QString qsTempFileName = copyFile( p_stFileName );
     QString qsCommand = "gunzip -q -f " + qsTempFileName;
-    system( qsCommand.toAscii() );
+    if( system( qsCommand.toAscii() ) != 0 ) throw cSevException( cSeverity::ERROR, "Error in gunzip command" );
 
     qsTempFileName.chop( 3 );  // Remove the ".gz" from file-name
 
