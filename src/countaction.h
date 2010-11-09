@@ -24,6 +24,8 @@ public:
 private:
     QString           m_qsName;
     tvActionsToCount  m_veActionsToCount;
+
+    void             init()                 throw();
 };
 
 #endif // COUNTACTION_H

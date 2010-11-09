@@ -102,13 +102,13 @@ void cActionTest::testSingleLinerDef() throw()
 
     poSingleLiner = new cActionDefSingleLiner( &obDomElem );
 
-    testCase( "SingleLiner Correct Dom Element Name", "TestSingleLiner", poSingleLiner->name().toStdString() );
+    testCase( "SingleLiner Correct DOM Element Name", "TestSingleLiner", poSingleLiner->name().toStdString() );
 
-    testCase( "SingleLiner Correct Dom Element Upload", cActionUpload::ALWAYS, poSingleLiner->upload() );
+    testCase( "SingleLiner Correct DOM Element Upload", cActionUpload::ALWAYS, poSingleLiner->upload() );
 
-    testCase( "SingleLiner Correct Dom Element Pattern", "Test Pattern", poSingleLiner->pattern().toStdString() );
+    testCase( "SingleLiner Correct DOM Element Pattern", "Test Pattern", poSingleLiner->pattern().toStdString() );
 
-    testCase( "SingleLiner Correct Dom Element Result", cActionResult::OK, poSingleLiner->result() );
+    testCase( "SingleLiner Correct DOM Element Result", cActionResult::OK, poSingleLiner->result() );
 
     delete poSingleLiner;
     obDomElem.removeAttribute( "pattern" );
@@ -123,10 +123,116 @@ void cActionTest::testSingleLinerDef() throw()
 
 void cActionTest::testCountActions() throw()
 {
+    cCountAction *poCountAction;
+
+    poCountAction = new cCountAction;
+
+    testCase( "CountAction empty constructor Name", "", poCountAction->name().toStdString() );
+
+    testCase( "CountAction empty constructor Action Container empty", true, poCountAction->actionsToCountBegin() == poCountAction->actionsToCountEnd() );
+
+    delete poCountAction;
+    poCountAction = new cCountAction( NULL );
+
+    testCase( "CountAction NULL DOM Element Name", "", poCountAction->name().toStdString() );
+
+    testCase( "CountAction NULL DOM Element Action Container empty", true, poCountAction->actionsToCountBegin() == poCountAction->actionsToCountEnd() );
+
+    delete poCountAction;
+    QDomDocument obDomDoc( "ActionTest" );
+    QDomElement obDomElem = obDomDoc.createElement( "count_action" );
+    obDomElem.setAttribute( "name", "CountSpam" );
+    QDomElement obAction1 = obDomDoc.createElement( "action" );
+    obAction1.setAttribute( "name", "SPAM" );
+    QDomElement obAction2 = obDomDoc.createElement( "action" );
+    obAction2.setAttribute( "name", "SPAM_A_LOT" );
+    QDomElement obAction3 = obDomDoc.createElement( "action" );
+    obAction3.setAttribute( "name", "SPAM_A_LOT_SPAM" );
+    obDomElem.appendChild( obAction1 );
+    obDomElem.appendChild( obAction2 );
+    obDomElem.appendChild( obAction3 );
+    poCountAction = new cCountAction( &obDomElem );
+
+    testCase( "CountAction Correct DOM Element Name", "CountSpam", poCountAction->name().toStdString() );
+
+    unsigned int uiActionCount = 0;
+    for( cCountAction::tiActionsToCount itAction = poCountAction->actionsToCountBegin();
+         itAction != poCountAction->actionsToCountEnd();
+         itAction++ )
+    {
+        switch( ++uiActionCount )
+        {
+            case 1: testCase( "CountAction Correct DOM Element Action 1 Name", "SPAM", itAction->toStdString() ); break;
+            case 2: testCase( "CountAction Correct DOM Element Action 2 Name", "SPAM_A_LOT", itAction->toStdString() ); break;
+            case 3: testCase( "CountAction Correct DOM Element Action 3 Name", "SPAM_A_LOT_SPAM", itAction->toStdString() ); break;
+        }
+    }
+
+    testCase( "CountAction Correct DOM Element Action count", 3, uiActionCount );
+
+    delete poCountAction;
 }
 
 void cActionTest::testPatterns() throw()
 {
+    cPattern  *poPattern;
+    poPattern = new cPattern();
+
+    testCase( "Pattern empty constructor Name", "", poPattern->name().toStdString() );
+
+    testCase( "Pattern empty constructor Pattern", "", poPattern->pattern().toStdString() );
+
+    testCase( "Pattern empty constructor Captures List empty", true, poPattern->captures().empty() );
+
+    delete poPattern;
+    poPattern = new cPattern( NULL );
+
+    testCase( "Pattern NULL DOM Element Name", "", poPattern->name().toStdString() );
+
+    testCase( "Pattern NULL DOM Element RegExp", "", poPattern->pattern().toStdString() );
+
+    testCase( "Pattern NULL DOM Element Captures List empty", true, poPattern->captures().empty() );
+
+    delete poPattern;
+    QDomDocument obDomDoc( "ActionTest" );
+    QDomElement obDomElem = obDomDoc.createElement( "pattern" );
+    obDomElem.setAttribute( "name", "GRENADE_INSTRUCTIONS" );
+    obDomElem.setAttribute( "regexp", "([\\d]*)[\\D]*([\\d]*)[\\D]*([\\d]*)" );
+    QDomElement obCap1 = obDomDoc.createElement( "capture" );
+    obCap1.setAttribute( "name", "NOT_COUNT" );
+    QDomElement obCap2 = obDomDoc.createElement( "capture" );
+    obCap2.setAttribute( "name", "NEITHER_COUNT" );
+    QDomElement obCap3 = obDomDoc.createElement( "capture" );
+    obCap3.setAttribute( "name", "EXCEPT_COUNT" );
+    obDomElem.appendChild( obCap1 );
+    obDomElem.appendChild( obCap2 );
+    obDomElem.appendChild( obCap3 );
+
+    poPattern = new cPattern( &obDomElem );
+
+    testCase( "Pattern Correct DOM Element Name", "GRENADE_INSTRUCTIONS", poPattern->name().toStdString() );
+
+    testCase( "Pattern Correct DOM Element RegExp", "([\\d]*)[\\D]*([\\d]*)[\\D]*([\\d]*)", poPattern->pattern().toStdString() );
+
+    testCase( "Pattern Correct DOM Element Captures List size", 3, poPattern->captures().size() );
+
+    QStringList slNumbers = poPattern->capturedTexts( "4 shalt thou not count, neither count thou 2, excepting that thou then proceed to 3." );
+
+    testCase( "Pattern Correct DOM Element Captured Text List size", 4, slNumbers.size() );
+
+    testCase( "Pattern Correct DOM Element Capture 1 Name", "NOT_COUNT", poPattern->captures().at( 0 ).toStdString() );
+
+    testCase( "Pattern Correct DOM Element Captured 1 Text", "4", slNumbers.at( 1 ).toStdString() );
+
+    testCase( "Pattern Correct DOM Element Capture 1 Name", "NEITHER_COUNT", poPattern->captures().at( 1 ).toStdString() );
+
+    testCase( "Pattern Correct DOM Element Captured 2 Text", "2", slNumbers.at( 2 ).toStdString() );
+
+    testCase( "Pattern Correct DOM Element Capture 1 Name", "EXCEPT_COUNT", poPattern->captures().at( 2 ).toStdString() );
+
+    testCase( "Pattern Correct DOM Element Captured 3 Text", "3", slNumbers.at( 3 ).toStdString() );
+
+    delete poPattern;
 }
 
 void cActionTest::testActionDefList() throw()
@@ -180,7 +286,19 @@ void cActionTest::testActionDefList() throw()
     {
         switch( ++uiCountActionCount )
         {
-            case 1: testCase( "ActionDefList Count Action 1 Name", "nbTargets", itCountAction->name().toStdString() );
+            case 1: testCase( "ActionDefList Count Action 1 Name", "nbActions", itCountAction->name().toStdString() );
+                    unsigned int uiActionCount = 0;
+                    for( cCountAction::tiActionsToCount itAction = itCountAction->actionsToCountBegin();
+                         itAction != itCountAction->actionsToCountEnd();
+                         itAction++ )
+                    {
+                        switch( ++uiActionCount )
+                        {
+                            case 1: testCase( "ActionDefList CountAction 1 Action 1 Name", "HOLY_HAND_GRENADE", itAction->toStdString() ); break;
+                            case 2: testCase( "ActionDefList CountAction 1 Action 2 Name", "NEW_TARGET", itAction->toStdString() ); break;
+                        }
+                    }
+                    testCase( "ActionDefList Count Action 1 Action Count", 2, uiActionCount );
                     break;
         }
     }

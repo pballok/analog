@@ -23,6 +23,8 @@ private:
     QString      m_qsName;
     QRegExp      m_obRegExp;
     QStringList  m_slCaptures;
+
+    void         init()                 throw();
 };
 
 #endif // PATTERN_H
