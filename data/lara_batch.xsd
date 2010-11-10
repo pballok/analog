@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+elementFormDefault="qualified">
+
+  <xs:element name="lara_batch">
+    <xs:complexType>
+
+      <xs:sequence>
+
+        <xs:element name="analysis" minOccurs="1" maxOccurs="unbounded">
+          <xs:complexType>
+            <xs:attribute name="name"        type="xs:string"  use="required"/>
+            <xs:attribute name="dir_prefix"  type="xs:string"  use="required"/>
+            <xs:attribute name="filenames"   type="xs:string"  use="required"/>
+            <xs:attribute name="action_def"  type="xs:string"  use="required"/>
+          </xs:complexType>
+        </xs:element>
+
+      </xs:sequence>
+
+    </xs:complexType>
+  </xs:element>
+
+</xs:schema>

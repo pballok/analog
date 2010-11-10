@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<lara_batch>
+
+    <analysis name="Compressed Logs" dir_prefix="multiple_files" filenames="test*.gz" action_def="test_actions.xml"/>
+    <analysis name="Uncompressed Logs" dir_prefix="multiple_files" filenames="test*.log" action_def="test_actions.xml"/>
+
+</lara_batch>
