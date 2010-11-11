@@ -82,7 +82,6 @@ public:
     cTimeStampPart::teTimeStampPart  timeStampPart( const unsigned int p_uiIndex ) const throw();
 
 private:
-    QString                          m_qsSchemaFileName;
     QDomDocument                    *m_poActionsDoc;
     QRegExp                          m_obTimeStampRegExp;
     cTimeStampPart::teTimeStampPart  m_poTimeStampParts[cTimeStampPart::MAX - 1];
@@ -90,7 +89,7 @@ private:
     tvSingleLinerList                m_veSingleLinerList;
     tvCountActionList                m_veCountActionList;
 
-    void validateActionDef( const QString &p_qsActionDefFile ) throw( cSevException );
+    void validateActionDef( const QString &p_qsActionDefFile, const QString &p_qsSchemaFile ) throw( cSevException );
     void parseActionDef() throw( cSevException );
 };
 

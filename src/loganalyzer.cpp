@@ -6,12 +6,12 @@
 #include "loganalyzer.h"
 #include "outputcreator.h"
 
-extern const unsigned long long g_ulMSecPerYear;
-extern const unsigned long long g_ulMSecPerMonth;
-extern const unsigned long long g_ulMSecPerDay;
-extern const unsigned long long g_ulMSecPerHour;
-extern const unsigned long long g_ulMSecPerMinute;
-extern const unsigned long long g_ulMSecPerSec;
+const unsigned long long  g_ulMSecPerYear   = 32140800000;
+const unsigned long long  g_ulMSecPerMonth  = 2678400000;
+const unsigned long long  g_ulMSecPerDay    = 86400000;
+const unsigned long long  g_ulMSecPerHour   = 3600000;
+const unsigned long long  g_ulMSecPerMinute = 60000;
+const unsigned long long  g_ulMSecPerSec    = 1000;
 
 cLogAnalyzer::cLogAnalyzer( const QString &p_qsPrefix, const QString &p_qsFiles, const QString &p_qsActions ) throw()
 {

@@ -17,7 +17,8 @@ HEADERS = ../../qtframework/severity.h \
     pattern.h \
     action.h \
     outputcreator.h \
-    countaction.h
+    countaction.h \
+    batchanalyser.h
 SOURCES = ../../qtframework/logger.cpp \
     ../../qtframework/consolewriter.cpp \
     ../../qtframework/logmessage.cpp \
@@ -32,7 +33,8 @@ SOURCES = ../../qtframework/logger.cpp \
     pattern.cpp \
     action.cpp \
     outputcreator.cpp \
-    countaction.cpp
+    countaction.cpp \
+    batchanalyser.cpp
 DESTDIR = ..
 QT -= gui
 QT += xml

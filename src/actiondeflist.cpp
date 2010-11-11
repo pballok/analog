@@ -9,12 +9,11 @@ cActionDefList::cActionDefList( const QString &p_qsActionDefFile, const QString 
 {
     cTracer  obTracer( &g_obLogger, "cActionDefList::cActionDefList", p_qsActionDefFile.toStdString() );
 
-    m_qsSchemaFileName = p_qsSchemaFile;
     m_poActionsDoc = new QDomDocument( "actions" );
 
     try
     {
-        validateActionDef( p_qsActionDefFile );
+        validateActionDef( p_qsActionDefFile, p_qsSchemaFile );
         parseActionDef();
     }
     catch( cSevException &e )
@@ -74,7 +73,7 @@ cTimeStampPart::teTimeStampPart cActionDefList::timeStampPart( const unsigned in
         return m_poTimeStampParts[p_uiIndex];
 }
 
-void cActionDefList::validateActionDef( const QString &p_qsActionDefFile ) throw( cSevException )
+void cActionDefList::validateActionDef( const QString &p_qsActionDefFile, const QString &p_qsSchemaFile ) throw( cSevException )
 {
     cTracer  obTracer( &g_obLogger, "cActionList::validateActionDef", p_qsActionDefFile.toStdString() );
 
@@ -88,18 +87,18 @@ void cActionDefList::validateActionDef( const QString &p_qsActionDefFile ) throw
         }
 
         QXmlSchema obSchema;
-        obSchema.load( m_qsSchemaFileName );
+        obSchema.load( p_qsSchemaFile );
 
         if( !obSchema.isValid() )
         {
-            throw cSevException( cSeverity::ERROR, QString( "Schema %1 is not valid" ).arg( m_qsSchemaFileName ).toStdString() );
+            throw cSevException( cSeverity::ERROR, QString( "Schema %1 is not valid" ).arg( p_qsSchemaFile ).toStdString() );
         }
 
         QXmlSchemaValidator obValidator( obSchema );
         if( !obValidator.validate( &obActionsFile, QUrl::fromLocalFile( p_qsActionDefFile ) ) )
         {
             throw cSevException( cSeverity::ERROR,
-                                 QString( "Action definition file %1 is not valid according to Schema %2" ).arg( p_qsActionDefFile ).arg( m_qsSchemaFileName ).toStdString() );
+                                 QString( "Action definition file %1 is not valid according to Schema %2" ).arg( p_qsActionDefFile ).arg( p_qsSchemaFile ).toStdString() );
         }
 
         QString      qsErrorMsg  = "";
