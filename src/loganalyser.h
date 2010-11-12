@@ -1,5 +1,5 @@
-#ifndef LOGANALYZER_H
-#define LOGANALYZER_H
+#ifndef LOGANALYSER_H
+#define LOGANALYSER_H
 
 #include <QString>
 #include <map>
@@ -11,7 +11,7 @@
 #include "outputcreator.h"
 #include "action.h"
 
-class cLogAnalyzer
+class cLogAnalyser
 {
 public:
     typedef struct
@@ -26,10 +26,10 @@ public:
     typedef multimap<QString, tsFoundPattern>   tmFoundPatternList;
     typedef tmFoundPatternList::const_iterator  tiFoundPatternList;
 
-    cLogAnalyzer( const QString &p_qsPrefix, const QString &p_qsFiles, const QString &p_qsActions ) throw();
-    ~cLogAnalyzer() throw();
+    cLogAnalyser( const QString &p_qsPrefix, const QString &p_qsFiles, const QString &p_qsActions ) throw();
+    ~cLogAnalyser() throw();
 
-    void analyze() throw( cSevException );
+    void analyse() throw( cSevException );
 
 private:
     cLogDataSource      *m_poDataSource;
@@ -44,4 +44,4 @@ private:
     void identifySingleLinerActions() throw();
 };
 
-#endif // LOGANALYZER_H
+#endif // LOGANALYSER_H

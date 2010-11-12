@@ -11,7 +11,7 @@ elementFormDefault="qualified">
           <xs:complexType>
             <xs:attribute name="name"        type="xs:string"  use="required"/>
             <xs:attribute name="dir_prefix"  type="xs:string"  use="required"/>
-            <xs:attribute name="filenames"   type="xs:string"  use="required"/>
+            <xs:attribute name="files"       type="xs:string"  use="required"/>
             <xs:attribute name="action_def"  type="xs:string"  use="required"/>
           </xs:complexType>
         </xs:element>

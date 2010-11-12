@@ -3,7 +3,7 @@
 #include <stdio.h>
 
 #include "lara.h"
-#include "loganalyzer.h"
+#include "loganalyser.h"
 #include "outputcreator.h"
 
 const unsigned long long  g_ulMSecPerYear   = 32140800000;
@@ -13,7 +13,7 @@ const unsigned long long  g_ulMSecPerHour   = 3600000;
 const unsigned long long  g_ulMSecPerMinute = 60000;
 const unsigned long long  g_ulMSecPerSec    = 1000;
 
-cLogAnalyzer::cLogAnalyzer( const QString &p_qsPrefix, const QString &p_qsFiles, const QString &p_qsActions ) throw()
+cLogAnalyser::cLogAnalyser( const QString &p_qsPrefix, const QString &p_qsFiles, const QString &p_qsActions ) throw()
 {
     cTracer obTracer( &g_obLogger, "cLogAnalyser::cLogAnalyser",
                       QString( "prefix: \"%1\", files: \"%2\", actions:\"%3\"" ).arg( p_qsPrefix ).arg( p_qsFiles ).arg( p_qsActions ).toStdString() );
@@ -24,12 +24,12 @@ cLogAnalyzer::cLogAnalyzer( const QString &p_qsPrefix, const QString &p_qsFiles,
     qsInputDir = QDir::cleanPath( qsInputDir );
     m_poDataSource    = new cLogDataSource( qsInputDir, p_qsFiles );
 
-    m_poActionDefList = new cActionDefList( p_qsActions, "data/lara.xsd" );
+    m_poActionDefList = new cActionDefList( p_qsActions, "data/lara_actions.xsd" );
 
     m_poOutputCreator = new cOutputCreator( m_poDataSource, &m_maActions, p_qsPrefix );
 }
 
-cLogAnalyzer::~cLogAnalyzer() throw()
+cLogAnalyser::~cLogAnalyser() throw()
 {
     cTracer  obTracer( &g_obLogger, "cLogAnalyser::~cLogAnalyser" );
 
@@ -38,9 +38,9 @@ cLogAnalyzer::~cLogAnalyzer() throw()
     delete m_poDataSource;
 }
 
-void cLogAnalyzer::analyze() throw( cSevException )
+void cLogAnalyser::analyse() throw( cSevException )
 {
-    cTracer  obTracer( &g_obLogger, "cLogAnalyser::analyze" );
+    cTracer  obTracer( &g_obLogger, "cLogAnalyser::analyse" );
 
     QStringList slLogFiles = m_poDataSource->logFileList();
     for( int i = 0; i < slLogFiles.size(); i++ )
@@ -54,7 +54,7 @@ void cLogAnalyzer::analyze() throw( cSevException )
     m_poOutputCreator->generateActionSummary();
 }
 
-void cLogAnalyzer::findPatterns( const unsigned int p_uiFileId, const QString &p_qsFileName ) throw( cSevException )
+void cLogAnalyser::findPatterns( const unsigned int p_uiFileId, const QString &p_qsFileName ) throw( cSevException )
 {
     cTracer  obTracer( &g_obLogger, "cLogAnalyser::findPatterns", p_qsFileName.toStdString() );
 
@@ -81,7 +81,7 @@ void cLogAnalyzer::findPatterns( const unsigned int p_uiFileId, const QString &p
     obTracer << "Found " << m_maFoundPatterns.size() << " patterns";
 }
 
-void cLogAnalyzer::storePattern( const unsigned int p_uiFileId, cActionDefList::tiPatternList p_itPattern, const QString &p_qsLogLine,
+void cLogAnalyser::storePattern( const unsigned int p_uiFileId, cActionDefList::tiPatternList p_itPattern, const QString &p_qsLogLine,
                                  tmFoundPatternList::iterator  *p_poInsertPos ) throw( cSevException )
 {
     cTracer  obTracer( &g_obLogger, "cLogAnalyser::storePattern", p_itPattern->name().toStdString() );
@@ -131,7 +131,7 @@ void cLogAnalyzer::storePattern( const unsigned int p_uiFileId, cActionDefList::
     *p_poInsertPos = m_maFoundPatterns.insert( *p_poInsertPos, pair<QString, tsFoundPattern>( p_itPattern->name(), suFoundPattern ) );
 }
 
-void cLogAnalyzer::identifySingleLinerActions() throw()
+void cLogAnalyser::identifySingleLinerActions() throw()
 {
     cTracer  obTracer( &g_obLogger, "cLogAnalyser::identifySingleLinerActions" );
 

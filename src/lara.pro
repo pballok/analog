@@ -9,7 +9,7 @@ HEADERS = ../../qtframework/severity.h \
     ../../qtframework/tracer.h \
     lara.h \
     preferences.h \
-    loganalyzer.h \
+    loganalyser.h \
     logdatasource.h \
     actiondefsingleliner.h \
     actiondeflist.h \
@@ -25,7 +25,7 @@ SOURCES = ../../qtframework/logger.cpp \
     ../../qtframework/tracer.cpp \
     preferences.cpp \
     main.cpp \
-    loganalyzer.cpp \
+    loganalyser.cpp \
     logdatasource.cpp \
     actiondefsingleliner.cpp \
     actiondeflist.cpp \

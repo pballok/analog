@@ -4,6 +4,7 @@
 
 #include "lara.h"
 #include "batchanalyser.h"
+#include "loganalyser.h"
 
 cBatchAnalyser::cBatchAnalyser( const QString &p_qsBatchDefFile, const QString &p_qsSchemaFile ) throw()
 {
@@ -32,7 +33,12 @@ cBatchAnalyser::~cBatchAnalyser()
 
 void cBatchAnalyser::analyse() throw()
 {
-
+    for( unsigned int i = 0; i < m_veAnalyseDefs.size(); i++ )
+    {
+        g_obLogger << cSeverity::INFO << "Analysing " << m_veAnalyseDefs.at( i ).qsName.toStdString();
+        cLogAnalyser  obAnalyser( m_veAnalyseDefs.at( i ).qsDirPrefix, m_veAnalyseDefs.at( i ).qsFiles, m_veAnalyseDefs.at( i ).qsActionDefFile );
+        obAnalyser.analyse();
+    }
 }
 
 void cBatchAnalyser::validateBatchDef( const QString &p_qsBatchDefFile, const QString &p_qsSchemaFile ) throw( cSevException )
@@ -94,6 +100,12 @@ void cBatchAnalyser::parseBatchDef() throw( cSevException )
     {
         if( obElem.tagName() == "analysis" )
         {
+            tsAnalyseDefinition  suAnalyseDef;
+            suAnalyseDef.qsName          = obElem.attribute( "name", "" );
+            suAnalyseDef.qsFiles         = obElem.attribute( "files", "" );
+            suAnalyseDef.qsDirPrefix     = obElem.attribute( "dir_prefix", "" );
+            suAnalyseDef.qsActionDefFile = obElem.attribute( "action_def", "" );
+            m_veAnalyseDefs.push_back( suAnalyseDef );
             continue;
         }
     }
