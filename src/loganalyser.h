@@ -8,7 +8,6 @@
 
 #include "logdatasource.h"
 #include "actiondeflist.h"
-#include "outputcreator.h"
 #include "action.h"
 
 class cLogAnalyser
@@ -34,7 +33,6 @@ public:
 private:
     cLogDataSource      *m_poDataSource;
     cActionDefList      *m_poActionDefList;
-    cOutputCreator      *m_poOutputCreator;
     tmFoundPatternList   m_maFoundPatterns;
     tmActionList         m_maActions;
 

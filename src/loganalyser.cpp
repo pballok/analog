@@ -4,7 +4,6 @@
 
 #include "lara.h"
 #include "loganalyser.h"
-#include "outputcreator.h"
 
 const unsigned long long  g_ulMSecPerYear   = 32140800000;
 const unsigned long long  g_ulMSecPerMonth  = 2678400000;
@@ -25,15 +24,12 @@ cLogAnalyser::cLogAnalyser( const QString &p_qsPrefix, const QString &p_qsFiles,
     m_poDataSource    = new cLogDataSource( qsInputDir, p_qsFiles );
 
     m_poActionDefList = new cActionDefList( p_qsActions, "data/lara_actions.xsd" );
-
-    m_poOutputCreator = new cOutputCreator( m_poDataSource, &m_maActions, p_qsPrefix );
 }
 
 cLogAnalyser::~cLogAnalyser() throw()
 {
     cTracer  obTracer( &g_obLogger, "cLogAnalyser::~cLogAnalyser" );
 
-    delete m_poOutputCreator;
     delete m_poActionDefList;
     delete m_poDataSource;
 }
@@ -49,9 +45,6 @@ void cLogAnalyser::analyse() throw( cSevException )
     }
 
     identifySingleLinerActions();
-
-    m_poOutputCreator->countActions();
-    m_poOutputCreator->generateActionSummary();
 }
 
 void cLogAnalyser::findPatterns( const unsigned int p_uiFileId, const QString &p_qsFileName ) throw( cSevException )
@@ -76,7 +69,6 @@ void cLogAnalyser::findPatterns( const unsigned int p_uiFileId, const QString &p
 
         pclose( poGrepOutput );
     }
-
 
     obTracer << "Found " << m_maFoundPatterns.size() << " patterns";
 }
@@ -163,5 +155,5 @@ void cLogAnalyser::identifySingleLinerActions() throw()
         }
     }
 
-    obTracer << "Found " << m_maActions.size() << " actions";
+    obTracer << "Found " << m_maActions.size() << " actions so far";
 }

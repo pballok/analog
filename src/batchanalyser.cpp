@@ -39,6 +39,9 @@ void cBatchAnalyser::analyse() throw()
         cLogAnalyser  obAnalyser( m_veAnalyseDefs.at( i ).qsDirPrefix, m_veAnalyseDefs.at( i ).qsFiles, m_veAnalyseDefs.at( i ).qsActionDefFile );
         obAnalyser.analyse();
     }
+
+//    m_poOutputCreator->countActions();
+//    m_poOutputCreator->generateActionSummary();
 }
 
 void cBatchAnalyser::validateBatchDef( const QString &p_qsBatchDefFile, const QString &p_qsSchemaFile ) throw( cSevException )

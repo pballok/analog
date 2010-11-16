@@ -39,7 +39,7 @@ private:
     tmActionCapturedTexts    m_maCapturedTexts;
 };
 
-typedef std::multimap<QString, cAction>        tmActionList;
+typedef std::multimap<QString, cAction>       tmActionList;
 typedef tmActionList::const_iterator           tiActionList;
 
 #endif // ACTION_H

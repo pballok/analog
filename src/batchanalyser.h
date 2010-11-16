@@ -4,6 +4,7 @@
 #include <QString>
 #include <QDomDocument>
 #include <vector>
+#include <outputcreator.h>
 
 class cBatchAnalyser
 {
@@ -27,6 +28,7 @@ public:
 private:
     QDomDocument   *m_poBatchDoc;
     tvAnalyseDefs   m_veAnalyseDefs;
+    cOutputCreator *m_poOC;
 
     void validateBatchDef( const QString &p_qsBatchDefFile, const QString &p_qsSchemaFile ) throw( cSevException );
     void parseBatchDef() throw( cSevException );

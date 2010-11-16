@@ -6,12 +6,10 @@
 #include "lara.h"
 #include "outputcreator.h"
 
-cOutputCreator::cOutputCreator( cLogDataSource *p_poDataSource, tmActionList *p_poActionList, const QString &p_qsDirPrefix )
+cOutputCreator::cOutputCreator( const QString &p_qsDirPrefix )
 {
     cTracer  obTracer( &g_obLogger, "cOutputCreator::cOutputCreator" );
 
-    m_poDataSource = p_poDataSource;
-    m_poActionList = p_poActionList;
     m_qsOutDir     = QDir::cleanPath( g_poPrefs->outputDir() + "/" + p_qsDirPrefix );
 }
 
@@ -25,11 +23,27 @@ cOutputCreator::~cOutputCreator()
     }
 }
 
+unsigned int cOutputCreator::fileId( const QString & p_qsFileName ) throw( cSevException )
+{
+    cTracer  obTracer( &g_obLogger, "cOutputCreator::fileId( " + p_qsFileName.toStdString() + " )" );
+
+    int inIndex = m_slInputFiles.indexOf( p_qsFileName );
+    if( inIndex == -1 )
+    {
+        m_slInputFiles.append( p_qsFileName );
+        inIndex = m_slInputFiles.size() - 1;
+    }
+
+    obTracer << inIndex;
+
+    return inIndex;
+}
+
 void cOutputCreator::countActions() throw()
 {
     cTracer  obTracer( &g_obLogger, "cOutputCreator::countActions" );
 
-    for( tiActionList itAction = m_poActionList->begin(); itAction != m_poActionList->end(); itAction++ )
+    for( tiActionList itAction = m_obActionList.begin(); itAction != m_obActionList.end(); itAction++ )
     {
         tsActionResCount  *poResCount = NULL;
         tiActionCountList  itResCount = m_maActionCounts.find( itAction->second.name() );
@@ -69,16 +83,15 @@ void cOutputCreator::generateActionSummary() const throw( cSevException )
     obActionSummaryFile.write( QDateTime::currentDateTime().toString( "dd-MMM-yyyy hh:mm:ss" ).toAscii() + "\n\n" );
 
     obActionSummaryFile.write( "Input files:\n" );
-    QStringList slInputFiles = m_poDataSource->origFileList();
-    for( int i = 0; i < slInputFiles.size(); i++ )
+    for( int i = 0; i < m_slInputFiles.size(); i++ )
     {
         obActionSummaryFile.write( QString::number( i ).toAscii() + " " );
-        obActionSummaryFile.write( slInputFiles.at( i ).toAscii() + "\n" );
+        obActionSummaryFile.write( m_slInputFiles.at( i ).toAscii() + "\n" );
     }
     obActionSummaryFile.write( "\n" );
 
     obActionSummaryFile.write( "Identified Actions:\n" );
-    for( tiActionList itAction = m_poActionList->begin(); itAction != m_poActionList->end(); itAction++ )
+    for( tiActionList itAction = m_obActionList.begin(); itAction != m_obActionList.end(); itAction++ )
     {
         obActionSummaryFile.write( itAction->second.timeStamp().toAscii() + " " );
         obActionSummaryFile.write( itAction->second.name().toAscii() + " " );
@@ -89,7 +102,7 @@ void cOutputCreator::generateActionSummary() const throw( cSevException )
         {
             obActionSummaryFile.write( " " + itCapturedText->first.toAscii() + "=\"" + itCapturedText->second.toAscii() + "\"" );
         }
-        obActionSummaryFile.write( " " + slInputFiles.at( itAction->second.fileId() ).toAscii() + ":" );
+        obActionSummaryFile.write( " " + m_slInputFiles.at( itAction->second.fileId() ).toAscii() + ":" );
         obActionSummaryFile.write( QString::number( itAction->second.lineNum() ).toAscii() + "\n" );
     }
 

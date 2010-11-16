@@ -27,7 +27,7 @@ int main( int argc, char *argv[] )
     cConsoleWriter  obConsoleWriter;
     g_obLogger.registerWriter( &obConsoleWriter );
 
-    g_poPrefs  = new cPreferences( "lara", "0.1.0", &obConsoleWriter );
+    g_poPrefs  = new cPreferences( "lara", "0.2.0", &obConsoleWriter );
 
     g_obLogger << cSeverity::INFO
                << g_poPrefs->appName().toStdString() << " Version " << g_poPrefs->version().toStdString() << " started."
