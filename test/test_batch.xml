@@ -2,7 +2,9 @@
 
 <lara_batch>
 
-    <analysis name="Compressed Logs" dir_prefix="multiple_files" files="test*.gz" action_def="test/test_actions.xml"/>
-    <analysis name="Uncompressed Logs" dir_prefix="multiple_files" files="test*.log" action_def="test/test_actions.xml"/>
+    <analysis name="Multiple Files" dir_prefix="multiple_files">
+        <input_log files="test*.gz" action_def="test/test_actions.xml"/>
+        <input_log files="test*.log" action_def="test/test_actions.xml"/>
+    </analysis>
 
 </lara_batch>

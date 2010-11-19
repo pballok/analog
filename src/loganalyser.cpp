@@ -70,7 +70,7 @@ void cLogAnalyser::findPatterns( const unsigned int p_uiFileId, const QString &p
         pclose( poGrepOutput );
     }
 
-    obTracer << "Found " << m_maFoundPatterns.size() << " patterns";
+    obTracer << "Found " << m_maFoundPatterns.size() << " patterns so far";
 }
 
 void cLogAnalyser::storePattern( const unsigned int p_uiFileId, cActionDefList::tiPatternList p_itPattern, const QString &p_qsLogLine,
@@ -155,5 +155,5 @@ void cLogAnalyser::identifySingleLinerActions() throw()
         }
     }
 
-    obTracer << "Found " << m_maActions.size() << " actions so far";
+    obTracer << "Found " << m_maActions.size() << " SingleLiner actions";
 }

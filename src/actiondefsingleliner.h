@@ -11,7 +11,7 @@ class cActionDefSingleLiner : public cActionDef
 public:
     cActionDefSingleLiner();
     cActionDefSingleLiner( const QDomElement *p_poElem );
-    ~cActionDefSingleLiner();
+    virtual ~cActionDefSingleLiner();
 
     QString                  pattern() const throw();
     cActionResult::teResult  result()  const throw();

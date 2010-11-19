@@ -35,9 +35,14 @@ void cBatchAnalyser::analyse() throw()
 {
     for( unsigned int i = 0; i < m_veAnalyseDefs.size(); i++ )
     {
-        g_obLogger << cSeverity::INFO << "Analysing " << m_veAnalyseDefs.at( i ).qsName.toStdString();
-        cLogAnalyser  obAnalyser( m_veAnalyseDefs.at( i ).qsDirPrefix, m_veAnalyseDefs.at( i ).qsFiles, m_veAnalyseDefs.at( i ).qsActionDefFile );
-        obAnalyser.analyse();
+        tsAnalyseDefinition  suAnalysis = m_veAnalyseDefs.at( i );
+        g_obLogger << cSeverity::INFO << "Starting to analyse " << suAnalysis.qsName.toStdString();
+        for( unsigned int l = 0; l < suAnalysis.veInputLogs.size(); l++ )
+        {
+            cLogAnalyser  obAnalyser( suAnalysis.qsDirPrefix, suAnalysis.veInputLogs.at( l ).qsFiles, suAnalysis.veInputLogs.at( l ).qsActionDefFile );
+            obAnalyser.analyse();
+        }
+        g_obLogger << cSeverity::INFO << "Finished analysing " << suAnalysis.qsName.toStdString();
     }
 
 //    m_poOutputCreator->countActions();
@@ -105,9 +110,16 @@ void cBatchAnalyser::parseBatchDef() throw( cSevException )
         {
             tsAnalyseDefinition  suAnalyseDef;
             suAnalyseDef.qsName          = obElem.attribute( "name", "" );
-            suAnalyseDef.qsFiles         = obElem.attribute( "files", "" );
             suAnalyseDef.qsDirPrefix     = obElem.attribute( "dir_prefix", "" );
-            suAnalyseDef.qsActionDefFile = obElem.attribute( "action_def", "" );
+            for( QDomElement obLogElem = obElem.firstChildElement( "input_log" );
+                 !obLogElem.isNull();
+                 obLogElem = obLogElem.nextSiblingElement( "input_log" ) )
+            {
+                tsInputLogDefinition suInputLog;
+                suInputLog.qsFiles = obLogElem.attribute( "files", "" );
+                suInputLog.qsActionDefFile = obLogElem.attribute( "action_def" );
+                suAnalyseDef.veInputLogs.push_back( suInputLog );
+            }
             m_veAnalyseDefs.push_back( suAnalyseDef );
             continue;
         }
