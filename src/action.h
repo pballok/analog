@@ -40,6 +40,6 @@ private:
 };
 
 typedef std::multimap<QString, cAction>       tmActionList;
-typedef tmActionList::const_iterator           tiActionList;
+typedef tmActionList::const_iterator          tiActionList;
 
 #endif // ACTION_H

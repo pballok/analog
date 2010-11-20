@@ -5,6 +5,7 @@
 #include "lara.h"
 #include "batchanalyser.h"
 #include "loganalyser.h"
+#include "outputcreator.h"
 
 cBatchAnalyser::cBatchAnalyser( const QString &p_qsBatchDefFile, const QString &p_qsSchemaFile ) throw()
 {
@@ -37,16 +38,22 @@ void cBatchAnalyser::analyse() throw()
     {
         tsAnalyseDefinition  suAnalysis = m_veAnalyseDefs.at( i );
         g_obLogger << cSeverity::INFO << "Starting to analyse " << suAnalysis.qsName.toStdString();
+
+        cOutputCreator  *poOC = new cOutputCreator( suAnalysis.qsDirPrefix );
+
         for( unsigned int l = 0; l < suAnalysis.veInputLogs.size(); l++ )
         {
-            cLogAnalyser  obAnalyser( suAnalysis.qsDirPrefix, suAnalysis.veInputLogs.at( l ).qsFiles, suAnalysis.veInputLogs.at( l ).qsActionDefFile );
+            cLogAnalyser  obAnalyser( suAnalysis.qsDirPrefix, suAnalysis.veInputLogs.at( l ).qsFiles, suAnalysis.veInputLogs.at( l ).qsActionDefFile, poOC );
             obAnalyser.analyse();
+
         }
+
+        poOC->generateActionSummary();
+
+        delete poOC;
+
         g_obLogger << cSeverity::INFO << "Finished analysing " << suAnalysis.qsName.toStdString();
     }
-
-//    m_poOutputCreator->countActions();
-//    m_poOutputCreator->generateActionSummary();
 }
 
 void cBatchAnalyser::validateBatchDef( const QString &p_qsBatchDefFile, const QString &p_qsSchemaFile ) throw( cSevException )

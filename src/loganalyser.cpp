@@ -12,7 +12,7 @@ const unsigned long long  g_ulMSecPerHour   = 3600000;
 const unsigned long long  g_ulMSecPerMinute = 60000;
 const unsigned long long  g_ulMSecPerSec    = 1000;
 
-cLogAnalyser::cLogAnalyser( const QString &p_qsPrefix, const QString &p_qsFiles, const QString &p_qsActions ) throw()
+cLogAnalyser::cLogAnalyser( const QString &p_qsPrefix, const QString &p_qsFiles, const QString &p_qsActions, cOutputCreator *p_poOC ) throw()
 {
     cTracer obTracer( &g_obLogger, "cLogAnalyser::cLogAnalyser",
                       QString( "prefix: \"%1\", files: \"%2\", actions:\"%3\"" ).arg( p_qsPrefix ).arg( p_qsFiles ).arg( p_qsActions ).toStdString() );
@@ -24,6 +24,8 @@ cLogAnalyser::cLogAnalyser( const QString &p_qsPrefix, const QString &p_qsFiles,
     m_poDataSource    = new cLogDataSource( qsInputDir, p_qsFiles );
 
     m_poActionDefList = new cActionDefList( p_qsActions, "data/lara_actions.xsd" );
+
+    m_poOC = p_poOC;
 }
 
 cLogAnalyser::~cLogAnalyser() throw()
@@ -41,15 +43,17 @@ void cLogAnalyser::analyse() throw( cSevException )
     QStringList slLogFiles = m_poDataSource->logFileList();
     for( int i = 0; i < slLogFiles.size(); i++ )
     {
-        findPatterns( i, slLogFiles.at( i ) );
+        findPatterns( slLogFiles.at( i ) );
     }
 
     identifySingleLinerActions();
 }
 
-void cLogAnalyser::findPatterns( const unsigned int p_uiFileId, const QString &p_qsFileName ) throw( cSevException )
+void cLogAnalyser::findPatterns( const QString &p_qsFileName ) throw( cSevException )
 {
     cTracer  obTracer( &g_obLogger, "cLogAnalyser::findPatterns", p_qsFileName.toStdString() );
+
+    unsigned int uiFileId = m_poOC->fileId( p_qsFileName );
 
     for( cActionDefList::tiPatternList itPattern = m_poActionDefList->patternBegin();
          itPattern != m_poActionDefList->patternEnd();
@@ -64,7 +68,7 @@ void cLogAnalyser::findPatterns( const unsigned int p_uiFileId, const QString &p
         while( !feof( poGrepOutput ) )
         {
             if( fgets( poLogLine, 1000, poGrepOutput ) )
-                storePattern( p_uiFileId, itPattern, QString::fromAscii( poLogLine ), &itLastPattern );
+                storePattern( uiFileId, itPattern, QString::fromAscii( poLogLine ), &itLastPattern );
         }
 
         pclose( poGrepOutput );
@@ -131,8 +135,6 @@ void cLogAnalyser::identifySingleLinerActions() throw()
          itSingleLiner != m_poActionDefList->singleLinerEnd();
          itSingleLiner++ )
     {
-        tmActionList::iterator  itLastAction = m_maActions.begin();
-
         pair<tiFoundPatternList,tiFoundPatternList> paFoundActionPatterns = m_maFoundPatterns.equal_range( itSingleLiner->pattern() );
         for( tiFoundPatternList  itFoundPattern = paFoundActionPatterns.first;
              itFoundPattern != paFoundActionPatterns.second;
@@ -151,9 +153,7 @@ void cLogAnalyser::identifySingleLinerActions() throw()
                 }
             }
 
-            itLastAction = m_maActions.insert( itLastAction, pair<QString, cAction>( itSingleLiner->name(), obAction ) );
+            m_poOC->addAction( &obAction );
         }
     }
-
-    obTracer << "Found " << m_maActions.size() << " SingleLiner actions";
 }

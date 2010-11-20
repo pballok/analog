@@ -15,8 +15,8 @@ public:
     ~cOutputCreator();
 
     unsigned int fileId( const QString & p_qsFileName ) throw( cSevException );
-    void         countActions()                         throw();
-    void         generateActionSummary()                const throw( cSevException );
+    void         addAction( cAction *m_poAction )       throw( cSevException );
+    void         generateActionSummary()                throw( cSevException );
 
 private:
     typedef struct
@@ -32,6 +32,8 @@ private:
 
     QString             m_qsOutDir;
     QStringList         m_slInputFiles;
+
+    void         countActions()                         throw();
 };
 
 #endif // OUTPUTCREATOR_H

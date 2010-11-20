@@ -8,7 +8,7 @@
 
 #include "logdatasource.h"
 #include "actiondeflist.h"
-#include "action.h"
+#include "outputcreator.h"
 
 class cLogAnalyser
 {
@@ -25,7 +25,7 @@ public:
     typedef multimap<QString, tsFoundPattern>   tmFoundPatternList;
     typedef tmFoundPatternList::const_iterator  tiFoundPatternList;
 
-    cLogAnalyser( const QString &p_qsPrefix, const QString &p_qsFiles, const QString &p_qsActions ) throw();
+    cLogAnalyser( const QString &p_qsPrefix, const QString &p_qsFiles, const QString &p_qsActions, cOutputCreator *p_poOC ) throw();
     ~cLogAnalyser() throw();
 
     void analyse() throw( cSevException );
@@ -34,9 +34,9 @@ private:
     cLogDataSource      *m_poDataSource;
     cActionDefList      *m_poActionDefList;
     tmFoundPatternList   m_maFoundPatterns;
-    tmActionList         m_maActions;
+    cOutputCreator      *m_poOC;
 
-    void findPatterns( const unsigned int p_uiFileId, const QString &p_qsFileName ) throw( cSevException );
+    void findPatterns( const QString &p_qsFileName ) throw( cSevException );
     void storePattern( const unsigned int p_uiFileId, cActionDefList::tiPatternList p_itPattern,
                        const QString &p_qsLogLine, tmFoundPatternList::iterator  *p_poInsertPos ) throw( cSevException );
     void identifySingleLinerActions() throw();
