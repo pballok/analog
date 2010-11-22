@@ -41,7 +41,35 @@ unsigned int cOutputCreator::fileId( const QString & p_qsFileName ) throw( cSevE
 
 void cOutputCreator::addAction( cAction *m_poAction ) throw( cSevException )
 {
-    m_obActionList.insert( pair<QString, cAction>(m_poAction->name(), *m_poAction ) );
+    m_mmActionList.insert( pair<QString, cAction>(m_poAction->name(), *m_poAction ) );
+}
+
+void cOutputCreator::countActions( const QString &p_qsCountName,
+                                   const QString &p_qsActionName ) throw()
+{
+    cTracer  obTracer( &g_obLogger, "cOutputCreator::countActions" );
+
+/*
+    for( tiActionList itAction = m_obActionList.begin(); itAction != m_obActionList.end(); itAction++ )
+    {
+        tsActionResCount  *poResCount = NULL;
+        tiActionCountList  itResCount = m_maActionCounts.find( itAction->second.name() );
+        if( itResCount == m_maActionCounts.end() )
+        {
+            poResCount = new tsActionResCount;
+            poResCount->ulFailed = 0;
+            poResCount->ulOk     = 0;
+            m_maActionCounts.insert( pair<QString, tsActionResCount*>( itAction->second.name(), poResCount ) );
+        }
+        else
+        {
+            poResCount = itResCount->second;
+        }
+
+        if( itAction->second.result() == cActionResult::OK ) poResCount->ulOk++;
+        else poResCount->ulFailed++;
+    }
+    */
 }
 
 void cOutputCreator::generateActionSummary() throw( cSevException )
@@ -70,7 +98,7 @@ void cOutputCreator::generateActionSummary() throw( cSevException )
     obActionSummaryFile.write( "\n" );
 
     obActionSummaryFile.write( "Identified Actions:\n" );
-    for( tiActionList itAction = m_obActionList.begin(); itAction != m_obActionList.end(); itAction++ )
+    for( tiActionList itAction = m_mmActionList.begin(); itAction != m_mmActionList.end(); itAction++ )
     {
         obActionSummaryFile.write( itAction->second.timeStamp().toAscii() + " " );
         obActionSummaryFile.write( itAction->second.name().toAscii() + " " );
@@ -87,8 +115,6 @@ void cOutputCreator::generateActionSummary() throw( cSevException )
 
     obActionSummaryFile.write( "\n" );
 
-    countActions();
-
     obActionSummaryFile.write( "Action Counts:\n" );
     for( tiActionCountList itAction = m_maActionCounts.begin(); itAction != m_maActionCounts.end(); itAction++ )
     {
@@ -101,29 +127,4 @@ void cOutputCreator::generateActionSummary() throw( cSevException )
 
     obActionSummaryFile.flush();
     obActionSummaryFile.close();
-}
-
-void cOutputCreator::countActions() throw()
-{
-    cTracer  obTracer( &g_obLogger, "cOutputCreator::countActions" );
-
-    for( tiActionList itAction = m_obActionList.begin(); itAction != m_obActionList.end(); itAction++ )
-    {
-        tsActionResCount  *poResCount = NULL;
-        tiActionCountList  itResCount = m_maActionCounts.find( itAction->second.name() );
-        if( itResCount == m_maActionCounts.end() )
-        {
-            poResCount = new tsActionResCount;
-            poResCount->ulFailed = 0;
-            poResCount->ulOk     = 0;
-            m_maActionCounts.insert( pair<QString, tsActionResCount*>( itAction->second.name(), poResCount ) );
-        }
-        else
-        {
-            poResCount = itResCount->second;
-        }
-
-        if( itAction->second.result() == cActionResult::OK ) poResCount->ulOk++;
-        else poResCount->ulFailed++;
-    }
 }
