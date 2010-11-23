@@ -38,4 +38,8 @@
         <action name="NEW_TARGET"/>
     </count_action>
 
+    <count_action name="nbGrenades">
+        <action name="HOLY_HAND_GRENADE"/>
+    </count_action>
+
 </lara_actions>

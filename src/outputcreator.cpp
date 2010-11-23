@@ -47,29 +47,35 @@ void cOutputCreator::addAction( cAction *m_poAction ) throw( cSevException )
 void cOutputCreator::countActions( const QString &p_qsCountName,
                                    const QString &p_qsActionName ) throw()
 {
-    cTracer  obTracer( &g_obLogger, "cOutputCreator::countActions" );
+    cTracer  obTracer( &g_obLogger, "cOutputCreator::countActions",
+                       QString( "CountName: \"%1\" ActionName: \"%2\"" ).arg( p_qsCountName ).arg( p_qsActionName ).toStdString() );
 
-/*
-    for( tiActionList itAction = m_obActionList.begin(); itAction != m_obActionList.end(); itAction++ )
+    tsActionResCount *poResCount = new tsActionResCount;
+    poResCount->ulFailed = 0;
+    poResCount->ulOk = 0;
+
+    pair<tiActionList, tiActionList> paActionsToCount = m_mmActionList.equal_range( p_qsActionName );
+    for( tiActionList itAction = paActionsToCount.first; itAction != paActionsToCount.second; itAction++ )
     {
-        tsActionResCount  *poResCount = NULL;
-        tiActionCountList  itResCount = m_maActionCounts.find( itAction->second.name() );
-        if( itResCount == m_maActionCounts.end() )
-        {
-            poResCount = new tsActionResCount;
-            poResCount->ulFailed = 0;
-            poResCount->ulOk     = 0;
-            m_maActionCounts.insert( pair<QString, tsActionResCount*>( itAction->second.name(), poResCount ) );
-        }
-        else
-        {
-            poResCount = itResCount->second;
-        }
-
         if( itAction->second.result() == cActionResult::OK ) poResCount->ulOk++;
         else poResCount->ulFailed++;
     }
-    */
+
+    tiActionCountList  itActionCount = m_maActionCounts.find( p_qsCountName );
+    if( itActionCount == m_maActionCounts.end() )
+    {
+        m_maActionCounts.insert( pair<QString, tsActionResCount*>( p_qsCountName, poResCount ) );
+
+        obTracer << QString( "Now Failed: %1 Now OK: %2" ).arg( poResCount->ulFailed ).arg( poResCount->ulOk ).toStdString();
+    }
+    else
+    {
+        tsActionResCount *poStoredResCount = itActionCount->second;
+        poStoredResCount->ulFailed += poResCount->ulFailed;
+        poStoredResCount->ulOk += poResCount->ulOk;
+
+        obTracer << QString( "Now Failed: %1 Now OK: %2 Total Failed: %3 Total OK: %4" ).arg( poResCount->ulFailed ).arg( poResCount->ulOk ).arg( poStoredResCount->ulFailed ).arg( poStoredResCount->ulOk ).toStdString();
+    }
 }
 
 void cOutputCreator::generateActionSummary() throw( cSevException )

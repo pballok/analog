@@ -47,6 +47,18 @@ void cLogAnalyser::analyse() throw( cSevException )
     }
 
     identifySingleLinerActions();
+
+    for( cActionDefList::tiCountActionList itCountAction = m_poActionDefList->countActionBegin();
+         itCountAction != m_poActionDefList->countActionEnd();
+         itCountAction++ )
+    {
+        for( cCountAction::tiActionsToCount itActionToCount = itCountAction->actionsToCountBegin();
+             itActionToCount != itCountAction->actionsToCountEnd();
+             itActionToCount++ )
+        {
+            m_poOC->countActions( itCountAction->name(), *itActionToCount );
+        }
+    }
 }
 
 void cLogAnalyser::findPatterns( const QString &p_qsFileName ) throw( cSevException )

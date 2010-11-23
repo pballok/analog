@@ -45,7 +45,6 @@ void cBatchAnalyser::analyse() throw()
         {
             cLogAnalyser  obAnalyser( suAnalysis.qsDirPrefix, suAnalysis.veInputLogs.at( l ).qsFiles, suAnalysis.veInputLogs.at( l ).qsActionDefFile, poOC );
             obAnalyser.analyse();
-
         }
 
         poOC->generateActionSummary();
