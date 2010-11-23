@@ -56,9 +56,11 @@ void cLogAnalyser::analyse() throw( cSevException )
              itActionToCount != itCountAction->actionsToCountEnd();
              itActionToCount++ )
         {
-            m_poOC->countActions( itCountAction->name(), *itActionToCount );
+            countActions( itCountAction->name(), *itActionToCount );
         }
     }
+
+    storeActions();
 }
 
 void cLogAnalyser::findPatterns( const QString &p_qsFileName ) throw( cSevException )
@@ -165,7 +167,40 @@ void cLogAnalyser::identifySingleLinerActions() throw()
                 }
             }
 
-            m_poOC->addAction( &obAction );
+            m_mmActionList.insert( pair<QString, cAction>(obAction.name(), obAction ) );
         }
+    }
+}
+
+void cLogAnalyser::countActions( const QString &p_qsCountName,
+                                 const QString &p_qsActionName ) throw()
+{
+    cTracer  obTracer( &g_obLogger, "cLogAnalyser::countActions",
+                       QString( "CountName: \"%1\" ActionName: \"%2\"" ).arg( p_qsCountName ).arg( p_qsActionName ).toStdString() );
+
+    unsigned long ulFailed = 0;
+    unsigned long ulOk     = 0;
+
+    pair<tiActionList, tiActionList> paActionsToCount = m_mmActionList.equal_range( p_qsActionName );
+    for( tiActionList itAction = paActionsToCount.first; itAction != paActionsToCount.second; itAction++ )
+    {
+        if( itAction->second.result() == cActionResult::OK ) ulOk++;
+        else ulFailed++;
+    }
+
+    m_poOC->addCountAction( p_qsCountName, ulOk, ulFailed );
+
+    obTracer << QString( "Ok: %1 Failed: %2" ).arg( ulOk ).arg( ulFailed ).toStdString();
+}
+
+void cLogAnalyser::storeActions() throw( cSevException )
+{
+    cTracer  obTracer( &g_obLogger, "cLogAnalyser::storeActions" );
+
+    for( tiActionList itAction = m_mmActionList.begin();
+         itAction != m_mmActionList.end();
+         itAction++ )
+    {
+        m_poOC->addAction( &(itAction->second) );
     }
 }

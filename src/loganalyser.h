@@ -8,6 +8,7 @@
 
 #include "logdatasource.h"
 #include "actiondeflist.h"
+#include "action.h"
 #include "outputcreator.h"
 
 class cLogAnalyser
@@ -34,12 +35,16 @@ private:
     cLogDataSource      *m_poDataSource;
     cActionDefList      *m_poActionDefList;
     tmFoundPatternList   m_maFoundPatterns;
+    tmActionList         m_mmActionList;
     cOutputCreator      *m_poOC;
 
     void findPatterns( const QString &p_qsFileName ) throw( cSevException );
     void storePattern( const unsigned int p_uiFileId, cActionDefList::tiPatternList p_itPattern,
                        const QString &p_qsLogLine, tmFoundPatternList::iterator  *p_poInsertPos ) throw( cSevException );
     void identifySingleLinerActions() throw();
+    void countActions( const QString &p_qsCountName,
+                       const QString &p_qsActionName ) throw();
+    void storeActions() throw( cSevException );
 };
 
 #endif // LOGANALYSER_H

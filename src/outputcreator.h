@@ -14,11 +14,12 @@ public:
     cOutputCreator( const QString &p_qsDirPrefix );
     ~cOutputCreator();
 
-    unsigned int fileId( const QString & p_qsFileName )        throw( cSevException );
-    void         addAction( cAction *m_poAction )              throw( cSevException );
-    void         countActions( const QString &p_qsCountName,
-                               const QString &p_qsActionName ) throw();
-    void         generateActionSummary()                       throw( cSevException );
+    unsigned int fileId( const QString & p_qsFileName )           throw( cSevException );
+    void         addAction( const cAction *m_poAction )           throw( cSevException );
+    void         addCountAction( const QString &p_qsCountName,
+                                 const unsigned long p_ulOk,
+                                 const unsigned long p_ulFailed ) throw();
+    void         generateActionSummary()                          throw( cSevException );
 
 private:
     typedef struct
