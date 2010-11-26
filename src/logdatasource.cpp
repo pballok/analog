@@ -133,7 +133,7 @@ QString cLogDataSource::gunzipFile( const QString &p_stFileName )
     cTracer  obTracer( &g_obLogger, "cLogDataSource::gunzipFile", p_stFileName.toStdString() );
 
     QString qsTempFileName = copyFile( p_stFileName );
-    QString qsCommand = "gunzip -q -f " + qsTempFileName;
+    QString qsCommand = "gzip -d -q -f " + qsTempFileName;
     if( system( qsCommand.toAscii() ) != 0 ) throw cSevException( cSeverity::ERROR, "Error in gunzip command" );
 
     qsTempFileName.chop( 3 );  // Remove the ".gz" from file-name
