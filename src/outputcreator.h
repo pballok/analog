@@ -3,6 +3,7 @@
 
 #include <QString>
 #include <QStringList>
+#include <map>
 #include <sevexception.h>
 
 #include "logdatasource.h"
@@ -19,19 +20,27 @@ public:
     void         addCountAction( const QString &p_qsCountName,
                                  const unsigned long p_ulOk,
                                  const unsigned long p_ulFailed ) throw();
-    void         generateActionSummary()                          throw( cSevException );
+    void         addAttribute( const QString &p_qsName,
+                               const QString &p_qsValue )         throw();
+    void         generateActionSummary()                          const throw( cSevException );
+    void         generateActionList()                             const throw( cSevException );
 
 private:
+
+    tmActionList        m_mmActionList;
+
     typedef struct
     {
         unsigned long ulOk;
         unsigned long ulFailed;
     } tsActionResCount;
-    typedef map<QString, tsActionResCount*>     tmActionCountList;
-    typedef tmActionCountList::const_iterator   tiActionCountList;
-
-    tmActionList        m_mmActionList;
+    typedef std::map<QString, tsActionResCount*> tmActionCountList;
+    typedef tmActionCountList::const_iterator    tiActionCountList;
     tmActionCountList   m_maActionCounts;
+
+    typedef std::map<QString,QString>            tmAttributes;
+    typedef tmAttributes::const_iterator         tiAttributes;
+    tmAttributes        m_maAttributes;
 
     QString             m_qsOutDir;
     QStringList         m_slInputFiles;

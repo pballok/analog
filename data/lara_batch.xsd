@@ -6,10 +6,15 @@ elementFormDefault="qualified">
     <xs:complexType>
 
       <xs:sequence>
-
         <xs:element name="analysis" minOccurs="1" maxOccurs="unbounded">
           <xs:complexType>
             <xs:sequence>
+              <xs:element name="attribute" minOccurs="0" maxOccurs="unbounded">
+                <xs:complexType>
+                  <xs:attribute name="name"   type="xs:string" use="required"/>
+                  <xs:attribute name="value"  type="xs:string" use="required"/>
+                </xs:complexType>
+              </xs:element>
               <xs:element name="input_log" minOccurs="1" maxOccurs="unbounded">
                 <xs:complexType>
                   <xs:attribute name="files"       type="xs:string"  use="required"/>
@@ -18,11 +23,11 @@ elementFormDefault="qualified">
               </xs:element>
             </xs:sequence>
             <xs:attribute name="name"        type="xs:string"  use="required"/>
-            <xs:attribute name="dir_prefix"  type="xs:string"  use="required"/>
           </xs:complexType>
         </xs:element>
-
       </xs:sequence>
+
+      <xs:attribute name="dir_prefix"  type="xs:string"  use="required"/>
 
     </xs:complexType>
   </xs:element>

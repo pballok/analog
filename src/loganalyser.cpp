@@ -5,6 +5,8 @@
 #include "lara.h"
 #include "loganalyser.h"
 
+using namespace std;
+
 const unsigned long long  g_ulMSecPerYear   = 32140800000LL;
 const unsigned long long  g_ulMSecPerMonth  = 2678400000LL;
 const unsigned long long  g_ulMSecPerDay    = 86400000LL;

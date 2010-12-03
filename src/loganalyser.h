@@ -23,8 +23,8 @@ public:
         tmActionAttribs     maCapturedAttribs;
     } tsFoundPattern;
 
-    typedef multimap<QString, tsFoundPattern>   tmFoundPatternList;
-    typedef tmFoundPatternList::const_iterator  tiFoundPatternList;
+    typedef std::multimap<QString, tsFoundPattern> tmFoundPatternList;
+    typedef tmFoundPatternList::const_iterator     tiFoundPatternList;
 
     cLogAnalyser( const QString &p_qsPrefix, const QString &p_qsFiles, const QString &p_qsActions, cOutputCreator *p_poOC ) throw();
     ~cLogAnalyser() throw();

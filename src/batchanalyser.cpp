@@ -7,6 +7,8 @@
 #include "loganalyser.h"
 #include "outputcreator.h"
 
+using namespace std;
+
 cBatchAnalyser::cBatchAnalyser( const QString &p_qsBatchDefFile, const QString &p_qsSchemaFile ) throw()
 {
     cTracer  obTracer( &g_obLogger, "cBatchAnalyser::cBatchAnalyser", p_qsBatchDefFile.toStdString() );
@@ -39,15 +41,24 @@ void cBatchAnalyser::analyse() throw()
         tsAnalyseDefinition  suAnalysis = m_veAnalyseDefs.at( i );
         g_obLogger << cSeverity::INFO << "Starting to analyse " << suAnalysis.qsName.toStdString();
 
-        cOutputCreator  *poOC = new cOutputCreator( suAnalysis.qsDirPrefix );
+        QString qsFullDirPrefix = m_qsDirPrefix + "/" + suAnalysis.qsName;
+        cOutputCreator  *poOC = new cOutputCreator( qsFullDirPrefix );
+
+        for( tiAttributes itAttrib = suAnalysis.maAttributes.begin();
+             itAttrib != suAnalysis.maAttributes.end();
+             itAttrib++ )
+        {
+            poOC->addAttribute( itAttrib->first, itAttrib->second );
+        }
 
         for( unsigned int l = 0; l < suAnalysis.veInputLogs.size(); l++ )
         {
-            cLogAnalyser  obAnalyser( suAnalysis.qsDirPrefix, suAnalysis.veInputLogs.at( l ).qsFiles, suAnalysis.veInputLogs.at( l ).qsActionDefFile, poOC );
+            cLogAnalyser  obAnalyser( qsFullDirPrefix, suAnalysis.veInputLogs.at( l ).qsFiles, suAnalysis.veInputLogs.at( l ).qsActionDefFile, poOC );
             obAnalyser.analyse();
         }
 
         poOC->generateActionSummary();
+        poOC->generateActionList();
 
         delete poOC;
 
@@ -108,26 +119,31 @@ void cBatchAnalyser::parseBatchDef() throw( cSevException )
 
     QDomElement obRootElement = m_poBatchDoc->documentElement();
 
-    for( QDomElement obElem = obRootElement.firstChildElement();
+    m_qsDirPrefix = obRootElement.attribute( "dir_prefix", "" );
+
+    for( QDomElement obElem = obRootElement.firstChildElement( "analysis" );
          !obElem.isNull();
-         obElem = obElem.nextSiblingElement() )
+         obElem = obElem.nextSiblingElement( "analysis" ) )
     {
-        if( obElem.tagName() == "analysis" )
+        tsAnalyseDefinition  suAnalyseDef;
+        suAnalyseDef.qsName = obElem.attribute( "name", "" );
+        for( QDomElement obLogElem = obElem.firstChildElement( "input_log" );
+             !obLogElem.isNull();
+             obLogElem = obLogElem.nextSiblingElement( "input_log" ) )
         {
-            tsAnalyseDefinition  suAnalyseDef;
-            suAnalyseDef.qsName          = obElem.attribute( "name", "" );
-            suAnalyseDef.qsDirPrefix     = obElem.attribute( "dir_prefix", "" );
-            for( QDomElement obLogElem = obElem.firstChildElement( "input_log" );
-                 !obLogElem.isNull();
-                 obLogElem = obLogElem.nextSiblingElement( "input_log" ) )
-            {
-                tsInputLogDefinition suInputLog;
-                suInputLog.qsFiles = obLogElem.attribute( "files", "" );
-                suInputLog.qsActionDefFile = obLogElem.attribute( "action_def" );
-                suAnalyseDef.veInputLogs.push_back( suInputLog );
-            }
-            m_veAnalyseDefs.push_back( suAnalyseDef );
-            continue;
+            tsInputLogDefinition suInputLog;
+            suInputLog.qsFiles = obLogElem.attribute( "files", "" );
+            suInputLog.qsActionDefFile = obLogElem.attribute( "action_def" );
+            suAnalyseDef.veInputLogs.push_back( suInputLog );
         }
+
+        for( QDomElement obAttribElem = obElem.firstChildElement( "attribute" );
+             !obAttribElem.isNull();
+             obAttribElem = obAttribElem.nextSiblingElement( "attribute" ) )
+        {
+            suAnalyseDef.maAttributes.insert( pair<QString,QString>( obAttribElem.attribute( "name" ), obAttribElem.attribute( "value" ) ) );
+        }
+
+        m_veAnalyseDefs.push_back( suAnalyseDef );
     }
 }

@@ -4,6 +4,7 @@
 #include <QString>
 #include <QDomDocument>
 #include <vector>
+#include <map>
 
 class cBatchAnalyser
 {
@@ -22,12 +23,14 @@ private:
 
     typedef std::vector<tsInputLogDefinition>  tvInputLogDefs;
     typedef tvInputLogDefs::const_iterator     tiInputLogDefs;
+    typedef std::map<QString,QString>          tmAttributes;
+    typedef tmAttributes::const_iterator       tiAttributes;
 
     typedef struct
     {
         QString         qsName;
-        QString         qsDirPrefix;
         tvInputLogDefs  veInputLogs;
+        tmAttributes    maAttributes;
     } tsAnalyseDefinition;
 
     typedef std::vector<tsAnalyseDefinition>  tvAnalyseDefs;
@@ -35,6 +38,7 @@ private:
 
     QDomDocument   *m_poBatchDoc;
     tvAnalyseDefs   m_veAnalyseDefs;
+    QString         m_qsDirPrefix;
 
     void validateBatchDef( const QString &p_qsBatchDefFile, const QString &p_qsSchemaFile ) throw( cSevException );
     void parseBatchDef() throw( cSevException );

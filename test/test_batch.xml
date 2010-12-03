@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<lara_batch>
+<lara_batch dir_prefix="multiple_files">
 
-    <analysis name="Multiple Files" dir_prefix="multiple_files">
+    <analysis name="test1">
+        <attribute name="tags" value="test multi"/>
+        <attribute name="comment" value="Testing attributes"/>
+
         <input_log files="test*.gz" action_def="test/test_actions.xml"/>
         <input_log files="test*.log" action_def="test/test_actions.xml"/>
     </analysis>

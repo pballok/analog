@@ -59,13 +59,13 @@ public:
 class cActionDefList
 {
 public:
-    typedef vector<cPattern>                   tvPatternList;
+    typedef std::vector<cPattern>              tvPatternList;
     typedef tvPatternList::const_iterator      tiPatternList;
 
-    typedef vector<cActionDefSingleLiner>      tvSingleLinerList;
+    typedef std::vector<cActionDefSingleLiner> tvSingleLinerList;
     typedef tvSingleLinerList::const_iterator  tiSingleLinerList;
 
-    typedef vector<cCountAction>               tvCountActionList;
+    typedef std::vector<cCountAction>          tvCountActionList;
     typedef tvCountActionList::const_iterator  tiCountActionList;
 
     cActionDefList( const QString &p_qsActionDefFile, const QString &p_qsSchemaFile ) throw();
