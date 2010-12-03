@@ -16,11 +16,11 @@ class cLogAnalyser
 public:
     typedef struct
     {
-        unsigned int           uiFileId;
-        unsigned long          ulLineNum;
-        QString                qsTimeStamp;
-        unsigned long long     ulTimeStamp;
-        tmActionCapturedTexts  maCaptures;
+        unsigned int        uiFileId;
+        unsigned long       ulLineNum;
+        QString             qsTimeStamp;
+        unsigned long long  ulTimeStamp;
+        tmActionAttribs     maCapturedAttribs;
     } tsFoundPattern;
 
     typedef multimap<QString, tsFoundPattern>   tmFoundPatternList;

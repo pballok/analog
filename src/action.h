@@ -6,8 +6,8 @@
 
 #include "actiondef.h"
 
-typedef std::map<QString,QString>              tmActionCapturedTexts;
-typedef tmActionCapturedTexts::const_iterator  tiActionCapturedTexts;
+typedef std::map<QString,QString>        tmActionAttribs;
+typedef tmActionAttribs::const_iterator  tiActionAttribs;
 
 class cAction
 {
@@ -25,9 +25,9 @@ public:
     unsigned long            lineNum() const throw();
     cActionResult::teResult  result() const throw();
     cActionUpload::teUpload  upload() const throw();
-    void                     addCapturedText( const QString &p_qsTextName, const QString &p_qsTextValue ) throw();
-    tiActionCapturedTexts    capturedTextsBegin() const throw();
-    tiActionCapturedTexts    capturedTextsEnd() const throw();
+    void                     addAttribute( const QString &p_qsTextName, const QString &p_qsTextValue ) throw();
+    tiActionAttribs          attributesBegin() const throw();
+    tiActionAttribs          attributesEnd() const throw();
 
 private:
     QString                  m_qsName;
@@ -36,10 +36,10 @@ private:
     unsigned long            m_ulLineNum;
     cActionResult::teResult  m_enResult;
     cActionUpload::teUpload  m_enUpload;
-    tmActionCapturedTexts    m_maCapturedTexts;
+    tmActionAttribs          m_maAttribs;
 };
 
-typedef std::multimap<QString, cAction>       tmActionList;
-typedef tmActionList::const_iterator          tiActionList;
+typedef std::multimap<QString, cAction>  tmActionList;
+typedef tmActionList::const_iterator     tiActionList;
 
 #endif // ACTION_H

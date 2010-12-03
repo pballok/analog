@@ -16,7 +16,7 @@
 
     <pattern name="PAT_TARGET_SPOTTED"
              regexp="Spotted a (.*)$">
-        <capture name="target"/>
+        <captured_attrib name="target"/>
     </pattern>
 
 
@@ -24,12 +24,20 @@
     <single_liner name="HOLY_HAND_GRENADE"
                   pattern="PAT_HOLY_HAND_GRENADE"
                   result="OK"
-                  upload="NEVER"/>
+                  upload="NEVER">
+        <fixed_attrib name="type"
+                      value="combat"/>
+    </single_liner>
 
     <single_liner name="NEW_TARGET"
                   pattern="PAT_TARGET_SPOTTED"
                   result="OK"
-                  upload="NEVER"/>
+                  upload="NEVER">
+        <fixed_attrib name="type"
+                      value="intel"/>
+        <fixed_attrib name="subtype"
+                      value="targeting"/>
+    </single_liner>
 
 
 <!-- *************** COUNT ACTIONS *************** -->

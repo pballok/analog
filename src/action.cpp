@@ -49,17 +49,17 @@ cActionUpload::teUpload cAction::upload() const throw()
     return m_enUpload;
 }
 
-void cAction::addCapturedText( const QString &p_qsTextName, const QString &p_qsTextValue ) throw()
+void cAction::addAttribute( const QString &p_qsTextName, const QString &p_qsTextValue ) throw()
 {
-    m_maCapturedTexts.insert( pair<QString,QString>( p_qsTextName, p_qsTextValue ) );
+    m_maAttribs.insert( pair<QString,QString>( p_qsTextName, p_qsTextValue ) );
 }
 
-tiActionCapturedTexts cAction::capturedTextsBegin() const throw()
+tiActionAttribs cAction::attributesBegin() const throw()
 {
-    return m_maCapturedTexts.begin();
+    return m_maAttribs.begin();
 }
 
-tiActionCapturedTexts cAction::capturedTextsEnd() const throw()
+tiActionAttribs cAction::attributesEnd() const throw()
 {
-    return m_maCapturedTexts.end();
+    return m_maAttribs.end();
 }

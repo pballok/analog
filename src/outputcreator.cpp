@@ -103,11 +103,11 @@ void cOutputCreator::generateActionSummary() throw( cSevException )
         obActionSummaryFile.write( itAction->second.timeStamp().toAscii() + " " );
         obActionSummaryFile.write( itAction->second.name().toAscii() + " " );
         obActionSummaryFile.write( cActionResult::toStr( itAction->second.result() ) );
-        for( tiActionCapturedTexts itCapturedText = itAction->second.capturedTextsBegin();
-             itCapturedText != itAction->second.capturedTextsEnd();
-             itCapturedText++ )
+        for( tiActionAttribs itAttrib = itAction->second.attributesBegin();
+             itAttrib != itAction->second.attributesEnd();
+             itAttrib++ )
         {
-            obActionSummaryFile.write( " " + itCapturedText->first.toAscii() + "=\"" + itCapturedText->second.toAscii() + "\"" );
+            obActionSummaryFile.write( " " + itAttrib->first.toAscii() + "=\"" + itAttrib->second.toAscii() + "\"" );
         }
         obActionSummaryFile.write( " " + m_slInputFiles.at( itAction->second.fileId() ).toAscii() + ":" );
         obActionSummaryFile.write( QString::number( itAction->second.lineNum() ).toAscii() + "\n" );

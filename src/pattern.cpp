@@ -17,9 +17,9 @@ cPattern::cPattern( const QDomElement *p_poElem )
         m_qsName = p_poElem->attribute( "name" );
         m_obRegExp.setPattern( p_poElem->attribute( "regexp" ) );
 
-        for( QDomElement obElem = p_poElem->firstChildElement( "capture" );
+        for( QDomElement obElem = p_poElem->firstChildElement( "captured_attrib" );
             !obElem.isNull();
-            obElem = obElem.nextSiblingElement( "capture" ) )
+            obElem = obElem.nextSiblingElement( "captured_attrib" ) )
         {
             m_slCaptures.push_back( obElem.attribute( "name" ) );
         }

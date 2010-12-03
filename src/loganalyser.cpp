@@ -134,7 +134,7 @@ void cLogAnalyser::storePattern( const unsigned int p_uiFileId, cActionDefList::
         for( int i = 0; i < slCaptures.size(); i++ )
         {
             if( i < slCapturedTexts.size() - 1 )
-                suFoundPattern.maCaptures.insert( pair<QString,QString>( slCaptures.at( i ), slCapturedTexts.at( i + 1 ) ) );
+                suFoundPattern.maCapturedAttribs.insert( pair<QString,QString>( slCaptures.at( i ), slCapturedTexts.at( i + 1 ) ) );
         }
     }
 
@@ -157,14 +157,24 @@ void cLogAnalyser::identifySingleLinerActions() throw()
             cAction  obAction( itSingleLiner->name(), itFoundPattern->second.qsTimeStamp,
                                itFoundPattern->second.uiFileId, itFoundPattern->second.ulLineNum,
                                itSingleLiner->result(), itSingleLiner->upload() );
-            if( itFoundPattern->second.maCaptures.size() )
+
+            /* Adding captured Attributes */
+            if( itFoundPattern->second.maCapturedAttribs.size() )
             {
-                for( tiActionCapturedTexts itCapture = itFoundPattern->second.maCaptures.begin();
-                     itCapture != itFoundPattern->second.maCaptures.end();
+                for( tiActionAttribs itCapture = itFoundPattern->second.maCapturedAttribs.begin();
+                     itCapture != itFoundPattern->second.maCapturedAttribs.end();
                      itCapture++ )
                 {
-                    obAction.addCapturedText( itCapture->first, itCapture->second );
+                    obAction.addAttribute( itCapture->first, itCapture->second );
                 }
+            }
+
+            /*Adding fixed attributes */
+            for( tiFixedAttribs itFixedAttrib = itSingleLiner->fixedAttributesBegin();
+                 itFixedAttrib != itSingleLiner->fixedAttributesEnd();
+                 itFixedAttrib++ )
+            {
+                obAction.addAttribute( itFixedAttrib->first, itFixedAttrib->second );
             }
 
             m_mmActionList.insert( pair<QString, cAction>(obAction.name(), obAction ) );
