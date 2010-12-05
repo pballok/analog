@@ -84,6 +84,12 @@ elementFormDefault="qualified">
           </xs:complexType>
         </xs:element>
 
+        <xs:element name="batch_attribute" minOccurs="0" maxOccurs="unbounded">
+          <xs:complexType>
+            <xs:attribute name="pattern" type="xs:string" use="required"/>
+          </xs:complexType>
+        </xs:element>
+
       </xs:sequence>
 
       <xs:attribute name="timestamp_regexp" type="xs:string" use="required"/>

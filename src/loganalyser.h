@@ -44,7 +44,8 @@ private:
     void identifySingleLinerActions() throw();
     void countActions( const QString &p_qsCountName,
                        const QString &p_qsActionName ) throw();
-    void storeActions() throw( cSevException );
+    void storeActions()    throw( cSevException );
+    void storeAttributes() throw();
 };
 
 #endif // LOGANALYSER_H

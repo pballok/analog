@@ -60,6 +60,11 @@ cActionDefList::tiCountActionList cActionDefList::countActionEnd() const throw()
     return m_veCountActionList.end();
 }
 
+QStringList cActionDefList::batchAttributes() const throw()
+{
+    return m_slBatchAttributes;
+}
+
 QRegExp cActionDefList::timeStampRegExp() const throw()
 {
     return m_obTimeStampRegExp;
@@ -150,6 +155,12 @@ void cActionDefList::parseActionDef() throw( cSevException )
         if( obElem.tagName() == "count_action" )
         {
             m_veCountActionList.push_back( cCountAction( &obElem ) );
+            continue;
+        }
+
+        if( obElem.tagName() == "batch_attribute" )
+        {
+            m_slBatchAttributes.push_back( obElem.attribute( "pattern", "" ) );
             continue;
         }
     }

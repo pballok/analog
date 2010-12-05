@@ -63,6 +63,7 @@ void cLogAnalyser::analyse() throw( cSevException )
     }
 
     storeActions();
+    storeAttributes();
 }
 
 void cLogAnalyser::findPatterns( const QString &p_qsFileName ) throw( cSevException )
@@ -214,5 +215,24 @@ void cLogAnalyser::storeActions() throw( cSevException )
          itAction++ )
     {
         m_poOC->addAction( &(itAction->second) );
+    }
+}
+
+void cLogAnalyser::storeAttributes() throw()
+{
+    cTracer  obTracer( &g_obLogger, "cLogAnalyser::storeAttributes" );
+
+    QStringList slAttribs = m_poActionDefList->batchAttributes();
+
+    for( int i = 0; i < slAttribs.size(); i++ )
+    {
+        tiFoundPatternList  itPattern = m_maFoundPatterns.find( slAttribs.at( i ) );
+        if( itPattern == m_maFoundPatterns.end() ) continue;
+        for( tiActionAttribs itAttrib = itPattern->second.maCapturedAttribs.begin();
+             itAttrib != itPattern->second.maCapturedAttribs.end();
+             itAttrib++ )
+        {
+            m_poOC->addAttribute( itAttrib->first, itAttrib->second );
+        }
     }
 }

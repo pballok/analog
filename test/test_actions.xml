@@ -10,6 +10,11 @@
               param_7 = "MSECOND">
 
 <!-- ***************** PATTERNS ****************** -->
+    <pattern name="PAT_HUNT_NAME"
+             regexp="Hereby Started (.*)$">
+        <captured_attrib name="hunt_name"/>
+    </pattern>
+
     <pattern name="PAT_HOLY_HAND_GRENADE"
              regexp="Throwing the Holy Hand Grenade">
     </pattern>
@@ -49,5 +54,9 @@
     <count_action name="nbGrenades">
         <action name="HOLY_HAND_GRENADE"/>
     </count_action>
+
+
+<!-- ************** BATCH ATTRIBUTES ************* -->
+    <batch_attribute pattern="PAT_HUNT_NAME"/>
 
 </lara_actions>

@@ -4,6 +4,7 @@
 #include <QString>
 #include <QDomDocument>
 #include <QRegExp>
+#include <QStringList>
 #include <vector>
 
 #include <sevexception.h>
@@ -77,6 +78,7 @@ public:
     tiSingleLinerList                singleLinerEnd() const throw();
     tiCountActionList                countActionBegin() const throw();
     tiCountActionList                countActionEnd() const throw();
+    QStringList                      batchAttributes() const throw();
 
     QRegExp                          timeStampRegExp() const throw();
     cTimeStampPart::teTimeStampPart  timeStampPart( const unsigned int p_uiIndex ) const throw();
@@ -88,6 +90,7 @@ private:
     tvPatternList                    m_vePatternList;
     tvSingleLinerList                m_veSingleLinerList;
     tvCountActionList                m_veCountActionList;
+    QStringList                      m_slBatchAttributes;
 
     void validateActionDef( const QString &p_qsActionDefFile, const QString &p_qsSchemaFile ) throw( cSevException );
     void parseActionDef() throw( cSevException );
