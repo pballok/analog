@@ -58,7 +58,7 @@ void cLogAnalyser::analyse() throw( cSevException )
              itActionToCount != itCountAction->actionsToCountEnd();
              itActionToCount++ )
         {
-            countActions( itCountAction->name(), *itActionToCount );
+            countActions( itCountAction->name(), itActionToCount->qsName, itActionToCount->qsAttrib );
         }
     }
 
@@ -186,7 +186,8 @@ void cLogAnalyser::identifySingleLinerActions() throw()
 }
 
 void cLogAnalyser::countActions( const QString &p_qsCountName,
-                                 const QString &p_qsActionName ) throw()
+                                 const QString &p_qsActionName,
+                                 const QString &p_qsAttribName ) throw()
 {
     cTracer  obTracer( &g_obLogger, "cLogAnalyser::countActions",
                        QString( "CountName: \"%1\" ActionName: \"%2\"" ).arg( p_qsCountName ).arg( p_qsActionName ).toStdString() );
@@ -197,8 +198,12 @@ void cLogAnalyser::countActions( const QString &p_qsCountName,
     pair<tiActionList, tiActionList> paActionsToCount = m_mmActionList.equal_range( p_qsActionName );
     for( tiActionList itAction = paActionsToCount.first; itAction != paActionsToCount.second; itAction++ )
     {
-        if( itAction->second.result() == cActionResult::OK ) ulOk++;
-        else ulFailed++;
+        QString       qsAttribVal = itAction->second.attribute( p_qsAttribName );
+        unsigned long ulCount = 0;
+        if( qsAttribVal != "" ) ulCount = qsAttribVal.toULongLong();
+        if( ulCount == 0 ) ulCount = 1;
+        if( itAction->second.result() == cActionResult::OK ) ulOk += ulCount;
+        else ulFailed += ulCount;
     }
 
     m_poOC->addCountAction( p_qsCountName, ulOk, ulFailed );

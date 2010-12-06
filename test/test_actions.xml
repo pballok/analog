@@ -19,6 +19,11 @@
              regexp="Throwing the Holy Hand Grenade">
     </pattern>
 
+    <pattern name="PAT_WASTED_GRENADE"
+             regexp="Wasted additional ([\d]*) Holy Hand Grenades">
+        <captured_attrib name="amount"/>
+    </pattern>
+
     <pattern name="PAT_TARGET_SPOTTED"
              regexp="Spotted a (.*)$">
         <captured_attrib name="target"/>
@@ -29,15 +34,21 @@
     <single_liner name="HOLY_HAND_GRENADE"
                   pattern="PAT_HOLY_HAND_GRENADE"
                   result="OK"
-                  upload="NEVER">
+                  upload="ALWAYS">
         <fixed_attrib name="type"
                       value="combat"/>
+    </single_liner>
+
+    <single_liner name="WASTED_GRENADE"
+                  pattern="PAT_WASTED_GRENADE"
+                  result="OK"
+                  upload="NEVER">
     </single_liner>
 
     <single_liner name="NEW_TARGET"
                   pattern="PAT_TARGET_SPOTTED"
                   result="OK"
-                  upload="NEVER">
+                  upload="OK">
         <fixed_attrib name="type"
                       value="intel"/>
         <fixed_attrib name="subtype"
@@ -53,6 +64,7 @@
 
     <count_action name="nbGrenades">
         <action name="HOLY_HAND_GRENADE"/>
+        <action name="WASTED_GRENADE" attrib="amount"/>
     </count_action>
 
 

@@ -28,6 +28,7 @@ public:
     void                     addAttribute( const QString &p_qsTextName, const QString &p_qsTextValue ) throw();
     tiActionAttribs          attributesBegin() const throw();
     tiActionAttribs          attributesEnd() const throw();
+    QString                  attribute( const QString &p_qsAttribName ) const throw();
 
 private:
     QString                  m_qsName;

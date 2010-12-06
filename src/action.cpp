@@ -65,3 +65,10 @@ tiActionAttribs cAction::attributesEnd() const throw()
 {
     return m_maAttribs.end();
 }
+
+QString cAction::attribute( const QString &p_qsAttribName ) const throw()
+{
+    tiActionAttribs itAttrib = m_maAttribs.find( p_qsAttribName );
+    if( itAttrib != m_maAttribs.end() ) return itAttrib->second;
+    else return "";
+}

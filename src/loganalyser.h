@@ -43,7 +43,8 @@ private:
                        const QString &p_qsLogLine, tmFoundPatternList::iterator  *p_poInsertPos ) throw( cSevException );
     void identifySingleLinerActions() throw();
     void countActions( const QString &p_qsCountName,
-                       const QString &p_qsActionName ) throw();
+                       const QString &p_qsActionName,
+                       const QString &p_qsAttribName ) throw();
     void storeActions()    throw( cSevException );
     void storeAttributes() throw();
 };
