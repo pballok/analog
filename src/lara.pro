@@ -7,6 +7,7 @@ HEADERS = ../../qtframework/severity.h \
     ../../qtframework/consolewriter.h \
     ../../qtframework/logmessage.h \
     ../../qtframework/tracer.h \
+    ../../qtframework/qtmysqlconnection.h \
     lara.h \
     preferences.h \
     loganalyser.h \
@@ -23,6 +24,7 @@ SOURCES = ../../qtframework/logger.cpp \
     ../../qtframework/consolewriter.cpp \
     ../../qtframework/logmessage.cpp \
     ../../qtframework/tracer.cpp \
+    ../../qtframework/qtmysqlconnection.cpp \
     preferences.cpp \
     main.cpp \
     loganalyser.cpp \
@@ -38,6 +40,7 @@ SOURCES = ../../qtframework/logger.cpp \
 DESTDIR = ..
 QT -= gui
 QT += xml
+QT += sql
 QT += xmlpatterns
 CONFIG += qt
 CONFIG += console

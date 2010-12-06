@@ -12,6 +12,10 @@ cPreferences::cPreferences( const QString &p_qsAppName, const QString &p_qsVersi
     m_qsOutputDir = "";
     m_qsTempDir   = "";
     m_qsFileName  = QString( "./%1.ini" ).arg( p_qsAppName );
+    m_qsDBHost    = "";
+    m_qsDBSchema  = "";
+    m_qsDBUser    = "";
+    m_qsDBPwd     = "";
 
     try
     {
@@ -51,19 +55,9 @@ QString cPreferences::inputDir() const
     return m_qsInputDir;
 }
 
-void cPreferences::setInputDir( const QString &p_qsDir )
-{
-    m_qsInputDir = p_qsDir;
-}
-
 QString cPreferences::outputDir() const
 {
     return m_qsOutputDir;
-}
-
-void cPreferences::setOutputDir( const QString &p_qsDir )
-{
-    m_qsOutputDir = p_qsDir;
 }
 
 QString cPreferences::tempDir() const
@@ -71,9 +65,24 @@ QString cPreferences::tempDir() const
     return m_qsTempDir;
 }
 
-void cPreferences::setTempDir( const QString &p_qsDir )
+QString cPreferences::dbHost() const
 {
-    m_qsTempDir = p_qsDir;
+    return m_qsDBHost;
+}
+
+QString cPreferences::dbSchema() const
+{
+    return m_qsDBSchema;
+}
+
+QString cPreferences::dbUser() const
+{
+    return m_qsDBUser;
+}
+
+QString cPreferences::dbPassword() const
+{
+    return m_qsDBPwd;
 }
 
 void cPreferences::load() throw(cSevException)
@@ -94,9 +103,14 @@ void cPreferences::load() throw(cSevException)
 
     setConsoleLogLevel( (cSeverity::teSeverity)uiConsoleLevel );
 
-    m_qsInputDir = obPrefFile.value( QString::fromAscii( "Directories/InputDir" ), "." ).toString();
+    m_qsInputDir  = obPrefFile.value( QString::fromAscii( "Directories/InputDir" ), "." ).toString();
     m_qsOutputDir = obPrefFile.value( QString::fromAscii( "Directories/OutputDir" ), "." ).toString();
-    m_qsTempDir = obPrefFile.value( QString::fromAscii( "Directories/TempDir" ), "." ).toString();
+    m_qsTempDir   = obPrefFile.value( QString::fromAscii( "Directories/TempDir" ), "." ).toString();
+
+    m_qsDBHost    = obPrefFile.value( QString::fromAscii( "DataBase/Host" ), "" ).toString();
+    m_qsDBSchema  = obPrefFile.value( QString::fromAscii( "DataBase/Schema" ), "" ).toString();
+    m_qsDBUser    = obPrefFile.value( QString::fromAscii( "DataBase/User" ), "" ).toString();
+    m_qsDBPwd     = obPrefFile.value( QString::fromAscii( "DataBase/Password" ), "" ).toString();
 }
 
 void cPreferences::save() const throw(cSevException)

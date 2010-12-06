@@ -17,11 +17,12 @@ public:
     void                       setConsoleLogLevel( const cSeverity::teSeverity p_enLevel );
     cSeverity::teSeverity      consoleLogLevel() const;
     QString                    inputDir() const;
-    void                       setInputDir( const QString &p_qsDir );
     QString                    outputDir() const;
-    void                       setOutputDir( const QString &p_qsDir );
     QString                    tempDir() const;
-    void                       setTempDir( const QString &p_qsDir );
+    QString                    dbHost() const;
+    QString                    dbSchema() const;
+    QString                    dbUser() const;
+    QString                    dbPassword() const;
 
     void                       load() throw(cSevException);
     void                       save() const throw(cSevException);
@@ -33,6 +34,10 @@ private:
     QString                    m_qsInputDir;
     QString                    m_qsOutputDir;
     QString                    m_qsTempDir;
+    QString                    m_qsDBHost;
+    QString                    m_qsDBSchema;
+    QString                    m_qsDBUser;
+    QString                    m_qsDBPwd;
 
     cConsoleWriter*            m_poConsoleWriter;
 };

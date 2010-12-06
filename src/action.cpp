@@ -1,6 +1,8 @@
 #include "lara.h"
 #include "action.h"
 
+using namespace std;
+
 cAction::cAction( const QString &p_qsName, const QString &p_qsTimeStamp,
                   const unsigned int p_uiFileId, const unsigned long p_ulLineNum,
                   const cActionResult::teResult p_enResult, const cActionUpload::teUpload p_enUpload )
