@@ -4,6 +4,7 @@
 #include <QString>
 #include <QStringList>
 #include <map>
+#include <qtmysqlconnection.h>
 #include <sevexception.h>
 
 #include "logdatasource.h"
@@ -23,6 +24,7 @@ public:
     void         addAttribute( const QString &p_qsName,
                                const QString &p_qsValue )         throw();
     void         generateActionSummary()                          const throw( cSevException );
+    void         uploadActionSummary()                            const throw( cSevException );
     void         generateActionList()                             const throw( cSevException );
 
 private:
@@ -42,6 +44,7 @@ private:
     typedef tmAttributes::const_iterator         tiAttributes;
     tmAttributes        m_maAttributes;
 
+    cQTMySQLConnection *m_poDB;
     QString             m_qsOutDir;
     QStringList         m_slInputFiles;
 };

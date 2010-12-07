@@ -5,6 +5,10 @@
     <analysis name="test1">
         <attribute name="tags" value="test multi"/>
         <attribute name="comment" value="Testing attributes"/>
+        <attribute name="cellName" value="TESTCELL"/>
+        <attribute name="startDate" value="2010-12-06 15:35:00"/>
+        <attribute name="endDate" value="2010-12-07 15:35:00"/>
+        <attribute name="examName" value="Test Exam"/>
 
         <input_log files="test*.gz" action_def="test/test_actions.xml"/>
         <input_log files="test*.log" action_def="test/test_actions.xml"/>

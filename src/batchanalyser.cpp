@@ -57,8 +57,15 @@ void cBatchAnalyser::analyse() throw()
             obAnalyser.analyse();
         }
 
-        poOC->generateActionSummary();
-        poOC->generateActionList();
+        try
+        {
+            poOC->generateActionSummary();
+            poOC->generateActionList();
+            poOC->uploadActionSummary();
+        } catch( cSevException &e )
+        {
+            g_obLogger << e;
+        }
 
         delete poOC;
 

@@ -12,7 +12,21 @@ cOutputCreator::cOutputCreator( const QString &p_qsDirPrefix )
 {
     cTracer  obTracer( &g_obLogger, "cOutputCreator::cOutputCreator" );
 
-    m_qsOutDir     = QDir::cleanPath( g_poPrefs->outputDir() + "/" + p_qsDirPrefix );
+    m_poDB = new cQTMySQLConnection( &g_obLogger );
+    m_poDB->setHostName( g_poPrefs->dbHost() );
+    m_poDB->setDatabaseName( g_poPrefs->dbSchema() );
+    m_poDB->setUserName( g_poPrefs->dbUser() );
+    m_poDB->setPassword( g_poPrefs->dbPassword() );
+    try
+    {
+        m_poDB->open();
+    } catch( cSevException &e )
+    {
+        g_obLogger << e;
+        g_obLogger << cSeverity::WARNING << "Could not open DataBase. Result upload is disabled." << cLogMessage::EOM;
+    }
+
+    m_qsOutDir = QDir::cleanPath( g_poPrefs->outputDir() + "/" + p_qsDirPrefix );
 }
 
 cOutputCreator::~cOutputCreator()
@@ -23,6 +37,8 @@ cOutputCreator::~cOutputCreator()
     {
         delete itActionCount->second;
     }
+
+    delete m_poDB;
 }
 
 unsigned int cOutputCreator::fileId( const QString & p_qsFileName ) throw( cSevException )
@@ -127,6 +143,70 @@ void cOutputCreator::generateActionSummary() const throw( cSevException )
 
     obActionSummaryFile.flush();
     obActionSummaryFile.close();
+}
+
+void cOutputCreator::uploadActionSummary() const throw( cSevException )
+{
+    cTracer  obTracer( &g_obLogger, "cOutputCreator::uploadActionSummary" );
+
+    if( !m_poDB->isOpen() ) return;
+
+    QStringList slColumns = m_poDB->columnList( "cyclerconfigs" );
+    if( slColumns.empty() ) throw cSevException( cSeverity::ERROR, "DataBase: \"cyclerconfigs\" table does not exist" );
+
+    tiAttributes itAttrib = m_maAttributes.find( "cellName" );
+    if( itAttrib == m_maAttributes.end() ) throw cSevException( cSeverity::ERROR, "Could not find \"cellName\" attribute" );
+    QString qsCellName = itAttrib->second;
+
+    itAttrib = m_maAttributes.find( "startDate" );
+    if( itAttrib == m_maAttributes.end() ) throw cSevException( cSeverity::ERROR, "Could not find \"startDate\" attribute" );
+    QString qsStartDate = itAttrib->second;
+
+    itAttrib = m_maAttributes.find( "endDate" );
+    if( itAttrib == m_maAttributes.end() ) throw cSevException( cSeverity::ERROR, "Could not find \"endDate\" attribute" );
+    QString qsEndDate = itAttrib->second;
+
+    itAttrib = m_maAttributes.find( "examName" );
+    if( itAttrib == m_maAttributes.end() ) throw cSevException( cSeverity::ERROR, "Could not find \"examName\" attribute" );
+
+    QString qsQuery = "SELECT cyclerconfigId FROM cyclerconfigs WHERE cellName =\"";
+    qsQuery += qsCellName;
+    qsQuery += "\" AND startDate=\"";
+    qsQuery += qsStartDate;
+    qsQuery += "\" AND endDate=\"";
+    qsQuery += qsEndDate;
+    qsQuery += "\"";
+    QSqlQuery *poQueryRes = m_poDB->executeQTQuery( qsQuery );
+    if( poQueryRes->first() )
+    {
+        QString qsError = QString( "Analysis result already exists as cyclerconfigId=%1" ).arg( poQueryRes->value( 0 ).toInt() );
+        delete poQueryRes;
+        throw cSevException( cSeverity::ERROR, qsError.toStdString() );
+    }
+    delete poQueryRes;
+
+    qsQuery = "INSERT INTO cyclerconfigs SET ";
+    bool boFieldPresent = false;
+    for( itAttrib = m_maAttributes.begin();
+         itAttrib != m_maAttributes.end();
+         itAttrib++ )
+    {
+        if( !slColumns.contains( itAttrib->first ) ) continue;
+        if( boFieldPresent ) qsQuery += ", ";
+        else boFieldPresent = true;
+        qsQuery += itAttrib->first;
+        qsQuery += "=\"";
+        qsQuery += itAttrib->second;
+        qsQuery += "\"";
+    }
+    for( tiActionCountList itAction = m_maActionCounts.begin(); itAction != m_maActionCounts.end(); itAction++ )
+    {
+        if( !slColumns.contains( itAction->first ) ) continue;
+        if( boFieldPresent ) qsQuery += ", ";
+        else boFieldPresent = true;
+        qsQuery += QString( "%1=\"%2\"" ).arg( itAction->first ).arg( itAction->second->ulOk + itAction->second->ulFailed );
+    }
+    m_poDB->executeQuery( qsQuery );
 }
 
 void cOutputCreator::generateActionList() const throw( cSevException )
