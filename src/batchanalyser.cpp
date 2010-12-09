@@ -62,6 +62,7 @@ void cBatchAnalyser::analyse() throw()
             poOC->generateActionSummary();
             poOC->generateActionList();
             poOC->uploadActionSummary();
+            poOC->uploadActionList();
         } catch( cSevException &e )
         {
             g_obLogger << e;

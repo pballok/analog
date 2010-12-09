@@ -145,7 +145,7 @@ void cOutputCreator::generateActionSummary() const throw( cSevException )
     obActionSummaryFile.close();
 }
 
-void cOutputCreator::uploadActionSummary() const throw( cSevException )
+void cOutputCreator::uploadActionSummary() throw( cSevException )
 {
     cTracer  obTracer( &g_obLogger, "cOutputCreator::uploadActionSummary" );
 
@@ -206,7 +206,10 @@ void cOutputCreator::uploadActionSummary() const throw( cSevException )
         else boFieldPresent = true;
         qsQuery += QString( "%1=\"%2\"" ).arg( itAction->first ).arg( itAction->second->ulOk + itAction->second->ulFailed );
     }
-    m_poDB->executeQuery( qsQuery );
+
+    poQueryRes = m_poDB->executeQTQuery( qsQuery );
+    m_ulBatchId = poQueryRes->lastInsertId().toULongLong();
+    delete poQueryRes;
 }
 
 void cOutputCreator::generateActionList() const throw( cSevException )
@@ -252,4 +255,21 @@ void cOutputCreator::generateActionList() const throw( cSevException )
 
     obActionListFile.flush();
     obActionListFile.close();
+}
+
+void cOutputCreator::uploadActionList() const throw( cSevException )
+{
+    cTracer  obTracer( &g_obLogger, "cOutputCreator::uploadActionList" );
+
+    if( !m_poDB->isOpen() ) return;
+
+    QStringList slColumns = m_poDB->columnList( "occurrences" );
+    if( slColumns.empty() ) throw cSevException( cSeverity::ERROR, "DataBase: \"occurrences\" table does not exist" );
+
+    for( tiActionList itAction = m_mmActionList.begin(); itAction != m_mmActionList.end(); itAction++ )
+    {
+        if( itAction->second.upload() == cActionUpload::NEVER ) continue;
+        if( itAction->second.upload() == cActionUpload::FAILED && itAction->second.result() != cActionResult::FAILED ) continue;
+        if( itAction->)
+    }
 }
