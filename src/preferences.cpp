@@ -3,10 +3,12 @@
 #include "lara.h"
 #include "preferences.h"
 
-cPreferences::cPreferences( const QString &p_qsAppName, const QString &p_qsVersion, cConsoleWriter *p_poConsoleWriter  )
+cPreferences::cPreferences( const QString &p_qsAppName, const QString &p_qsVersion,
+                            cConsoleWriter *p_poConsoleWriter, cFileWriter *p_poFileWriter  )
     : m_qsAppName( p_qsAppName ),
       m_qsVersion( p_qsVersion ),
-      m_poConsoleWriter( p_poConsoleWriter )
+      m_poConsoleWriter( p_poConsoleWriter ),
+      m_poFileWriter( p_poFileWriter )
 {
     m_qsInputDir  = "";
     m_qsOutputDir = "";
@@ -48,6 +50,16 @@ void cPreferences::setConsoleLogLevel( const cSeverity::teSeverity p_enLevel )
 cSeverity::teSeverity cPreferences::consoleLogLevel() const
 {
     return m_poConsoleWriter->minSeverity();
+}
+
+void cPreferences::setFileLogLevel( const cSeverity::teSeverity p_enLevel )
+{
+    m_poFileWriter->setMinSeverity( p_enLevel );
+}
+
+cSeverity::teSeverity cPreferences::fileLogLevel() const
+{
+    return m_poFileWriter->minSeverity();
 }
 
 QString cPreferences::inputDir() const
@@ -100,8 +112,16 @@ void cPreferences::load() throw(cSevException)
         uiConsoleLevel = cSeverity::NONE;
         throw cSevException( cSeverity::WARNING, QString( "Invalid ConsoleLogLevel in preferences file: %1" ).arg( m_qsFileName ).toStdString() );
     }
-
     setConsoleLogLevel( (cSeverity::teSeverity)uiConsoleLevel );
+
+    unsigned int uiFileLevel = obPrefFile.value( QString::fromAscii( "LogLevels/FileLogLevel" ), cSeverity::ERROR ).toUInt();
+    if( (uiFileLevel >= cSeverity::MAX) ||
+        (uiFileLevel <= cSeverity::MIN) )
+    {
+        uiFileLevel = cSeverity::NONE;
+        throw cSevException( cSeverity::WARNING, QString( "Invalid FileLogLevel in preferences file: %1" ).arg( m_qsFileName ).toStdString() );
+    }
+    setFileLogLevel( (cSeverity::teSeverity)uiFileLevel );
 
     m_qsInputDir  = obPrefFile.value( QString::fromAscii( "Directories/InputDir" ), "." ).toString();
     m_qsOutputDir = obPrefFile.value( QString::fromAscii( "Directories/OutputDir" ), "." ).toString();

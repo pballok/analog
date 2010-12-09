@@ -5,6 +5,7 @@
 
 #include <logger.h>
 #include <consolewriter.h>
+#include <filewriter.h>
 
 #include "preferences.h"
 #include "batchanalyser.h"
@@ -29,7 +30,10 @@ int main( int argc, char *argv[] )
     cConsoleWriter  obConsoleWriter;
     g_obLogger.registerWriter( &obConsoleWriter );
 
-    g_poPrefs  = new cPreferences( "lara", "0.3.0", &obConsoleWriter );
+    cFileWriter obFileWriter( cSeverity::NONE, "log/lara.log", cFileWriter::BACKUP );
+    g_obLogger.registerWriter( &obFileWriter );
+
+    g_poPrefs  = new cPreferences( "lara", "0.3.0", &obConsoleWriter, &obFileWriter );
 
     g_obLogger << cSeverity::INFO
                << g_poPrefs->appName().toStdString() << " Version " << g_poPrefs->version().toStdString() << " started."

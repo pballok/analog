@@ -5,6 +5,7 @@ HEADERS = ../../qtframework/severity.h \
     ../../qtframework/logger.h \
     ../../qtframework/logwriter.h \
     ../../qtframework/consolewriter.h \
+    ../../qtframework/filewriter.h \
     ../../qtframework/logmessage.h \
     ../../qtframework/tracer.h \
     ../../qtframework/qtmysqlconnection.h \
@@ -22,6 +23,7 @@ HEADERS = ../../qtframework/severity.h \
     batchanalyser.h
 SOURCES = ../../qtframework/logger.cpp \
     ../../qtframework/consolewriter.cpp \
+    ../../qtframework/filewriter.cpp \
     ../../qtframework/logmessage.cpp \
     ../../qtframework/tracer.cpp \
     ../../qtframework/qtmysqlconnection.cpp \

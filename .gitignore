@@ -9,4 +9,4 @@ src/*.o
 src/lara.pro.user
 src/Makefile
 data/*.xml
-
+log/*.log

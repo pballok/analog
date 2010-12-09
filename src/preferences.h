@@ -4,18 +4,22 @@
 #include <QString>
 
 #include <consolewriter.h>
+#include <filewriter.h>
 #include <sevexception.h>
 
 class cPreferences
 {
 public:
-    cPreferences( const QString &p_qsAppName, const QString &p_qsVersion, cConsoleWriter *p_poConsoleWriter );
+    cPreferences( const QString &p_qsAppName, const QString &p_qsVersion,
+                  cConsoleWriter *p_poConsoleWriter, cFileWriter *p_poFileWriter );
     ~cPreferences();
 
     QString                    appName() const;
     QString                    version() const;
     void                       setConsoleLogLevel( const cSeverity::teSeverity p_enLevel );
     cSeverity::teSeverity      consoleLogLevel() const;
+    void                       setFileLogLevel( const cSeverity::teSeverity p_enLevel );
+    cSeverity::teSeverity      fileLogLevel() const;
     QString                    inputDir() const;
     QString                    outputDir() const;
     QString                    tempDir() const;
@@ -40,6 +44,7 @@ private:
     QString                    m_qsDBPwd;
 
     cConsoleWriter*            m_poConsoleWriter;
+    cFileWriter*               m_poFileWriter;
 };
 
 #endif
