@@ -72,6 +72,7 @@ public:
     cActionDefList( const QString &p_qsActionDefFile, const QString &p_qsSchemaFile ) throw();
     ~cActionDefList() throw();
 
+    QString                          combilogColor() const throw();
     tiPatternList                    patternBegin() const throw();
     tiPatternList                    patternEnd() const throw();
     tiSingleLinerList                singleLinerBegin() const throw();
@@ -87,6 +88,7 @@ private:
     QDomDocument                    *m_poActionsDoc;
     QRegExp                          m_obTimeStampRegExp;
     cTimeStampPart::teTimeStampPart  m_poTimeStampParts[cTimeStampPart::MAX - 1];
+    QString                          m_qsCombilogColor;
     tvPatternList                    m_vePatternList;
     tvSingleLinerList                m_veSingleLinerList;
     tvCountActionList                m_veCountActionList;

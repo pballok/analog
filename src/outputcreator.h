@@ -23,6 +23,9 @@ public:
                                  const unsigned long p_ulFailed )       throw();
     void         addAttribute( const QString &p_qsName,
                                const QString &p_qsValue )               throw();
+    void         addCombilogEntry( const unsigned long long p_ulTime,
+                                   const QString &p_qsLogLine,
+                                   const QString &p_qsColor )           throw();
     void         generateActionSummary()                          const throw( cSevException );
     void         uploadActionSummary()                                  throw( cSevException );
     void         generateActionList()                             const throw( cSevException );
@@ -44,6 +47,15 @@ private:
     typedef std::map<QString,QString>            tmAttributes;
     typedef tmAttributes::const_iterator         tiAttributes;
     tmAttributes        m_maAttributes;
+
+    typedef struct
+    {
+        QString qsLogLine;
+        QString qsColor;
+    } tsCombilogEntry;
+    typedef std::multimap<unsigned long long, tsCombilogEntry> tmCombilogEntries;
+    typedef tmCombilogEntries::const_iterator                  tiCombilogEntries;
+    tmCombilogEntries   m_mmCombilogEntries;
 
     cQTMySQLConnection *m_poDB;
     QString             m_qsOutDir;

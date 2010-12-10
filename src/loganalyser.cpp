@@ -141,6 +141,21 @@ void cLogAnalyser::storePattern( const unsigned int p_uiFileId, cActionDefList::
     }
 
     *p_poInsertPos = m_maFoundPatterns.insert( *p_poInsertPos, pair<QString, tsFoundPattern>( p_itPattern->name(), suFoundPattern ) );
+
+    if( m_poActionDefList->combilogColor() != "" )
+    {
+        tm tmTime;
+        tmTime.tm_year = suFoundPattern.suTimeStamp.uiYear - 1900;
+        tmTime.tm_mon  = suFoundPattern.suTimeStamp.uiMonth - 1;
+        tmTime.tm_mday = suFoundPattern.suTimeStamp.uiDay;
+        tmTime.tm_hour = suFoundPattern.suTimeStamp.uiHour;
+        tmTime.tm_min  = suFoundPattern.suTimeStamp.uiMinute;
+        tmTime.tm_sec  = suFoundPattern.suTimeStamp.uiSecond;
+        time_t  uiTime = mktime( &tmTime );
+        unsigned long long ulTime = (unsigned long long)uiTime * 1000LL;
+        ulTime += suFoundPattern.suTimeStamp.uiMSecond;
+        m_poOC->addCombilogEntry( ulTime, qsLogLine, m_poActionDefList->combilogColor() );
+    }
 }
 
 void cLogAnalyser::identifySingleLinerActions() throw()
@@ -241,13 +256,3 @@ void cLogAnalyser::storeAttributes() throw()
         }
     }
 }
-
-/* CombiLog-hoz kell majd:
-            case cTimeStampPart::YEAR:    suFoundPattern.suTimeStamp += slTimeStampParts.at( i ).toULongLong() * g_ulMSecPerYear;   break;
-            case cTimeStampPart::MONTH:   suFoundPattern.ulTimeStamp += slTimeStampParts.at( i ).toULongLong() * g_ulMSecPerMonth;  break;
-            case cTimeStampPart::DAY:     suFoundPattern.ulTimeStamp += slTimeStampParts.at( i ).toULongLong() * g_ulMSecPerDay;    break;
-            case cTimeStampPart::HOUR:    suFoundPattern.ulTimeStamp += slTimeStampParts.at( i ).toULongLong() * g_ulMSecPerHour;   break;
-            case cTimeStampPart::MINUTE:  suFoundPattern.ulTimeStamp += slTimeStampParts.at( i ).toULongLong() * g_ulMSecPerMinute; break;
-            case cTimeStampPart::SECOND:  suFoundPattern.ulTimeStamp += slTimeStampParts.at( i ).toULongLong() * g_ulMSecPerSec;    break;
-            case cTimeStampPart::MSECOND: suFoundPattern.ulTimeStamp += slTimeStampParts.at( i ).toULongLong();                     break;
-*/

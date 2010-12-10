@@ -7,7 +7,8 @@
               param_4 = "HOUR"
               param_5 = "MINUTE"
               param_6 = "SECOND"
-              param_7 = "MSECOND">
+              param_7 = "MSECOND"
+              combilog_color="#00ff00">
 
 <!-- ***************** PATTERNS ****************** -->
     <pattern name="PAT_HUNT_NAME"

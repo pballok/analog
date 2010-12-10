@@ -98,6 +98,16 @@ void cOutputCreator::addAttribute( const QString &p_qsName, const QString &p_qsV
     m_maAttributes.insert( pair<QString, QString>( p_qsName, p_qsValue ) );
 }
 
+void cOutputCreator::addCombilogEntry( const unsigned long long p_ulTime,
+                                       const QString &p_qsLogLine,
+                                       const QString &p_qsColor ) throw()
+{
+    tsCombilogEntry  suEntry;
+    suEntry.qsLogLine = p_qsLogLine;
+    suEntry.qsColor = p_qsColor;
+    m_mmCombilogEntries.insert( pair<unsigned long long, tsCombilogEntry>(p_ulTime, suEntry) );
+}
+
 void cOutputCreator::generateActionSummary() const throw( cSevException )
 {
     cTracer  obTracer( &g_obLogger, "cOutputCreator::generateActionSummary" );

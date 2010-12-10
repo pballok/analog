@@ -30,6 +30,11 @@ cActionDefList::~cActionDefList()
     delete m_poActionsDoc;
 }
 
+QString cActionDefList::combilogColor() const throw()
+{
+    return m_qsCombilogColor;
+}
+
 cActionDefList::tiPatternList cActionDefList::patternBegin() const throw()
 {
     return m_vePatternList.begin();
@@ -135,6 +140,7 @@ void cActionDefList::parseActionDef() throw( cSevException )
     {
         m_poTimeStampParts[i - 1] = cTimeStampPart::fromStr( obRootElement.attribute( QString( "param_%1" ).arg( i ), "MIN" ).toAscii() );
     }
+    m_qsCombilogColor = obRootElement.attribute( "combilog_color", "" );
 
     for( QDomElement obElem = obRootElement.firstChildElement();
          !obElem.isNull();
