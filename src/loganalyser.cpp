@@ -111,18 +111,17 @@ void cLogAnalyser::storePattern( const unsigned int p_uiFileId, cActionDefList::
 
     suFoundPattern.qsTimeStamp = slTimeStampParts.at( 0 );
 
-    suFoundPattern.ulTimeStamp = 0;
     for( int i = 1; i < slTimeStampParts.size(); i++ )
     {
         switch( m_poActionDefList->timeStampPart( i - 1 ) )
         {
-            case cTimeStampPart::YEAR:    suFoundPattern.ulTimeStamp += slTimeStampParts.at( i ).toULongLong() * g_ulMSecPerYear;   break;
-            case cTimeStampPart::MONTH:   suFoundPattern.ulTimeStamp += slTimeStampParts.at( i ).toULongLong() * g_ulMSecPerMonth;  break;
-            case cTimeStampPart::DAY:     suFoundPattern.ulTimeStamp += slTimeStampParts.at( i ).toULongLong() * g_ulMSecPerDay;    break;
-            case cTimeStampPart::HOUR:    suFoundPattern.ulTimeStamp += slTimeStampParts.at( i ).toULongLong() * g_ulMSecPerHour;   break;
-            case cTimeStampPart::MINUTE:  suFoundPattern.ulTimeStamp += slTimeStampParts.at( i ).toULongLong() * g_ulMSecPerMinute; break;
-            case cTimeStampPart::SECOND:  suFoundPattern.ulTimeStamp += slTimeStampParts.at( i ).toULongLong() * g_ulMSecPerSec;    break;
-            case cTimeStampPart::MSECOND: suFoundPattern.ulTimeStamp += slTimeStampParts.at( i ).toULongLong();                     break;
+            case cTimeStampPart::YEAR:    suFoundPattern.suTimeStamp.uiYear    = slTimeStampParts.at( i ).toUInt(); break;
+            case cTimeStampPart::MONTH:   suFoundPattern.suTimeStamp.uiMonth   = slTimeStampParts.at( i ).toUInt(); break;
+            case cTimeStampPart::DAY:     suFoundPattern.suTimeStamp.uiDay     = slTimeStampParts.at( i ).toUInt(); break;
+            case cTimeStampPart::HOUR:    suFoundPattern.suTimeStamp.uiHour    = slTimeStampParts.at( i ).toUInt(); break;
+            case cTimeStampPart::MINUTE:  suFoundPattern.suTimeStamp.uiMinute  = slTimeStampParts.at( i ).toUInt(); break;
+            case cTimeStampPart::SECOND:  suFoundPattern.suTimeStamp.uiSecond  = slTimeStampParts.at( i ).toUInt(); break;
+            case cTimeStampPart::MSECOND: suFoundPattern.suTimeStamp.uiMSecond = slTimeStampParts.at( i ).toUInt(); break;
             default: ;
         }
     }
@@ -158,6 +157,7 @@ void cLogAnalyser::identifySingleLinerActions() throw()
              itFoundPattern++ )
         {
             cAction  obAction( itSingleLiner->name(), itFoundPattern->second.qsTimeStamp,
+                               &(itFoundPattern->second.suTimeStamp),
                                itFoundPattern->second.uiFileId, itFoundPattern->second.ulLineNum,
                                itSingleLiner->result(), itSingleLiner->upload() );
 
@@ -241,3 +241,13 @@ void cLogAnalyser::storeAttributes() throw()
         }
     }
 }
+
+/* CombiLog-hoz kell majd:
+            case cTimeStampPart::YEAR:    suFoundPattern.suTimeStamp += slTimeStampParts.at( i ).toULongLong() * g_ulMSecPerYear;   break;
+            case cTimeStampPart::MONTH:   suFoundPattern.ulTimeStamp += slTimeStampParts.at( i ).toULongLong() * g_ulMSecPerMonth;  break;
+            case cTimeStampPart::DAY:     suFoundPattern.ulTimeStamp += slTimeStampParts.at( i ).toULongLong() * g_ulMSecPerDay;    break;
+            case cTimeStampPart::HOUR:    suFoundPattern.ulTimeStamp += slTimeStampParts.at( i ).toULongLong() * g_ulMSecPerHour;   break;
+            case cTimeStampPart::MINUTE:  suFoundPattern.ulTimeStamp += slTimeStampParts.at( i ).toULongLong() * g_ulMSecPerMinute; break;
+            case cTimeStampPart::SECOND:  suFoundPattern.ulTimeStamp += slTimeStampParts.at( i ).toULongLong() * g_ulMSecPerSec;    break;
+            case cTimeStampPart::MSECOND: suFoundPattern.ulTimeStamp += slTimeStampParts.at( i ).toULongLong();                     break;
+*/

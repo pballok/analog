@@ -270,6 +270,23 @@ void cOutputCreator::uploadActionList() const throw( cSevException )
     {
         if( itAction->second.upload() == cActionUpload::NEVER ) continue;
         if( itAction->second.upload() == cActionUpload::FAILED && itAction->second.result() != cActionResult::FAILED ) continue;
-        if( itAction->)
+        if( itAction->second.upload() == cActionUpload::OK && itAction->second.result() != cActionResult::OK ) continue;
+
+        QString qsQuery = QString( "INSERT INTO occurrences SET cyclerconfigId=%1, " ).arg( m_ulBatchId );
+        cAction::tsTimeStamp  suTimeStamp = itAction->second.timeStampStruct();
+        qsQuery += QString( "created=\"%1-%2-%3 %4:%5:%6\"" ).arg( suTimeStamp.uiYear ).arg( suTimeStamp.uiMonth ).arg( suTimeStamp.uiDay ).arg( suTimeStamp.uiHour ).arg( suTimeStamp.uiMinute ).arg( suTimeStamp.uiSecond );
+        for( tiActionAttribs itAttrib = itAction->second.attributesBegin();
+             itAttrib != itAction->second.attributesBegin();
+             itAttrib++ )
+        {
+            if( !slColumns.contains( itAttrib->first ) ) continue;
+            qsQuery += ", ";
+            qsQuery += itAttrib->first;
+            qsQuery += "=\"";
+            qsQuery += itAttrib->second;
+            qsQuery += "\"";
+        }
+
+        m_poDB->executeQuery( qsQuery );
     }
 }
