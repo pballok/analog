@@ -145,13 +145,16 @@ void cLogAnalyser::storePattern( const unsigned int p_uiFileId, cActionDefList::
     if( m_poActionDefList->combilogColor() != "" )
     {
         tm tmTime;
-        tmTime.tm_year = suFoundPattern.suTimeStamp.uiYear - 1900;
-        tmTime.tm_mon  = suFoundPattern.suTimeStamp.uiMonth - 1;
-        tmTime.tm_mday = suFoundPattern.suTimeStamp.uiDay;
-        tmTime.tm_hour = suFoundPattern.suTimeStamp.uiHour;
-        tmTime.tm_min  = suFoundPattern.suTimeStamp.uiMinute;
-        tmTime.tm_sec  = suFoundPattern.suTimeStamp.uiSecond;
-        time_t  uiTime = mktime( &tmTime );
+        tmTime.tm_wday  = 0;
+        tmTime.tm_yday  = 0;
+        tmTime.tm_isdst = 0;
+        tmTime.tm_year  = suFoundPattern.suTimeStamp.uiYear - 1900;
+        tmTime.tm_mon   = suFoundPattern.suTimeStamp.uiMonth - 1;
+        tmTime.tm_mday  = suFoundPattern.suTimeStamp.uiDay;
+        tmTime.tm_hour  = suFoundPattern.suTimeStamp.uiHour;
+        tmTime.tm_min   = suFoundPattern.suTimeStamp.uiMinute;
+        tmTime.tm_sec   = suFoundPattern.suTimeStamp.uiSecond;
+        time_t  uiTime  = mktime( &tmTime );
         unsigned long long ulTime = (unsigned long long)uiTime * 1000LL;
         ulTime += suFoundPattern.suTimeStamp.uiMSecond;
         m_poOC->addCombilogEntry( ulTime, qsLogLine, m_poActionDefList->combilogColor() );

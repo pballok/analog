@@ -30,6 +30,7 @@ public:
     void         uploadActionSummary()                                  throw( cSevException );
     void         generateActionList()                             const throw( cSevException );
     void         uploadActionList()                               const throw( cSevException );
+    void         generateCombilog()                               const throw( cSevException );
 
 private:
 

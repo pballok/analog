@@ -61,6 +61,7 @@ void cBatchAnalyser::analyse() throw()
         {
             poOC->generateActionSummary();
             poOC->generateActionList();
+            poOC->generateCombilog();
             poOC->uploadActionSummary();
             poOC->uploadActionList();
         } catch( cSevException &e )
