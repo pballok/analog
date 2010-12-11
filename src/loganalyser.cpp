@@ -1,6 +1,7 @@
 #include <QDir>
 #include <cstdlib>
 #include <stdio.h>
+#include <ctime>
 
 #include "lara.h"
 #include "loganalyser.h"
