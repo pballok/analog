@@ -38,7 +38,7 @@ private:
     tmActionList         m_mmActionList;
     cOutputCreator      *m_poOC;
 
-    void findPatterns( const QString &p_qsFileName ) throw( cSevException );
+    void findPatterns( const QString &p_qsFileName ) throw();
     void storePattern( const unsigned int p_uiFileId, cActionDefList::tiPatternList p_itPattern,
                        const QString &p_qsLogLine, tmFoundPatternList::iterator  *p_poInsertPos ) throw( cSevException );
     void identifySingleLinerActions() throw();

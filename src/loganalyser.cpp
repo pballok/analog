@@ -67,7 +67,7 @@ void cLogAnalyser::analyse() throw( cSevException )
     storeAttributes();
 }
 
-void cLogAnalyser::findPatterns( const QString &p_qsFileName ) throw( cSevException )
+void cLogAnalyser::findPatterns( const QString &p_qsFileName ) throw()
 {
     cTracer  obTracer( &g_obLogger, "cLogAnalyser::findPatterns", p_qsFileName.toStdString() );
 
@@ -82,11 +82,19 @@ void cLogAnalyser::findPatterns( const QString &p_qsFileName ) throw( cSevExcept
         tmFoundPatternList::iterator itLastPattern = m_maFoundPatterns.begin();
 
         FILE*  poGrepOutput = popen( qsCommand.toAscii(), "r" );
-        char poLogLine[1000] = "";
+        char poLogLine[5000] = "";
         while( !feof( poGrepOutput ) )
         {
-            if( fgets( poLogLine, 1000, poGrepOutput ) )
-                storePattern( uiFileId, itPattern, QString::fromAscii( poLogLine ), &itLastPattern );
+            if( fgets( poLogLine, 5000, poGrepOutput ) )
+            {
+                try
+                {
+                    storePattern( uiFileId, itPattern, QString::fromAscii( poLogLine ), &itLastPattern );
+                } catch( cSevException &e )
+                {
+                    g_obLogger << e;
+                }
+            }
         }
 
         pclose( poGrepOutput );
@@ -105,7 +113,8 @@ void cLogAnalyser::storePattern( const unsigned int p_uiFileId, cActionDefList::
 
     QRegExp obTimeStampRegExp = m_poActionDefList->timeStampRegExp();
     if( obTimeStampRegExp.indexIn( qsLogLine ) == -1 )
-        throw cSevException( cSeverity::ERROR, "TimeStamp Regular Expression does not match on Log Line.");
+        throw cSevException( cSeverity::ERROR,
+                             QString( "TimeStamp Regular Expression does not match on Log Line \"%1\"" ).arg( qsLogLine ).toStdString() );
 
     QStringList    slTimeStampParts = obTimeStampRegExp.capturedTexts();
     tsFoundPattern suFoundPattern;
