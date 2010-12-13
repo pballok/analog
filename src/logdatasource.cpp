@@ -1,5 +1,6 @@
 #include <QDir>
 #include <QFile>
+#include <QTextStream>
 #include <QString>
 #include <QStringList>
 #include <cstdlib>
@@ -99,6 +100,12 @@ void cLogDataSource::prepareFiles()
                 continue;
             }
 
+            if( qsFileName.indexOf( "sysError", 0, Qt::CaseInsensitive ) != -1 )
+            {
+                m_slTempFiles.push_back( decodeFile( qsFileName ) );
+                continue;
+            }
+
             m_slTempFiles.push_back( copyFile( qsFileName ) );
         }
         catch( cSevException &e )
@@ -108,12 +115,12 @@ void cLogDataSource::prepareFiles()
     }
 }
 
-QString cLogDataSource::unzipFile( const QString &p_stFileName )
+QString cLogDataSource::unzipFile( const QString &p_qsFileName )
         throw( cSevException )
 {
-    cTracer  obTracer( &g_obLogger, "cLogDataSource::unzipFile", p_stFileName.toStdString() );
+    cTracer  obTracer( &g_obLogger, "cLogDataSource::unzipFile", p_qsFileName.toStdString() );
 
-    QString qsTempFileName = copyFile( p_stFileName );
+    QString qsTempFileName = copyFile( p_qsFileName );
     QString qsCommand = QString( "unzip -o -d %1 %2" ).arg( g_poPrefs->tempDir() ).arg( qsTempFileName );
     if( system( qsCommand.toAscii() ) != 0 ) throw cSevException( cSeverity::ERROR, "Error in unzip command" );
 
@@ -127,12 +134,12 @@ QString cLogDataSource::unzipFile( const QString &p_stFileName )
     return qsTempFileName;
 }
 
-QString cLogDataSource::gunzipFile( const QString &p_stFileName )
+QString cLogDataSource::gunzipFile( const QString &p_qsFileName )
         throw( cSevException )
 {
-    cTracer  obTracer( &g_obLogger, "cLogDataSource::gunzipFile", p_stFileName.toStdString() );
+    cTracer  obTracer( &g_obLogger, "cLogDataSource::gunzipFile", p_qsFileName.toStdString() );
 
-    QString qsTempFileName = copyFile( p_stFileName );
+    QString qsTempFileName = copyFile( p_qsFileName );
     QString qsCommand = "gzip -d -q -f " + qsTempFileName;
     if( system( qsCommand.toAscii() ) != 0 ) throw cSevException( cSeverity::ERROR, "Error in gunzip command" );
 
@@ -143,10 +150,10 @@ QString cLogDataSource::gunzipFile( const QString &p_stFileName )
     return qsTempFileName;
 }
 
-QString cLogDataSource::copyFile( const QString &p_stFileName )
+QString cLogDataSource::copyFile( const QString &p_qsFileName )
         throw( cSevException )
 {
-    cTracer  obTracer( &g_obLogger, "cLogDataSource::copyFile", p_stFileName.toStdString() );
+    cTracer  obTracer( &g_obLogger, "cLogDataSource::copyFile", p_qsFileName.toStdString() );
 
     QString qsTempFileName = g_poPrefs->tempDir();
     if( (qsTempFileName.at( qsTempFileName.length() - 1 ) != '/') &&
@@ -154,15 +161,92 @@ QString cLogDataSource::copyFile( const QString &p_stFileName )
     {
         qsTempFileName.append( QDir::separator() );
     }
-    qsTempFileName.append( p_stFileName.section( QRegExp( "[/\\\\]" ), -1, -1 ) );
+    qsTempFileName.append( p_qsFileName.section( QRegExp( "[/\\\\]" ), -1, -1 ) );
 
     QFile::remove( qsTempFileName );
-    if( !QFile::copy( p_stFileName, qsTempFileName ) )
+    if( !QFile::copy( p_qsFileName, qsTempFileName ) )
     {
-        throw cSevException( cSeverity::ERROR, "Cannot copy file " + p_stFileName.toStdString() + " to " + qsTempFileName.toStdString() );
+        throw cSevException( cSeverity::ERROR, "Cannot copy file " + p_qsFileName.toStdString() + " to " + qsTempFileName.toStdString() );
     }
 
     obTracer << qsTempFileName.toStdString();
 
     return qsTempFileName;
+}
+
+QString cLogDataSource::decodeFile( const QString &p_qsFileName ) throw( cSevException )
+{
+    cTracer  obTracer( &g_obLogger, "cLogDataSource::decodeFile", p_qsFileName.toStdString() );
+
+    QString qsTempFileName = copyFile( p_qsFileName );
+    QString qsDecodedFileName = qsTempFileName + ".decoded";
+
+    QFile   obCodedFile( qsTempFileName );
+    if( !obCodedFile.open( QIODevice::ReadOnly | QIODevice::Text ) )
+    {
+        throw cSevException( cSeverity::ERROR, QString( "%1: %2" ).arg( qsTempFileName ).arg( obCodedFile.errorString() ).toStdString() );
+    }
+
+    QFile   obDecodedFile( qsDecodedFileName );
+    if( !obDecodedFile.open( QIODevice::WriteOnly | QIODevice::Truncate | QIODevice::Text ) )
+    {
+        obCodedFile.close();
+        throw cSevException( cSeverity::ERROR, QString( "%1: %2" ).arg( qsDecodedFileName ).arg( obDecodedFile.errorString() ).toStdString() );
+    }
+
+    QTextStream srCodedStream( &obCodedFile );
+    QTextStream srDecodedStream( &obDecodedFile );
+    bool boFirstLine = true;
+    for( QString qsCodedLine = srCodedStream.readLine();
+         !qsCodedLine.isNull();
+         qsCodedLine = srCodedStream.readLine() )
+    {
+        QStringList slCodedTags = qsCodedLine.split( ',' );
+        bool boFirstTag = true;
+        for( int i = 0; i < slCodedTags.size(); i++ )
+        {
+            if( boFirstTag ) boFirstTag = false;
+            else srDecodedStream << ",";
+
+            //only need to decode the 5. 9. 10. and 11. tags
+            if( boFirstLine || ( i != 5 && i != 9 && i != 10 && i != 11 ) )
+            {
+                srDecodedStream << slCodedTags.at( i );
+            }
+            else
+            {
+                srDecodedStream << decodeString( slCodedTags.at( i ) );
+            }
+        }
+        srDecodedStream << "\n";
+        srDecodedStream.flush();
+
+        if( boFirstLine ) boFirstLine = false;
+    }
+
+    obCodedFile.close();
+    QFile::remove( qsTempFileName );
+
+    obDecodedFile.close();
+
+    obTracer << qsTempFileName.toStdString();
+
+    return qsTempFileName;
+}
+
+QString cLogDataSource::decodeString( const QString &p_qsInput ) throw()
+{
+    QByteArray     baLine = QByteArray::fromBase64( p_qsInput.toAscii() );
+
+    unsigned char  poKeyArray[8] = {115,3,23,8,120,6,22,111};
+    QString        qsDecodedString = "";
+
+    char poDecodedChar[2] = " ";
+    for( int i = 0; i < baLine.length(); i++ )
+    {
+        poDecodedChar[0] = baLine.at( i ) ^ poKeyArray[i%8];
+        qsDecodedString.append( poDecodedChar );
+    }
+
+    return qsDecodedString;
 }
