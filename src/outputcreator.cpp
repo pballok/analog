@@ -284,7 +284,7 @@ void cOutputCreator::uploadActionList() const throw( cSevException )
         if( itAction->second.upload() == cActionUpload::FAILED && itAction->second.result() != cActionResult::FAILED ) continue;
         if( itAction->second.upload() == cActionUpload::OK && itAction->second.result() != cActionResult::OK ) continue;
 
-        QString qsQuery = QString( "INSERT INTO occurrences SET cyclerconfigId=%1, " ).arg( m_ulBatchId );
+        QString qsQuery = QString( "INSERT INTO occurrences SET cyclerconfigId=%1" ).arg( m_ulBatchId );
         for( tiActionAttribs itAttrib = itAction->second.attributesBegin();
              itAttrib != itAction->second.attributesEnd();
              itAttrib++ )
