@@ -72,6 +72,7 @@ void cLogAnalyser::findPatterns( const QString &p_qsFileName ) throw()
     cTracer  obTracer( &g_obLogger, "cLogAnalyser::findPatterns", p_qsFileName.toStdString() );
 
     unsigned int uiFileId = m_poOC->fileId( p_qsFileName );
+    char poLogLine[500000] = "";
 
     for( cActionDefList::tiPatternList itPattern = m_poActionDefList->patternBegin();
          itPattern != m_poActionDefList->patternEnd();
@@ -82,10 +83,9 @@ void cLogAnalyser::findPatterns( const QString &p_qsFileName ) throw()
         tmFoundPatternList::iterator itLastPattern = m_maFoundPatterns.begin();
 
         FILE*  poGrepOutput = popen( qsCommand.toAscii(), "r" );
-        char poLogLine[5000] = "";
         while( !feof( poGrepOutput ) )
         {
-            if( fgets( poLogLine, 5000, poGrepOutput ) )
+            if( fgets( poLogLine, 500000, poGrepOutput ) )
             {
                 try
                 {

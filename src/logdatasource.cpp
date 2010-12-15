@@ -100,7 +100,7 @@ void cLogDataSource::prepareFiles()
                 continue;
             }
 
-            if( qsFileName.indexOf( "sysError", 0, Qt::CaseInsensitive ) != -1 )
+            if( qsFileName.indexOf( "sysError" ) != -1 )
             {
                 m_slTempFiles.push_back( decodeFile( qsFileName ) );
                 continue;
@@ -231,7 +231,7 @@ QString cLogDataSource::decodeFile( const QString &p_qsFileName ) throw( cSevExc
 
     obTracer << qsTempFileName.toStdString();
 
-    return qsTempFileName;
+    return qsDecodedFileName;
 }
 
 QString cLogDataSource::decodeString( const QString &p_qsInput ) throw()
