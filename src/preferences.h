@@ -29,7 +29,6 @@ public:
     QString                    dbPassword() const;
 
     void                       load() throw(cSevException);
-    void                       save() const throw(cSevException);
 
 private:
     QString                    m_qsAppName;

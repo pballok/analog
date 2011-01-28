@@ -133,18 +133,3 @@ void cPreferences::load() throw(cSevException)
     m_qsDBPwd     = obPrefFile.value( QString::fromAscii( "DataBase/Password" ), "" ).toString();
 }
 
-void cPreferences::save() const throw(cSevException)
-{
-    QSettings  obPrefFile( m_qsFileName, QSettings::IniFormat );
-    if( obPrefFile.status() != QSettings::NoError )
-    {
-        throw cSevException( cSeverity::WARNING, QString( "Failed to write to preferences file: %1" ).arg( m_qsFileName ).toStdString() );
-    }
-
-    unsigned int  uiConLevel = consoleLogLevel();
-    obPrefFile.setValue( QString::fromAscii( "LogLevels/ConsoleLogLevel" ), uiConLevel );
-
-    obPrefFile.setValue( QString::fromAscii( "Directories/InputDir" ), m_qsInputDir );
-    obPrefFile.setValue( QString::fromAscii( "Directories/OutputDir" ), m_qsOutputDir );
-    obPrefFile.setValue( QString::fromAscii( "Directories/TempDir" ), m_qsTempDir );
-}

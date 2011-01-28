@@ -25,9 +25,20 @@ void cActionTest::run() throw()
 
 void cActionTest::testAction() throw()
 {
-    cAction  obAction( "ActionTest", "ActionTimeStamp", 42, 3, cActionResult::OK, cActionUpload::NEVER );
+    cAction::tsTimeStamp suTimeStamp;
+    suTimeStamp.uiYear    = 2010;
+    suTimeStamp.uiMonth   = 8;
+    suTimeStamp.uiDay     = 2;
+    suTimeStamp.uiHour    = 15;
+    suTimeStamp.uiMinute  = 27;
+    suTimeStamp.uiSecond  = 11;
+    suTimeStamp.uiMSecond = 97;
+    cAction  obAction( "ActionTest", "ActionTimeStamp", &suTimeStamp, 42, 3, cActionResult::OK, cActionUpload::NEVER );
 
     testCase( "Name Test", "ActionTest", obAction.name().toStdString() );
+
+    cAction::tsTimeStamp tsStoredStamp = obAction.timeStampStruct();
+    testCase( "TimeStampStruct Test", 27, tsStoredStamp.uiMinute );
 
     testCase( "TimeStamp Test", "ActionTimeStamp", obAction.timeStamp().toStdString() );
 
@@ -39,32 +50,32 @@ void cActionTest::testAction() throw()
 
     testCase( "Upload Test", cActionUpload::NEVER, obAction.upload() );
 
-    bool boCapturedEmpty = (obAction.capturedTextsBegin() == obAction.capturedTextsEnd() );
-    testCase( "CapturedText Container must be empty", true, boCapturedEmpty );
+    bool boAttribsEmpty = (obAction.attributesBegin() == obAction.attributesEnd() );
+    testCase( "Attributes Container must be empty", true, boAttribsEmpty );
 
-    obAction.addCapturedText( QString::fromStdString( "Palin" ), QString::fromStdString( "Pontius Pilate" ) );
-    obAction.addCapturedText( QString::fromStdString( "Chapman" ), QString::fromStdString( "Biggus Dickus" ) );
-    obAction.addCapturedText( QString::fromStdString(  "Cleese" ), QString::fromStdString( "Reg" ) );
+    obAction.addAttribute( QString::fromStdString( "Palin" ), QString::fromStdString( "Pontius Pilate" ) );
+    obAction.addAttribute( QString::fromStdString( "Chapman" ), QString::fromStdString( "Biggus Dickus" ) );
+    obAction.addAttribute( QString::fromStdString(  "Cleese" ), QString::fromStdString( "Reg" ) );
     int inCounter = 0;
-    for( tiActionCapturedTexts itCapturedText = obAction.capturedTextsBegin();
-         itCapturedText != obAction.capturedTextsEnd();
-         itCapturedText++ )
+    for( tiActionAttribs itAttrib = obAction.attributesBegin();
+         itAttrib != obAction.attributesEnd();
+         itAttrib++ )
     {
         switch( ++inCounter )
         {
             /* The captured texts are stored in a multimap that orders the stored value
                alphabetically based on the key. That is why the extracted order is not the
                same as the order in which they were added to the container */
-            case 1: testCase( "Captured Text 2 Name", "Chapman", itCapturedText->first.toStdString() );
-                    testCase( "Captured Text 2 Value", "Biggus Dickus", itCapturedText->second.toStdString() ); break;
-            case 2: testCase( "Captured Text 3 Name", "Cleese", itCapturedText->first.toStdString() );
-                    testCase( "Captured Text 3 Value", "Reg", itCapturedText->second.toStdString() ); break;
-            case 3: testCase( "Captured Text 1 Name", "Palin", itCapturedText->first.toStdString() );
-                    testCase( "Captured Text 1 Value", "Pontius Pilate", itCapturedText->second.toStdString() ); break;
+            case 1: testCase( "Attribute 1 Name", "Chapman", itAttrib->first.toStdString() );
+                    testCase( "Attribute 1 Value", "Biggus Dickus", itAttrib->second.toStdString() ); break;
+            case 2: testCase( "Attribute 2 Name", "Cleese", itAttrib->first.toStdString() );
+                    testCase( "Attribute 2 Value", "Reg", itAttrib->second.toStdString() ); break;
+            case 3: testCase( "Attribute 3 Name", "Palin", itAttrib->first.toStdString() );
+                    testCase( "Attribute 3 Value", "Pontius Pilate", itAttrib->second.toStdString() ); break;
         }
     }
 
-    testCase( "Captured Text Count Test", 3, inCounter );
+    testCase( "Attribute Count Test", 3, inCounter );
 }
 
 void cActionTest::testSingleLinerDef() throw()
@@ -146,6 +157,7 @@ void cActionTest::testCountActions() throw()
     obAction1.setAttribute( "name", "SPAM" );
     QDomElement obAction2 = obDomDoc.createElement( "action" );
     obAction2.setAttribute( "name", "SPAM_A_LOT" );
+    obAction2.setAttribute( "attrib", "PIECES_OF_SPAM" );
     QDomElement obAction3 = obDomDoc.createElement( "action" );
     obAction3.setAttribute( "name", "SPAM_A_LOT_SPAM" );
     obDomElem.appendChild( obAction1 );
@@ -162,9 +174,10 @@ void cActionTest::testCountActions() throw()
     {
         switch( ++uiActionCount )
         {
-            case 1: testCase( "CountAction Correct DOM Element Action 1 Name", "SPAM", itAction->toStdString() ); break;
-            case 2: testCase( "CountAction Correct DOM Element Action 2 Name", "SPAM_A_LOT", itAction->toStdString() ); break;
-            case 3: testCase( "CountAction Correct DOM Element Action 3 Name", "SPAM_A_LOT_SPAM", itAction->toStdString() ); break;
+            case 1: testCase( "CountAction Correct DOM Element Action 1 Name", "SPAM", itAction->qsName.toStdString() ); break;
+            case 2: testCase( "CountAction Correct DOM Element Action 2 Name", "SPAM_A_LOT", itAction->qsName.toStdString() );
+                    testCase( "CountAction Correct DOM Element Action 2 Attrib", "PIECES_OF_SPAM", itAction->qsAttrib.toStdString() ); break;
+            case 3: testCase( "CountAction Correct DOM Element Action 3 Name", "SPAM_A_LOT_SPAM", itAction->qsName.toStdString() ); break;
         }
     }
 
@@ -294,8 +307,8 @@ void cActionTest::testActionDefList() throw()
                     {
                         switch( ++uiActionCount )
                         {
-                            case 1: testCase( "ActionDefList CountAction 1 Action 1 Name", "HOLY_HAND_GRENADE", itAction->toStdString() ); break;
-                            case 2: testCase( "ActionDefList CountAction 1 Action 2 Name", "NEW_TARGET", itAction->toStdString() ); break;
+                            case 1: testCase( "ActionDefList CountAction 1 Action 1 Name", "HOLY_HAND_GRENADE", itAction->qsName.toStdString() ); break;
+                            case 2: testCase( "ActionDefList CountAction 1 Action 2 Name", "NEW_TARGET", itAction->qsName.toStdString() ); break;
                         }
                     }
                     testCase( "ActionDefList Count Action 1 Action Count", 2, uiActionCount );

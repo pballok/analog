@@ -8,13 +8,6 @@
 
 using namespace std;
 
-const unsigned long long  g_ulMSecPerYear   = 32140800000LL;
-const unsigned long long  g_ulMSecPerMonth  = 2678400000LL;
-const unsigned long long  g_ulMSecPerDay    = 86400000LL;
-const unsigned long long  g_ulMSecPerHour   = 3600000LL;
-const unsigned long long  g_ulMSecPerMinute = 60000LL;
-const unsigned long long  g_ulMSecPerSec    = 1000LL;
-
 cLogAnalyser::cLogAnalyser( const QString &p_qsPrefix, const QString &p_qsFiles, const QString &p_qsActions, cOutputCreator *p_poOC ) throw()
 {
     cTracer obTracer( &g_obLogger, "cLogAnalyser::cLogAnalyser",
