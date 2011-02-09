@@ -1,12 +1,10 @@
 lara
 lara.ini
-test/output
-test/*.o
-test/laratest
-test/laratest.pro.user
-test/Makefile
-src/*.o
+lara-build-desktop
 src/lara.pro.user
-src/Makefile
+laratest
+test/output
+test/laratest.pro.user
+laratest-build-desktop
 data/*.xml
 log/*.log

@@ -15,18 +15,17 @@ cActionDef::cActionDef( const QDomElement *p_poElem )
     {
         m_qsName = p_poElem->attribute( "name", "" );
         m_enUpload = cActionUpload::fromStr( p_poElem->attribute( "upload", "MIN" ).toAscii() );
-    }
 
-    for( QDomElement obElem = p_poElem->firstChildElement( "fixed_attrib" );
-        !obElem.isNull();
-        obElem = obElem.nextSiblingElement( "fixed_attrib" ) )
-    {
-        if( obElem.attribute( "name", "" ) != "" )
+        for( QDomElement obElem = p_poElem->firstChildElement( "fixed_attrib" );
+            !obElem.isNull();
+            obElem = obElem.nextSiblingElement( "fixed_attrib" ) )
         {
-            m_maFixedAttribs.insert( pair<QString,QString>(obElem.attribute( "name", "" ), obElem.attribute( "value", "" ) ) );
+            if( obElem.attribute( "name", "" ) != "" )
+            {
+                m_maFixedAttribs.insert( pair<QString,QString>(obElem.attribute( "name", "" ), obElem.attribute( "value", "" ) ) );
+            }
         }
     }
-
 }
 
 cActionDef::~cActionDef()

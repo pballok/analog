@@ -52,3 +52,8 @@ void cUnitTest::testCaseResult( const bool p_boPassed )
         m_boResult = false;
     }
 }
+
+void cUnitTest::printNote( const std::string p_stText ) throw()
+{
+    cout << "*** " << p_stText << " ***" << endl;
+}
