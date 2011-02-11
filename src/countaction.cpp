@@ -20,7 +20,10 @@ cCountAction::cCountAction( const QDomElement *p_poElem )
              !obActionElem.isNull();
              obActionElem = obActionElem.nextSiblingElement( "action" ) )
         {
-            m_veActionsToCount.push_back( obActionElem.attribute( "name" ) );
+            tsActionDef suActionDef;
+            suActionDef.qsName = obActionElem.attribute( "name" );
+            suActionDef.qsAttrib = obActionElem.attribute( "attrib", "" );
+            m_veActionsToCount.push_back( suActionDef );
         }
     }
 }

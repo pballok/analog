@@ -43,7 +43,7 @@ elementFormDefault="qualified">
         <xs:element name="pattern" minOccurs="0" maxOccurs="unbounded">
           <xs:complexType>
             <xs:sequence>
-              <xs:element name="capture" minOccurs="0" maxOccurs="unbounded">
+              <xs:element name="captured_attrib" minOccurs="0" maxOccurs="unbounded">
                 <xs:complexType>
                   <xs:attribute name="name"   type="xs:string"  use="required"/>
                 </xs:complexType>
@@ -56,6 +56,14 @@ elementFormDefault="qualified">
 
         <xs:element name="single_liner" minOccurs="0" maxOccurs="unbounded">
           <xs:complexType>
+            <xs:sequence>
+              <xs:element name="fixed_attrib" minOccurs="0" maxOccurs="unbounded">
+                <xs:complexType>
+                  <xs:attribute name="name"  type="xs:string"  use="required"/>
+                  <xs:attribute name="value" type="xs:string"  use="required"/>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
             <xs:attribute name="name"    type="xs:string"  use="required"/>
             <xs:attribute name="pattern" type="xs:string"  use="required"/>
             <xs:attribute name="result"  type="resultType" use="required"/>
@@ -68,11 +76,18 @@ elementFormDefault="qualified">
             <xs:sequence>
               <xs:element name="action" minOccurs="1" maxOccurs="unbounded">
                 <xs:complexType>
-                  <xs:attribute name="name"  type="xs:string"  use="required"/>
+                  <xs:attribute name="name"   type="xs:string"  use="required"/>
+                  <xs:attribute name="attrib" type="xs:string"/>
                 </xs:complexType>
               </xs:element>
             </xs:sequence>
             <xs:attribute name="name"    type="xs:string" use="required"/>
+          </xs:complexType>
+        </xs:element>
+
+        <xs:element name="batch_attribute" minOccurs="0" maxOccurs="unbounded">
+          <xs:complexType>
+            <xs:attribute name="pattern" type="xs:string" use="required"/>
           </xs:complexType>
         </xs:element>
 
@@ -86,6 +101,7 @@ elementFormDefault="qualified">
       <xs:attribute name="param_5" type="timestampPartType" use="required"/>
       <xs:attribute name="param_6" type="timestampPartType" use="required"/>
       <xs:attribute name="param_7" type="timestampPartType" use="required"/>
+      <xs:attribute name="combilog_color" type="xs:string"/>
 
     </xs:complexType>
   </xs:element>

@@ -4,27 +4,31 @@
 #include <QString>
 
 #include <consolewriter.h>
+#include <filewriter.h>
 #include <sevexception.h>
 
 class cPreferences
 {
 public:
-    cPreferences( const QString &p_qsAppName, const QString &p_qsVersion, cConsoleWriter *p_poConsoleWriter );
+    cPreferences( const QString &p_qsAppName, const QString &p_qsVersion,
+                  cConsoleWriter *p_poConsoleWriter, cFileWriter *p_poFileWriter );
     ~cPreferences();
 
     QString                    appName() const;
     QString                    version() const;
     void                       setConsoleLogLevel( const cSeverity::teSeverity p_enLevel );
     cSeverity::teSeverity      consoleLogLevel() const;
+    void                       setFileLogLevel( const cSeverity::teSeverity p_enLevel );
+    cSeverity::teSeverity      fileLogLevel() const;
     QString                    inputDir() const;
-    void                       setInputDir( const QString &p_qsDir );
     QString                    outputDir() const;
-    void                       setOutputDir( const QString &p_qsDir );
     QString                    tempDir() const;
-    void                       setTempDir( const QString &p_qsDir );
+    QString                    dbHost() const;
+    QString                    dbSchema() const;
+    QString                    dbUser() const;
+    QString                    dbPassword() const;
 
     void                       load() throw(cSevException);
-    void                       save() const throw(cSevException);
 
 private:
     QString                    m_qsAppName;
@@ -33,8 +37,13 @@ private:
     QString                    m_qsInputDir;
     QString                    m_qsOutputDir;
     QString                    m_qsTempDir;
+    QString                    m_qsDBHost;
+    QString                    m_qsDBSchema;
+    QString                    m_qsDBUser;
+    QString                    m_qsDBPwd;
 
     cConsoleWriter*            m_poConsoleWriter;
+    cFileWriter*               m_poFileWriter;
 };
 
 #endif

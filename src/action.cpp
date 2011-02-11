@@ -1,7 +1,10 @@
 #include "lara.h"
 #include "action.h"
 
+using namespace std;
+
 cAction::cAction( const QString &p_qsName, const QString &p_qsTimeStamp,
+                  const tsTimeStamp* p_poTimeStamp,
                   const unsigned int p_uiFileId, const unsigned long p_ulLineNum,
                   const cActionResult::teResult p_enResult, const cActionUpload::teUpload p_enUpload )
 {
@@ -9,6 +12,17 @@ cAction::cAction( const QString &p_qsName, const QString &p_qsTimeStamp,
 
     m_qsName      = p_qsName;
     m_qsTimeStamp = p_qsTimeStamp;
+    if( p_poTimeStamp ) m_suTimeStamp = *p_poTimeStamp;
+    else
+    {
+        m_suTimeStamp.uiYear    = 0;
+        m_suTimeStamp.uiMonth   = 0;
+        m_suTimeStamp.uiDay     = 0;
+        m_suTimeStamp.uiHour    = 0;
+        m_suTimeStamp.uiMinute  = 0;
+        m_suTimeStamp.uiSecond  = 0;
+        m_suTimeStamp.uiMSecond = 0;
+    }
     m_uiFileId    = p_uiFileId;
     m_ulLineNum   = p_ulLineNum;
     m_enResult    = p_enResult;
@@ -27,6 +41,11 @@ QString cAction::name() const throw()
 QString cAction::timeStamp() const throw()
 {
     return m_qsTimeStamp;
+}
+
+cAction::tsTimeStamp cAction::timeStampStruct() const throw()
+{
+    return m_suTimeStamp;
 }
 
 unsigned int cAction::fileId() const throw()
@@ -49,17 +68,24 @@ cActionUpload::teUpload cAction::upload() const throw()
     return m_enUpload;
 }
 
-void cAction::addCapturedText( const QString &p_qsTextName, const QString &p_qsTextValue ) throw()
+void cAction::addAttribute( const QString &p_qsTextName, const QString &p_qsTextValue ) throw()
 {
-    m_maCapturedTexts.insert( pair<QString,QString>( p_qsTextName, p_qsTextValue ) );
+    m_maAttribs.insert( pair<QString,QString>( p_qsTextName, p_qsTextValue ) );
 }
 
-tiActionCapturedTexts cAction::capturedTextsBegin() const throw()
+tiActionAttribs cAction::attributesBegin() const throw()
 {
-    return m_maCapturedTexts.begin();
+    return m_maAttribs.begin();
 }
 
-tiActionCapturedTexts cAction::capturedTextsEnd() const throw()
+tiActionAttribs cAction::attributesEnd() const throw()
 {
-    return m_maCapturedTexts.end();
+    return m_maAttribs.end();
+}
+
+QString cAction::attribute( const QString &p_qsAttribName ) const throw()
+{
+    tiActionAttribs itAttrib = m_maAttribs.find( p_qsAttribName );
+    if( itAttrib != m_maAttribs.end() ) return itAttrib->second;
+    else return "";
 }

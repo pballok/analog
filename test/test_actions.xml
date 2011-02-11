@@ -7,16 +7,27 @@
               param_4 = "HOUR"
               param_5 = "MINUTE"
               param_6 = "SECOND"
-              param_7 = "MSECOND">
+              param_7 = "MSECOND"
+              combilog_color="#00ff00">
 
 <!-- ***************** PATTERNS ****************** -->
+    <pattern name="PAT_HUNT_NAME"
+             regexp="Hereby Started (.*)$">
+        <captured_attrib name="hunt_name"/>
+    </pattern>
+
     <pattern name="PAT_HOLY_HAND_GRENADE"
              regexp="Throwing the Holy Hand Grenade">
     </pattern>
 
+    <pattern name="PAT_WASTED_GRENADE"
+             regexp="Wasted additional ([\d]*) Holy Hand Grenades">
+        <captured_attrib name="amount"/>
+    </pattern>
+
     <pattern name="PAT_TARGET_SPOTTED"
              regexp="Spotted a (.*)$">
-        <capture name="target"/>
+        <captured_attrib name="target"/>
     </pattern>
 
 
@@ -24,18 +35,41 @@
     <single_liner name="HOLY_HAND_GRENADE"
                   pattern="PAT_HOLY_HAND_GRENADE"
                   result="OK"
-                  upload="NEVER"/>
+                  upload="ALWAYS">
+        <fixed_attrib name="type"
+                      value="combat"/>
+    </single_liner>
+
+    <single_liner name="WASTED_GRENADE"
+                  pattern="PAT_WASTED_GRENADE"
+                  result="OK"
+                  upload="NEVER">
+    </single_liner>
 
     <single_liner name="NEW_TARGET"
                   pattern="PAT_TARGET_SPOTTED"
                   result="OK"
-                  upload="NEVER"/>
+                  upload="OK">
+        <fixed_attrib name="type"
+                      value="intel"/>
+        <fixed_attrib name="subtype"
+                      value="targeting"/>
+    </single_liner>
 
 
 <!-- *************** COUNT ACTIONS *************** -->
-    <count_action name="nbActions">
+    <count_action name="nbManeuvers">
         <action name="HOLY_HAND_GRENADE"/>
         <action name="NEW_TARGET"/>
     </count_action>
+
+    <count_action name="nbGrenades">
+        <action name="HOLY_HAND_GRENADE"/>
+        <action name="WASTED_GRENADE" attrib="amount"/>
+    </count_action>
+
+
+<!-- ************** BATCH ATTRIBUTES ************* -->
+    <batch_attribute pattern="PAT_HUNT_NAME"/>
 
 </lara_actions>

@@ -9,7 +9,13 @@ class cCountAction
 {
 public:
 
-    typedef std::vector<QString>              tvActionsToCount;
+    typedef struct
+    {
+        QString  qsName;
+        QString  qsAttrib;
+    } tsActionDef;
+
+    typedef std::vector<tsActionDef>          tvActionsToCount;
     typedef tvActionsToCount::const_iterator  tiActionsToCount;
 
     cCountAction();
@@ -25,7 +31,7 @@ private:
     QString           m_qsName;
     tvActionsToCount  m_veActionsToCount;
 
-    void             init()                 throw();
+    void              init()                throw();
 };
 
 #endif // COUNTACTION_H

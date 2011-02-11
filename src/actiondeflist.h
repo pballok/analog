@@ -4,6 +4,7 @@
 #include <QString>
 #include <QDomDocument>
 #include <QRegExp>
+#include <QStringList>
 #include <vector>
 
 #include <sevexception.h>
@@ -59,38 +60,41 @@ public:
 class cActionDefList
 {
 public:
-    typedef vector<cPattern>                   tvPatternList;
+    typedef std::vector<cPattern>              tvPatternList;
     typedef tvPatternList::const_iterator      tiPatternList;
 
-    typedef vector<cActionDefSingleLiner>      tvSingleLinerList;
+    typedef std::vector<cActionDefSingleLiner> tvSingleLinerList;
     typedef tvSingleLinerList::const_iterator  tiSingleLinerList;
 
-    typedef vector<cCountAction>               tvCountActionList;
+    typedef std::vector<cCountAction>          tvCountActionList;
     typedef tvCountActionList::const_iterator  tiCountActionList;
 
     cActionDefList( const QString &p_qsActionDefFile, const QString &p_qsSchemaFile ) throw();
     ~cActionDefList() throw();
 
+    QString                          combilogColor() const throw();
     tiPatternList                    patternBegin() const throw();
     tiPatternList                    patternEnd() const throw();
     tiSingleLinerList                singleLinerBegin() const throw();
     tiSingleLinerList                singleLinerEnd() const throw();
     tiCountActionList                countActionBegin() const throw();
     tiCountActionList                countActionEnd() const throw();
+    QStringList                      batchAttributes() const throw();
 
     QRegExp                          timeStampRegExp() const throw();
     cTimeStampPart::teTimeStampPart  timeStampPart( const unsigned int p_uiIndex ) const throw();
 
 private:
-    QString                          m_qsSchemaFileName;
     QDomDocument                    *m_poActionsDoc;
     QRegExp                          m_obTimeStampRegExp;
     cTimeStampPart::teTimeStampPart  m_poTimeStampParts[cTimeStampPart::MAX - 1];
+    QString                          m_qsCombilogColor;
     tvPatternList                    m_vePatternList;
     tvSingleLinerList                m_veSingleLinerList;
     tvCountActionList                m_veCountActionList;
+    QStringList                      m_slBatchAttributes;
 
-    void validateActionDef( const QString &p_qsActionDefFile ) throw( cSevException );
+    void validateActionDef( const QString &p_qsActionDefFile, const QString &p_qsSchemaFile ) throw( cSevException );
     void parseActionDef() throw( cSevException );
 };
 

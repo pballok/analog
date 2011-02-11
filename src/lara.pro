@@ -5,11 +5,13 @@ HEADERS = ../../qtframework/severity.h \
     ../../qtframework/logger.h \
     ../../qtframework/logwriter.h \
     ../../qtframework/consolewriter.h \
+    ../../qtframework/filewriter.h \
     ../../qtframework/logmessage.h \
     ../../qtframework/tracer.h \
+    ../../qtframework/qtmysqlconnection.h \
     lara.h \
     preferences.h \
-    loganalyzer.h \
+    loganalyser.h \
     logdatasource.h \
     actiondefsingleliner.h \
     actiondeflist.h \
@@ -17,14 +19,17 @@ HEADERS = ../../qtframework/severity.h \
     pattern.h \
     action.h \
     outputcreator.h \
-    countaction.h
+    countaction.h \
+    batchanalyser.h
 SOURCES = ../../qtframework/logger.cpp \
     ../../qtframework/consolewriter.cpp \
+    ../../qtframework/filewriter.cpp \
     ../../qtframework/logmessage.cpp \
     ../../qtframework/tracer.cpp \
+    ../../qtframework/qtmysqlconnection.cpp \
     preferences.cpp \
     main.cpp \
-    loganalyzer.cpp \
+    loganalyser.cpp \
     logdatasource.cpp \
     actiondefsingleliner.cpp \
     actiondeflist.cpp \
@@ -32,10 +37,12 @@ SOURCES = ../../qtframework/logger.cpp \
     pattern.cpp \
     action.cpp \
     outputcreator.cpp \
-    countaction.cpp
+    countaction.cpp \
+    batchanalyser.cpp
 DESTDIR = ..
 QT -= gui
 QT += xml
+QT += sql
 QT += xmlpatterns
 CONFIG += qt
 CONFIG += console

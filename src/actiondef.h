@@ -3,6 +3,7 @@
 
 #include <QString>
 #include <QDomElement>
+#include <map>
 
 class cActionResult
 {
@@ -68,6 +69,9 @@ public:
     }
 };
 
+typedef std::map<QString,QString>       tmFixedAttribs;
+typedef tmFixedAttribs::const_iterator  tiFixedAttribs;
+
 class cActionDef
 {
 public:
@@ -75,13 +79,15 @@ public:
     cActionDef( const QDomElement *p_poElem );
     virtual ~cActionDef();
 
-    QString                  name()   const throw();
-    cActionUpload::teUpload  upload() const throw();
-
+    QString                  name()                 const throw();
+    cActionUpload::teUpload  upload()               const throw();
+    tiFixedAttribs           fixedAttributesBegin() const throw();
+    tiFixedAttribs           fixedAttributesEnd()   const throw();
 
 protected:
     QString                  m_qsName;
     cActionUpload::teUpload  m_enUpload;
+    tmFixedAttribs           m_maFixedAttribs;
 
     virtual void             init()   throw();
 };

@@ -9,12 +9,11 @@ cActionDefList::cActionDefList( const QString &p_qsActionDefFile, const QString 
 {
     cTracer  obTracer( &g_obLogger, "cActionDefList::cActionDefList", p_qsActionDefFile.toStdString() );
 
-    m_qsSchemaFileName = p_qsSchemaFile;
     m_poActionsDoc = new QDomDocument( "actions" );
 
     try
     {
-        validateActionDef( p_qsActionDefFile );
+        validateActionDef( p_qsActionDefFile, p_qsSchemaFile );
         parseActionDef();
     }
     catch( cSevException &e )
@@ -29,6 +28,11 @@ cActionDefList::~cActionDefList()
     cTracer  obTracer( &g_obLogger, "cActionDefList::~cActionDefList" );
 
     delete m_poActionsDoc;
+}
+
+QString cActionDefList::combilogColor() const throw()
+{
+    return m_qsCombilogColor;
 }
 
 cActionDefList::tiPatternList cActionDefList::patternBegin() const throw()
@@ -61,6 +65,11 @@ cActionDefList::tiCountActionList cActionDefList::countActionEnd() const throw()
     return m_veCountActionList.end();
 }
 
+QStringList cActionDefList::batchAttributes() const throw()
+{
+    return m_slBatchAttributes;
+}
+
 QRegExp cActionDefList::timeStampRegExp() const throw()
 {
     return m_obTimeStampRegExp;
@@ -74,7 +83,7 @@ cTimeStampPart::teTimeStampPart cActionDefList::timeStampPart( const unsigned in
         return m_poTimeStampParts[p_uiIndex];
 }
 
-void cActionDefList::validateActionDef( const QString &p_qsActionDefFile ) throw( cSevException )
+void cActionDefList::validateActionDef( const QString &p_qsActionDefFile, const QString &p_qsSchemaFile ) throw( cSevException )
 {
     cTracer  obTracer( &g_obLogger, "cActionList::validateActionDef", p_qsActionDefFile.toStdString() );
 
@@ -88,18 +97,18 @@ void cActionDefList::validateActionDef( const QString &p_qsActionDefFile ) throw
         }
 
         QXmlSchema obSchema;
-        obSchema.load( m_qsSchemaFileName );
+        obSchema.load( p_qsSchemaFile );
 
         if( !obSchema.isValid() )
         {
-            throw cSevException( cSeverity::ERROR, QString( "Schema %1 is not valid" ).arg( m_qsSchemaFileName ).toStdString() );
+            throw cSevException( cSeverity::ERROR, QString( "Schema %1 is not valid" ).arg( p_qsSchemaFile ).toStdString() );
         }
 
         QXmlSchemaValidator obValidator( obSchema );
         if( !obValidator.validate( &obActionsFile, QUrl::fromLocalFile( p_qsActionDefFile ) ) )
         {
             throw cSevException( cSeverity::ERROR,
-                                 QString( "Action definition file %1 is not valid according to Schema %2" ).arg( p_qsActionDefFile ).arg( m_qsSchemaFileName ).toStdString() );
+                                 QString( "Action definition file %1 is not valid according to Schema %2" ).arg( p_qsActionDefFile ).arg( p_qsSchemaFile ).toStdString() );
         }
 
         QString      qsErrorMsg  = "";
@@ -131,6 +140,7 @@ void cActionDefList::parseActionDef() throw( cSevException )
     {
         m_poTimeStampParts[i - 1] = cTimeStampPart::fromStr( obRootElement.attribute( QString( "param_%1" ).arg( i ), "MIN" ).toAscii() );
     }
+    m_qsCombilogColor = obRootElement.attribute( "combilog_color", "" );
 
     for( QDomElement obElem = obRootElement.firstChildElement();
          !obElem.isNull();
@@ -151,6 +161,12 @@ void cActionDefList::parseActionDef() throw( cSevException )
         if( obElem.tagName() == "count_action" )
         {
             m_veCountActionList.push_back( cCountAction( &obElem ) );
+            continue;
+        }
+
+        if( obElem.tagName() == "batch_attribute" )
+        {
+            m_slBatchAttributes.push_back( obElem.attribute( "pattern", "" ) );
             continue;
         }
     }

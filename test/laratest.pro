@@ -34,7 +34,7 @@ SOURCES = ../../qtframework/logger.cpp \
     unittest.cpp \
     actiontest.cpp
 
-DESTDIR = .
+DESTDIR = ..
 
 QT -= gui
 QT += xml
