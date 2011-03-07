@@ -8,3 +8,4 @@ test/laratest.pro.user
 laratest-build-desktop
 data/*.xml
 log/*.log
+html

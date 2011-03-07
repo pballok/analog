@@ -166,20 +166,38 @@ void cOutputCreator::uploadActionSummary() throw( cSevException )
     QStringList slColumns = m_poDB->columnList( "cyclerconfigs" );
     if( slColumns.empty() ) throw cSevException( cSeverity::ERROR, "DataBase: \"cyclerconfigs\" table does not exist" );
 
+    QString qsCellName = "";
     tiAttributes itAttrib = m_maAttributes.find( "cellName" );
-    if( itAttrib == m_maAttributes.end() ) throw cSevException( cSeverity::ERROR, "Could not find \"cellName\" attribute" );
-    QString qsCellName = itAttrib->second;
+    if( itAttrib == m_maAttributes.end() )
+    {
+        qsCellName = "UNKNOWN";
+        m_maAttributes.insert( pair<QString,QString>( "cellName", qsCellName ) );
+    }
+    else qsCellName = itAttrib->second;
 
+    QString qsStartDate = "";
     itAttrib = m_maAttributes.find( "startDate" );
-    if( itAttrib == m_maAttributes.end() ) throw cSevException( cSeverity::ERROR, "Could not find \"startDate\" attribute" );
-    QString qsStartDate = itAttrib->second;
+    if( itAttrib == m_maAttributes.end() )
+    {
+        qsStartDate = QDateTime::currentDateTime().toString( "yyyy-MM-dd hh:mm:ss" );
+        m_maAttributes.insert( pair<QString,QString>( "startDate", qsStartDate ) );
+    }
+    else qsStartDate = itAttrib->second;
 
+    QString qsEndDate = "";
     itAttrib = m_maAttributes.find( "endDate" );
-    if( itAttrib == m_maAttributes.end() ) throw cSevException( cSeverity::ERROR, "Could not find \"endDate\" attribute" );
-    QString qsEndDate = itAttrib->second;
+    if( itAttrib == m_maAttributes.end() )
+    {
+        qsEndDate = QDateTime::currentDateTime().toString( "yyyy-MM-dd hh:mm:ss" );
+        m_maAttributes.insert( pair<QString,QString>( "endDate", qsEndDate ) );
+    }
+    else qsEndDate = itAttrib->second;
 
     itAttrib = m_maAttributes.find( "examName" );
-    if( itAttrib == m_maAttributes.end() ) throw cSevException( cSeverity::ERROR, "Could not find \"examName\" attribute" );
+    if( itAttrib == m_maAttributes.end() )
+    {
+        m_maAttributes.insert( pair<QString,QString>( "examName", "UNKNOWN" ) );
+    }
 
     QString qsQuery = "SELECT cyclerconfigId FROM cyclerconfigs WHERE cellName =\"";
     qsQuery += qsCellName;
