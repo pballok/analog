@@ -140,8 +140,11 @@ void cLogAnalyser::storePattern( const unsigned int p_uiFileId, cActionDefList::
         {
             if( i < slCapturedTexts.size() - 1 )
             {
-                QString qsCapturedValue = slCapturedTexts.at( i + 1 ).replace( "\"", "\\\"" );
+                QString qsCapturedValue = slCapturedTexts.at( i + 1 );
+                qsCapturedValue.replace( "\"", "\\\"" );
+                qsCapturedValue.replace( "\'", "\\\'" );
                 suFoundPattern.maCapturedAttribs.insert( pair<QString,QString>( slCaptures.at( i ), qsCapturedValue ) );
+            }
         }
     }
 
