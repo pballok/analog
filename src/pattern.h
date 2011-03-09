@@ -80,10 +80,20 @@ public:
 private:
 
     //! Holds the <tt>name</tt> attribute of the Pattern
+    /*! \sa name()
+     */
     QString      m_qsName;
+
     //! Holds the <tt>pattern</tt> attribute of the Pattern
+    /*! The <tt>pattern</tt> attribute is stored as a QRegExp object to make matching and
+     *  capturing simpler.
+     *  \sa pattern() capturedTexts()
+     */
     QRegExp      m_obRegExp;
+
     //! Holds the list of the names of Captured Attributes
+    /*! \sa captures() capturedTexts()
+     */
     QStringList  m_slCaptures;
 
     //! \brief Internal function to initialize member variables

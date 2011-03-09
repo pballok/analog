@@ -158,10 +158,18 @@ public:
 
 protected:
     //! Holds the <tt>name</tt> attribute of the ActionDef
+    /*! \sa name()
+     */
     QString                  m_qsName;
+
     //! Holds the <tt>upload</tt> attribute of the ActionDef
+    /*! \sa upload()
+     */
     cActionUpload::teUpload  m_enUpload;
+
     //! Holds the list of the names and values of Fixed Attributes
+    /*! \sa fixedAttributesBegin() fixedAttributesEnd()
+     */
     tmFixedAttribs           m_maFixedAttribs;
 
     //! \brief Internal function to initialize member variables

@@ -40,13 +40,37 @@ public:
      */
     virtual ~cActionDefSingleLiner();
 
+    //! \brief returns with the Name of the Pattern of this Action
+    /*! Since this is a SingleLiner Action, it has only one Pattern associated with it. This
+     *  function returns with the unique name identifying that single Pattern, as defined in
+     *  the XML configuration file.
+     *  \return the name of the single Pattern of this Action as a QString
+     */
     QString                  pattern() const throw();
+
+    //! \brief returns with the pre-defined result value of this Action
+    /*! SingleLiner Actions always have a predefined result value, since they consist of only
+     *  a single Pattern. Finding that Pattern in the input logs can either mean a failed or
+     *  a successful Action, the presence of other Patterns cannot influence the result.
+     *  \return the predefined result value as an enum
+     */
     cActionResult::teResult  result()  const throw();
 
 protected:
+    //! Holds the <tt>pattern</tt> attribute of the ActionDef
+    /*! \sa pattern()
+     */
     QString                  m_qsPattern;
+
+    //! Holds the <tt>result</tt> attribute of the ActionDef
+    /*! \sa result()
+     */
     cActionResult::teResult  m_enResult;
 
+    //! \brief Internal function to initialize member variables
+    /*! This is just a simple function to initialize the member variables with their default
+     *  values.
+     */
     virtual void             init()    throw();
 };
 

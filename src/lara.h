@@ -14,7 +14,7 @@
     \dot
     digraph lara_modules {
         node [shape=record, fontname=Helvetica, fontsize=10];
-        Pattern [label="Action\n(cPattern, cActionDef)"];
+        Pattern [label="Action Definition Module\n(cActionDef, cActionDefSingleLiner, cActionDefList)"];
     }
     \enddot
  */
