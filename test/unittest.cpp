@@ -8,8 +8,8 @@ using namespace std;
 cUnitTest::cUnitTest( const std::string p_stTestName ) throw()
 {
     m_stName        = p_stTestName;
-    m_boResult      = true;
     m_uiTestCaseNum = 0;
+    m_uiFailedNum   = 0;
 
     cout << "*****" << endl;
     cout << "***** Starting Unit Test \"" << m_stName << "\"" << endl;
@@ -20,8 +20,10 @@ cUnitTest::~cUnitTest() throw()
 {
     cout << "*****" << endl;
     cout << "***** Unit Test \"" << m_stName << "\"";
-    if( m_boResult ) cout << " PASSED" << endl;
-    else cout << " FAILED" << endl;
+    if( m_uiFailedNum )
+        cout << " FAILED (" << m_uiFailedNum << " out of " << m_uiTestCaseNum << " Test Cases FAILED)" << endl;
+    else
+        cout << " PASSED (All " << m_uiTestCaseNum << " Test Cases PASSED)" << endl;
     cout << "*****" << endl;
     cout << endl << endl;
 }
@@ -53,11 +55,21 @@ void cUnitTest::testCaseResult( const bool p_boPassed )
     else
     {
         cout << " -- FAILED" << endl;
-        m_boResult = false;
+        m_uiFailedNum++;
     }
 }
 
 void cUnitTest::printNote( const std::string p_stText ) throw()
 {
     cout << "*** " << p_stText << " ***" << endl;
+}
+
+unsigned int cUnitTest::totalTestCaseNum() throw()
+{
+    return m_uiTestCaseNum;
+}
+
+unsigned int cUnitTest::failedTestCaseNum() throw()
+{
+    return m_uiFailedNum;
 }

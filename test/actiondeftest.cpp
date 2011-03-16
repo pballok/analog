@@ -91,7 +91,7 @@ void cActionDefTest::testSingleLinerDef() throw()
     } catch( cSevException &e )
     {
         g_obLogger << e;
-        m_boResult = false;
+        m_uiFailedNum++;
     }
 }
 
@@ -157,7 +157,7 @@ void cActionDefTest::testCountActions() throw()
     } catch( cSevException &e )
     {
         g_obLogger << e;
-        m_boResult = false;
+        m_uiFailedNum++;
     }
 }
 
@@ -231,7 +231,7 @@ void cActionDefTest::testPatterns() throw()
     } catch( cSevException &e )
     {
         g_obLogger << e;
-        m_boResult = false;
+        m_uiFailedNum++;
     }
 }
 
@@ -310,6 +310,6 @@ void cActionDefTest::testActionDefList() throw()
     } catch( cSevException &e )
     {
         g_obLogger << e;
-        m_boResult = false;
+        m_uiFailedNum++;
     }
 }

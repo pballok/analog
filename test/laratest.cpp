@@ -10,8 +10,9 @@
 #include <ctime>
 
 #include "actiondeftest.h"
-#include "batchanalysertest.h"
+#include "datasourcetest.h"
 #include "loganalysertest.h"
+//#include "batchanalysertest.h"
 
 using namespace std;
 
@@ -30,8 +31,9 @@ int main( int argc, char *argv[] )
     cout << "Time: " << asctime( localtime( &ttTime ) ) << endl;
 
     QStringList slAllTests;
-    slAllTests << "actiondef" << "batchanalyser" << "loganalyser";
+    slAllTests << "actiondef"<< "datasource" << "loganalyser" << "batchanalyser" ;
 
+    /* Determine list of Tests to run */
     QStringList slTestsToRun;
     if( argc == 1 )
     {
@@ -44,32 +46,61 @@ int main( int argc, char *argv[] )
     }
     cout << "Running Tests: " << slTestsToRun.join( ", " ).toStdString() << endl << endl;
 
+    /* Run the Tests */
+    unsigned int poTotalTestCases[slTestsToRun.size()];
+    unsigned int poFailedTestCases[slTestsToRun.size()];
     for( int inTest = 0; inTest < slTestsToRun.size(); inTest++ )
     {
-        if( slTestsToRun[inTest] == "actiondef" )
+        cUnitTest *poTest = NULL;
+
+        if( slTestsToRun[inTest] == "actiondef" )          poTest = new cActionDefTest;
+        else if( slTestsToRun[inTest] == "datasource" )    poTest = new cDataSourceTest;
+        else if( slTestsToRun[inTest] == "loganalyser" )   poTest = new cLogAnalyserTest;
+        else
         {
-            cActionDefTest obTest;
-            obTest.run();
-            continue;
+            cout << "Invalid test name: " << slTestsToRun[inTest].toStdString() << endl;
+            cout << "    Test name can be one of: " << slAllTests.join( ", " ).toStdString() << endl << endl;
         }
 
-        if( slTestsToRun[inTest] == "batchanalyser" )
+        if( poTest )
         {
-            cBatchAnalyserTest obTest;
-            obTest.run();
-            continue;
-        }
+            poTest->run();
 
-        if( slTestsToRun[inTest] == "loganalyser" )
+            poTotalTestCases[inTest] = poTest->totalTestCaseNum();
+            poFailedTestCases[inTest] = poTest->failedTestCaseNum();
+
+            delete poTest;
+            poTest = NULL;
+        }
+        else
         {
-            cLogAnalyserTest obTest;
-            obTest.run();
-            continue;
+            poTotalTestCases[inTest] = 1;
+            poFailedTestCases[inTest] = 1;
         }
-
-        cout << "Invalid test name: " << slTestsToRun[inTest].toStdString() << endl;
-        cout << "    Test name can be one of: " << slAllTests.join( ", " ).toStdString() << endl << endl;
     }
+
+    /* Print result summary */
+    cout << "***** Unit Test Summary" << endl;
+    unsigned int uiSummaryTotal  = 0;
+    unsigned int uiSummaryFailed = 0;
+    for( int inTest = 0; inTest < slTestsToRun.size(); inTest++ )
+    {
+        cout << slTestsToRun[inTest].toStdString() << ": ";
+        if( poFailedTestCases[inTest] )
+            cout << " FAILED (" << poFailedTestCases[inTest] << " out of " << poTotalTestCases[inTest] << " Test Cases FAILED)" << endl;
+        else
+            cout << " PASSED (All " << poTotalTestCases[inTest] << " Test Cases PASSED)" << endl;
+        uiSummaryTotal += poTotalTestCases[inTest];
+        uiSummaryFailed += poFailedTestCases[inTest];
+    }
+    cout << "-----------------------------------------" << endl;
+    cout << "Overall Result: ";
+    if( uiSummaryFailed )
+        cout << " FAILED (" << uiSummaryFailed << " out of " << uiSummaryTotal << " Test Cases FAILED)" << endl;
+    else
+        cout << " PASSED (All " << uiSummaryTotal << " Test Cases PASSED)" << endl;
+
+    cout << endl;
 
     return 0;
 }

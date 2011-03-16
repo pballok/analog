@@ -11,36 +11,37 @@ HEADERS = ../../qtframework/severity.h \
     ../../qtframework/logmessage.h \
     ../../qtframework/tracer.h \
     ../src/lara.h \
-    ../src/action.h \
     ../src/actiondef.h \
     ../src/actiondefsingleliner.h \
     ../src/actiondeflist.h \
     ../src/pattern.h \
     ../src/countaction.h \
+    ../src/action.h \
     unittest.h \
     actiondeftest.h \
     loganalysertest.h \
-    batchanalysertest.h
+    datasourcetest.h
 
 SOURCES = ../../qtframework/logger.cpp \
     ../../qtframework/consolewriter.cpp \
     ../../qtframework/logmessage.cpp \
     ../../qtframework/tracer.cpp \
-    ../src/action.cpp \
     ../src/actiondef.cpp \
     ../src/actiondefsingleliner.cpp \
     ../src/actiondeflist.cpp \
     ../src/pattern.cpp \
     ../src/countaction.cpp \
+    ../src/action.cpp \
     laratest.cpp \
     unittest.cpp \
     actiondeftest.cpp \
     loganalysertest.cpp \
-    batchanalysertest.cpp
+    datasourcetest.cpp
 
 DESTDIR = ..
 
 QT -= gui
+QT += sql
 QT += xml
 QT += xmlpatterns
 

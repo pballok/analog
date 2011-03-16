@@ -16,10 +16,13 @@ public:
 
     void printNote( const std::string p_stText ) throw();
 
+    unsigned int  totalTestCaseNum() throw();
+    unsigned int  failedTestCaseNum() throw();
+
 protected:
     std::string   m_stName;
-    bool          m_boResult;
     unsigned int  m_uiTestCaseNum;
+    unsigned int  m_uiFailedNum;
 
     void testCaseResult( const bool p_boPassed );
 };

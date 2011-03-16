@@ -84,7 +84,7 @@ void cLogAnalyserTest::testAction() throw()
     } catch( cSevException &e )
     {
         g_obLogger << e;
-        m_boResult = false;
+        m_uiFailedNum++;
     }
 }
 

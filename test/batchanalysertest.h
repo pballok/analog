@@ -12,6 +12,7 @@ public:
     virtual void run()                throw();
 
 private:
+    void         testBatchAnalyser()  throw();
 };
 
 #endif // BATCHANALYSERTEST_H
