@@ -9,7 +9,9 @@
 #include <iomanip>
 #include <ctime>
 
-#include "actiontest.h"
+#include "actiondeftest.h"
+#include "batchanalysertest.h"
+#include "loganalysertest.h"
 
 using namespace std;
 
@@ -28,12 +30,12 @@ int main( int argc, char *argv[] )
     cout << "Time: " << asctime( localtime( &ttTime ) ) << endl;
 
     QStringList slAllTests;
-    slAllTests << "action";
+    slAllTests << "actiondef" << "batchanalyser" << "loganalyser";
 
     QStringList slTestsToRun;
     if( argc == 1 )
     {
-        slTestsToRun << "action";
+        slTestsToRun << slAllTests;
     }
     else
     {
@@ -44,9 +46,23 @@ int main( int argc, char *argv[] )
 
     for( int inTest = 0; inTest < slTestsToRun.size(); inTest++ )
     {
-        if( slTestsToRun[inTest] == "action" )
+        if( slTestsToRun[inTest] == "actiondef" )
         {
-            cActionTest obTest;
+            cActionDefTest obTest;
+            obTest.run();
+            continue;
+        }
+
+        if( slTestsToRun[inTest] == "batchanalyser" )
+        {
+            cBatchAnalyserTest obTest;
+            obTest.run();
+            continue;
+        }
+
+        if( slTestsToRun[inTest] == "loganalyser" )
+        {
+            cLogAnalyserTest obTest;
             obTest.run();
             continue;
         }

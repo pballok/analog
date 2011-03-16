@@ -18,7 +18,9 @@ HEADERS = ../../qtframework/severity.h \
     ../src/pattern.h \
     ../src/countaction.h \
     unittest.h \
-    actiontest.h
+    actiondeftest.h \
+    loganalysertest.h \
+    batchanalysertest.h
 
 SOURCES = ../../qtframework/logger.cpp \
     ../../qtframework/consolewriter.cpp \
@@ -32,7 +34,9 @@ SOURCES = ../../qtframework/logger.cpp \
     ../src/countaction.cpp \
     laratest.cpp \
     unittest.cpp \
-    actiontest.cpp
+    actiondeftest.cpp \
+    loganalysertest.cpp \
+    batchanalysertest.cpp
 
 DESTDIR = ..
 

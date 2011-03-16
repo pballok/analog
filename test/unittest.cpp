@@ -11,15 +11,19 @@ cUnitTest::cUnitTest( const std::string p_stTestName ) throw()
     m_boResult      = true;
     m_uiTestCaseNum = 0;
 
-    cout << "Starting Unit Test \"" << m_stName << "\"" << endl;
+    cout << "*****" << endl;
+    cout << "***** Starting Unit Test \"" << m_stName << "\"" << endl;
+    cout << "*****" << endl;
 }
 
 cUnitTest::~cUnitTest() throw()
 {
-    cout << "Unit Test \"" << m_stName << "\"";
+    cout << "*****" << endl;
+    cout << "***** Unit Test \"" << m_stName << "\"";
     if( m_boResult ) cout << " PASSED" << endl;
     else cout << " FAILED" << endl;
-    cout << endl;
+    cout << "*****" << endl;
+    cout << endl << endl;
 }
 
 void cUnitTest::testCase( const string p_stText, const bool p_boExpected, const bool p_boObserved ) throw()
