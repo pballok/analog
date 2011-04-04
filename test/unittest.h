@@ -2,6 +2,7 @@
 #define UNITTEST_H
 
 #include <string>
+#include <QStringList>
 
 class cUnitTest
 {
@@ -25,6 +26,8 @@ protected:
     unsigned int  m_uiFailedNum;
 
     void testCaseResult( const bool p_boPassed );
+
+    void checkFileContents( const std::string p_stFile, const QStringList &p_slExpectedContent ) throw();
 };
 
 #endif

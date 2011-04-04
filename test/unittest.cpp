@@ -1,6 +1,10 @@
 #include <iostream>
 #include <iomanip>
 
+#include <QFile>
+#include <QString>
+#include <QTextStream>
+
 #include "unittest.h"
 
 using namespace std;
@@ -49,16 +53,6 @@ void cUnitTest::testCase( const string p_stText, const string p_stExpected, cons
     testCaseResult( p_stExpected == p_stObserved );
 }
 
-void cUnitTest::testCaseResult( const bool p_boPassed )
-{
-    if( p_boPassed ) cout << " -- PASSED" << endl;
-    else
-    {
-        cout << " -- FAILED" << endl;
-        m_uiFailedNum++;
-    }
-}
-
 void cUnitTest::printNote( const std::string p_stText ) throw()
 {
     cout << "*** " << p_stText << " ***" << endl;
@@ -72,4 +66,36 @@ unsigned int cUnitTest::totalTestCaseNum() throw()
 unsigned int cUnitTest::failedTestCaseNum() throw()
 {
     return m_uiFailedNum;
+}
+
+void cUnitTest::testCaseResult( const bool p_boPassed )
+{
+    if( p_boPassed ) cout << " -- PASSED" << endl;
+    else
+    {
+        cout << " -- FAILED" << endl;
+        m_uiFailedNum++;
+    }
+}
+
+void cUnitTest::checkFileContents( const std::string p_stFile,
+                                   const QStringList &p_slExpectedContent ) throw()
+{
+    QFile obFile( QString::fromStdString( p_stFile ) );
+    testCase( "File " + p_stFile + " exists and is readable",
+              obFile.open( QIODevice::ReadOnly | QIODevice::Text ), true );
+
+    QStringList slFileContents;
+    QTextStream fileStream( &obFile );
+    while( !fileStream.atEnd() )
+    {
+        QString qsLine = fileStream.readLine();
+        if( !qsLine.isNull() ) slFileContents.append( qsLine );
+    }
+
+    for( int i = 0; i < p_slExpectedContent.size(); i++ )
+    {
+        testCase( QString( "File contains line \"%1\"" ).arg( p_slExpectedContent.at( i ) ).toStdString(),
+                  true, slFileContents.contains( p_slExpectedContent.at( i ) ) );
+    }
 }

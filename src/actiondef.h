@@ -49,8 +49,8 @@ public:
 //! Convenience class to provide conversion functions for the ActionUpload enum values
 /*! Action Upload is a flag that specifies if a given cAction needs to be uploaded into the
  *  database or not. The possible values are:
- *  \li <tt>OK</tt> Upload this action only its Result is <tt>OK</tt>.
- *  \li <tt>FAILED</tt> Upload this action only its Result is <tt>FAILED</tt>.
+ *  \li <tt>OK</tt> Upload this action only if its Result is <tt>OK</tt>.
+ *  \li <tt>FAILED</tt> Upload this action only if its Result is <tt>FAILED</tt>.
  *  \li <tt>ALWAYS</tt> Always upload this Action, regardless of its Result.
  *  \li <tt>NEVER</tt> Never upload this Action, regardless of its Result.
  *
@@ -144,8 +144,7 @@ public:
     /*! Each ActionDef can have any number of Fixed Attributes. These are fixed values, so
      *  they are not extracted from an input log line, their value is predefined in the XML
      *  file containing the Action Definition. Fixed Attributes are stored in an std::map
-     *  with the name of the Attribute as the key and the predefined value as the attribute
-     *  value.
+     *  with the name of the Attribute as the key and the predefined value as the value.
      *  \return The <tt>begin</tt> iterator for the map holding the Fixed Attributes
      */
     tiFixedAttribs           fixedAttributesBegin() const throw();

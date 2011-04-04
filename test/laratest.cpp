@@ -1,37 +1,46 @@
 #include <QCoreApplication>
 #include <QStringList>
+#include <QDateTime>
 
 #include <logger.h>
 #include <consolewriter.h>
+#include <filewriter.h>
 
 #include <string>
 #include <iostream>
 #include <iomanip>
 #include <ctime>
 
+#include "preferences.h"
+
 #include "actiondeftest.h"
 #include "datasourcetest.h"
+#include "outputcreatortest.h"
 #include "loganalysertest.h"
 //#include "batchanalysertest.h"
 
 using namespace std;
 
-cLogger  g_obLogger;
+cLogger          g_obLogger;
+cPreferences    *g_poPrefs;
 
 int main( int argc, char *argv[] )
 {
     QCoreApplication  apMainApp( argc, argv );
 
     cConsoleWriter  obConsoleWriter;
-    obConsoleWriter.setMinSeverity( cSeverity::WARNING );
     g_obLogger.registerWriter( &obConsoleWriter );
 
+    cFileWriter obFileWriter( cSeverity::NONE, "log/laratest.log", cFileWriter::BACKUP );
+    g_obLogger.registerWriter( &obFileWriter );
+
+    g_poPrefs  = new cPreferences( "laratest", "1.0", &obConsoleWriter, &obFileWriter );
+
     cout << "This is L.A.R.A. Unit Test Run." << endl;
-    time_t  ttTime = time( NULL );
-    cout << "Time: " << asctime( localtime( &ttTime ) ) << endl;
+    cout << "Time: " << QDateTime::currentDateTime().toString( "yyyy-MMM-dd hh:mm:ss" ).toStdString() << endl;
 
     QStringList slAllTests;
-    slAllTests << "actiondef"<< "datasource" << "loganalyser" << "batchanalyser" ;
+    slAllTests << "actiondef"<< "datasource" << "outputcreator" << "loganalyser" << "batchanalyser" ;
 
     /* Determine list of Tests to run */
     QStringList slTestsToRun;
@@ -55,6 +64,7 @@ int main( int argc, char *argv[] )
 
         if( slTestsToRun[inTest] == "actiondef" )          poTest = new cActionDefTest;
         else if( slTestsToRun[inTest] == "datasource" )    poTest = new cDataSourceTest;
+        else if( slTestsToRun[inTest] == "outputcreator" ) poTest = new cOutputCreatorTest;
         else if( slTestsToRun[inTest] == "loganalyser" )   poTest = new cLogAnalyserTest;
         else
         {
@@ -101,6 +111,8 @@ int main( int argc, char *argv[] )
         cout << " PASSED (All " << uiSummaryTotal << " Test Cases PASSED)" << endl;
 
     cout << endl;
+
+    delete g_poPrefs;
 
     return 0;
 }

@@ -13,6 +13,7 @@ public:
 
 private:
     void         testAction()         throw();
+    void         testLogAnalyser()    throw();
 };
 
 #endif // LOGANALYSERTEST_H

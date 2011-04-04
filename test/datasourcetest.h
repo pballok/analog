@@ -12,6 +12,7 @@ public:
     virtual void run()                throw();
 
 private:
+    void         testDataSource() throw();
 };
 
 #endif // DATASOURCETEST_H

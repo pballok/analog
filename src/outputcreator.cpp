@@ -57,9 +57,9 @@ unsigned int cOutputCreator::fileId( const QString & p_qsFileName ) throw( cSevE
     return inIndex;
 }
 
-void cOutputCreator::addAction( const cAction *m_poAction ) throw( cSevException )
+void cOutputCreator::addAction( const cAction *p_poAction ) throw( cSevException )
 {
-    m_mmActionList.insert( pair<QString, cAction>(m_poAction->name(), *m_poAction ) );
+    m_mmActionList.insert( pair<QString, cAction>(p_poAction->name(), *p_poAction ) );
 }
 
 void cOutputCreator::addCountAction( const QString &p_qsCountName,
@@ -157,11 +157,11 @@ void cOutputCreator::generateActionSummary() const throw( cSevException )
     obActionSummaryFile.close();
 }
 
-void cOutputCreator::uploadActionSummary() throw( cSevException )
+unsigned long long cOutputCreator::uploadActionSummary() throw( cSevException )
 {
     cTracer  obTracer( &g_obLogger, "cOutputCreator::uploadActionSummary" );
 
-    if( !m_poDB->isOpen() ) return;
+    if( !m_poDB->isOpen() ) return 0;
 
     QStringList slColumns = m_poDB->columnList( "cyclerconfigs" );
     if( slColumns.empty() ) throw cSevException( cSeverity::ERROR, "DataBase: \"cyclerconfigs\" table does not exist" );
@@ -171,7 +171,7 @@ void cOutputCreator::uploadActionSummary() throw( cSevException )
     if( itAttrib == m_maAttributes.end() )
     {
         qsCellName = "UNKNOWN";
-        m_maAttributes.insert( pair<QString,QString>( "cellName", qsCellName ) );
+        addAttribute( "cellName", qsCellName );
     }
     else qsCellName = itAttrib->second;
 
@@ -180,7 +180,7 @@ void cOutputCreator::uploadActionSummary() throw( cSevException )
     if( itAttrib == m_maAttributes.end() )
     {
         qsStartDate = QDateTime::currentDateTime().toString( "yyyy-MM-dd hh:mm:ss" );
-        m_maAttributes.insert( pair<QString,QString>( "startDate", qsStartDate ) );
+        addAttribute( "startDate", qsStartDate );
     }
     else qsStartDate = itAttrib->second;
 
@@ -189,14 +189,14 @@ void cOutputCreator::uploadActionSummary() throw( cSevException )
     if( itAttrib == m_maAttributes.end() )
     {
         qsEndDate = QDateTime::currentDateTime().toString( "yyyy-MM-dd hh:mm:ss" );
-        m_maAttributes.insert( pair<QString,QString>( "endDate", qsEndDate ) );
+        addAttribute( "endDate", qsEndDate );
     }
     else qsEndDate = itAttrib->second;
 
     itAttrib = m_maAttributes.find( "examName" );
     if( itAttrib == m_maAttributes.end() )
     {
-        m_maAttributes.insert( pair<QString,QString>( "examName", "UNKNOWN" ) );
+        addAttribute( "examName", "UNKNOWN" );
     }
 
     QString qsQuery = "SELECT cyclerconfigId FROM cyclerconfigs WHERE cellName =\"";
@@ -240,6 +240,8 @@ void cOutputCreator::uploadActionSummary() throw( cSevException )
     poQueryRes = m_poDB->executeQTQuery( qsQuery );
     m_ulBatchId = poQueryRes->lastInsertId().toULongLong();
     delete poQueryRes;
+
+    return m_ulBatchId;
 }
 
 void cOutputCreator::generateActionList() const throw( cSevException )
@@ -298,6 +300,8 @@ void cOutputCreator::uploadActionList() const throw( cSevException )
 
     for( tiActionList itAction = m_mmActionList.begin(); itAction != m_mmActionList.end(); itAction++ )
     {
+        g_obLogger << cSeverity::DEBUG << itAction->first.toStdString() << cLogMessage::EOM;
+
         if( itAction->second.upload() == cActionUpload::NEVER ) continue;
         if( itAction->second.upload() == cActionUpload::FAILED && itAction->second.result() != cActionResult::FAILED ) continue;
         if( itAction->second.upload() == cActionUpload::OK && itAction->second.result() != cActionResult::OK ) continue;

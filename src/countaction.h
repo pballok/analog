@@ -25,7 +25,11 @@ public:
     //! Holds an Action Name and an Attribute that defines one of the many Actions to count.
     typedef struct
     {
+        //! Name of the Action to Count
         QString  qsName;
+        //! \brief Name of an Action Attribute with a numerical value
+        /*! If this Attribute name refers to a numerical attribute value, this Action will
+         *  not be counted as one, but instead the value of the Attribute */
         QString  qsAttrib;
     } tsActionDef;
 

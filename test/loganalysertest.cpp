@@ -1,10 +1,16 @@
-#include <logger.h>
+#include <QStringList>
+#include <QFile>
 
-#include "action.h"
+#include <logger.h>
+#include <preferences.h>
+
+#include <action.h>
+#include <loganalyser.h>
 
 #include "loganalysertest.h"
 
-extern cLogger g_obLogger;
+extern cLogger       g_obLogger;
+extern cPreferences *g_poPrefs;
 
 cLogAnalyserTest::cLogAnalyserTest() throw() : cUnitTest( "Log Analyser" )
 {
@@ -17,6 +23,7 @@ cLogAnalyserTest::~cLogAnalyserTest() throw()
 void cLogAnalyserTest::run() throw()
 {
     testAction();
+    testLogAnalyser();
 }
 
 void cLogAnalyserTest::testAction() throw()
@@ -88,3 +95,37 @@ void cLogAnalyserTest::testAction() throw()
     }
 }
 
+void cLogAnalyserTest::testLogAnalyser() throw()
+{
+    printNote( "LOG ANALYSER TESTS" );
+
+    try
+    {
+        QString          qsDirPrefix = "multiple_files/test1";
+        cOutputCreator  *poOC        = new cOutputCreator( qsDirPrefix );
+        cLogAnalyser    *poLA        = new cLogAnalyser( qsDirPrefix, "test*.log.gz",
+                                                         "test/test_actions.xml", poOC );
+
+        poLA->analyse();
+
+        QString qsActionSummary = g_poPrefs->outputDir();
+        qsActionSummary += "/" + qsDirPrefix + "/actionsummary.txt";
+        QFile::remove( qsActionSummary );
+
+        poOC->generateActionSummary();
+
+        QStringList slSummaryContent;
+        slSummaryContent << "nbGrenades OK: 2 FAILED: 0 TOTAL: 2";
+        slSummaryContent << "nbManeuvers OK: 4 FAILED: 0 TOTAL: 4";
+
+        checkFileContents( qsActionSummary.toStdString(), slSummaryContent );
+
+        delete poLA;
+        delete poOC;
+
+    } catch( cSevException &e )
+    {
+        g_obLogger << e;
+        m_uiFailedNum++;
+    }
+}

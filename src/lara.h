@@ -18,9 +18,18 @@
     digraph lara_modules {
         node [shape=record, fontname=Helvetica, fontsize=10];
         edge [fontsize=10];
-        AD [label="{Action Definition Module|cActionDef\n cActionDefSingleLiner\n cCountAction\n cActionDefList}"];
-        LA [label="{Log Analyser Module|cPattern}"];
+        US [label="USER"];
+        BA [label="{Batch Analyser Module|cBatchAnalyser}"];
+        AD [label="{Action Definition Module|cPattern\n cActionDef\n cActionDefSingleLiner\n cCountAction\n cActionDefList}"];
+        LA [label="{Log Analyser Module|cLogAnalyser\n cAction}"];
+        DS [label="{Data Source Module|cLogDataSource}"];
+        OC [label="{Output Creator Module|cOutputCreator}"];
+        US -> BA [label="Starts"];
+        US -> AD [label="Provides Action Definitions (XML)"];
         AD -> LA [label="Provides Action Definitions"];
+        DS -> LA [label="Provides Input Log File Names"];
+        BA -> LA [label="Starts"];
+        LA -> OC [label="Sends Results To"];
     }
     \enddot
  */

@@ -6,7 +6,7 @@
 #include <QDomElement>
 #include <QRegExp>
 
-//! Represents a Pattern (regular expression) used to identify actions in the input log file.
+//! \brief Represents a Pattern (regular expression) used to identify actions in the input log file.
 /*! cPattern is basically a regular expression that can match input log lines. It uses
  *  <a href="http://perldoc.perl.org/perlre.html#Regular-Expressions">PCRE</a> compatible
  *  regular expression syntax, and can capture parts of the matched text as well.

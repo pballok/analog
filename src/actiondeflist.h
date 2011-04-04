@@ -108,7 +108,7 @@ public:
      *  Schema file. If the XML is valid, it is parsed and all the Pattern and Action
      *  definitions are stored in their respective containers.
      *  \param p_qsActionDefFile name (and path) of the XML file containing the definitions
-     *  \param p_qsScheaFile name (and path) of the XML Schema file for validation
+     *  \param p_qsSchemaFile name (and path) of the XML Schema file for validation
      */
     cActionDefList( const QString &p_qsActionDefFile, const QString &p_qsSchemaFile ) throw();
 
