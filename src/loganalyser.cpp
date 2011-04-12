@@ -22,6 +22,7 @@ cLogAnalyser::cLogAnalyser( const QString &p_qsPrefix, const QString &p_qsFiles,
     m_poActionDefList = new cActionDefList( p_qsActions, "data/lara_actions.xsd" );
 
     m_poOC = p_poOC;
+    if( !m_poOC ) g_obLogger << cSeverity::WARNING << "LogAnalyser: Non-existing OutputCreator received. Generating outputs is disabled!" << cLogMessage::EOM;
 }
 
 cLogAnalyser::~cLogAnalyser() throw()
@@ -64,8 +65,10 @@ void cLogAnalyser::findPatterns( const QString &p_qsFileName ) throw()
 {
     cTracer  obTracer( &g_obLogger, "cLogAnalyser::findPatterns", p_qsFileName.toStdString() );
 
-    unsigned int uiFileId = m_poOC->fileId( p_qsFileName );
+    unsigned int uiFileId = 0;
     char poLogLine[500000] = "";
+
+    if( m_poOC ) uiFileId = m_poOC->fileId( p_qsFileName );
 
     for( cActionDefList::tiPatternList itPattern = m_poActionDefList->patternBegin();
          itPattern != m_poActionDefList->patternEnd();
@@ -165,7 +168,7 @@ void cLogAnalyser::storePattern( const unsigned int p_uiFileId, cActionDefList::
         time_t  uiTime  = mktime( &tmTime );
         unsigned long long ulTime = (unsigned long long)uiTime * 1000LL;
         ulTime += suFoundPattern.suTimeStamp.uiMSecond;
-        m_poOC->addCombilogEntry( ulTime, qsLogLine, m_poActionDefList->combilogColor() );
+        if( m_poOC ) m_poOC->addCombilogEntry( ulTime, qsLogLine, m_poActionDefList->combilogColor() );
     }
 }
 
@@ -232,7 +235,7 @@ void cLogAnalyser::countActions( const QString &p_qsCountName,
         else ulFailed += ulCount;
     }
 
-    m_poOC->addCountAction( p_qsCountName, ulOk, ulFailed );
+    if( m_poOC ) m_poOC->addCountAction( p_qsCountName, ulOk, ulFailed );
 
     obTracer << QString( "Ok: %1 Failed: %2" ).arg( ulOk ).arg( ulFailed ).toStdString();
 }
@@ -241,11 +244,14 @@ void cLogAnalyser::storeActions() throw( cSevException )
 {
     cTracer  obTracer( &g_obLogger, "cLogAnalyser::storeActions" );
 
-    for( tiActionList itAction = m_mmActionList.begin();
-         itAction != m_mmActionList.end();
-         itAction++ )
+    if( m_poOC )
     {
-        m_poOC->addAction( &(itAction->second) );
+        for( tiActionList itAction = m_mmActionList.begin();
+             itAction != m_mmActionList.end();
+             itAction++ )
+        {
+            m_poOC->addAction( &(itAction->second) );
+        }
     }
 }
 
@@ -255,15 +261,28 @@ void cLogAnalyser::storeAttributes() throw()
 
     QStringList slAttribs = m_poActionDefList->batchAttributes();
 
-    for( int i = 0; i < slAttribs.size(); i++ )
+    if( m_poOC )
     {
-        tiFoundPatternList  itPattern = m_maFoundPatterns.find( slAttribs.at( i ) );
-        if( itPattern == m_maFoundPatterns.end() ) continue;
-        for( tiActionAttribs itAttrib = itPattern->second.maCapturedAttribs.begin();
-             itAttrib != itPattern->second.maCapturedAttribs.end();
-             itAttrib++ )
+        for( int i = 0; i < slAttribs.size(); i++ )
         {
-            m_poOC->addAttribute( itAttrib->first, itAttrib->second );
+            tiFoundPatternList  itPattern = m_maFoundPatterns.find( slAttribs.at( i ) );
+            if( itPattern == m_maFoundPatterns.end() ) continue;
+            for( tiActionAttribs itAttrib = itPattern->second.maCapturedAttribs.begin();
+                itAttrib != itPattern->second.maCapturedAttribs.end();
+                itAttrib++ )
+            {
+                m_poOC->addAttribute( itAttrib->first, itAttrib->second );
+            }
         }
     }
+}
+
+unsigned int cLogAnalyser::patternCount() throw()
+{
+    return m_maFoundPatterns.size();
+}
+
+unsigned int cLogAnalyser::actionCount() throw()
+{
+    return m_mmActionList.size();
 }

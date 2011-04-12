@@ -101,24 +101,82 @@ void cLogAnalyserTest::testLogAnalyser() throw()
 
     try
     {
-        QString          qsDirPrefix = "multiple_files/test1";
-        cOutputCreator  *poOC        = new cOutputCreator( qsDirPrefix );
-        cLogAnalyser    *poLA        = new cLogAnalyser( qsDirPrefix, "test*.log.gz",
-                                                         "test/test_actions.xml", poOC );
+        cLogAnalyser  *poLA                    = NULL;
+        QString        qsDirPrefix             = "multiple_files/test1";
+        QString        qsActionListFileName    = g_poPrefs->outputDir() + "/" + qsDirPrefix + "/actionlist.txt";
+        QString        qsActionSummaryFileName = g_poPrefs->outputDir() + "/" + qsDirPrefix + "/actionsummary.txt";
 
+        poLA = new cLogAnalyser( qsDirPrefix, "test*.log.gz", "nonexisting.xml", NULL );
         poLA->analyse();
 
-        QString qsActionSummary = g_poPrefs->outputDir();
-        qsActionSummary += "/" + qsDirPrefix + "/actionsummary.txt";
-        QFile::remove( qsActionSummary );
+        testCase( "Non-existing XML Action Definition, Pattern count", 0, poLA->patternCount() );
 
+        testCase( "Non-existing XML Action Definition, Action count", 0, poLA->patternCount() );
+
+        delete poLA;
+        poLA = NULL;
+
+        poLA = new cLogAnalyser( qsDirPrefix, "nonexisting.log", "test/test_actions.xml", NULL );
+        poLA->analyse();
+
+        testCase( "Non-existing Input Log File, Pattern count", 0, poLA->patternCount() );
+
+        testCase( "Non-existing Input Log File, Action count", 0, poLA->patternCount() );
+
+        delete poLA;
+        poLA = NULL;
+
+        poLA = new cLogAnalyser( qsDirPrefix, "test*.log.gz", "test/test_actions.xml", NULL );
+        poLA->analyse();
+
+        testCase( "Non-existing OutputCreator, Pattern count", 4, poLA->patternCount() );
+
+        testCase( "Non-existing OutputCreator, Action count", 4, poLA->patternCount() );
+
+        delete poLA;
+        poLA = NULL;
+
+        cOutputCreator  *poOC        = NULL;
+        poOC = new cOutputCreator( qsDirPrefix );
+
+        poLA = new cLogAnalyser( qsDirPrefix, "test*.log.gz", "test/test_actions.xml", poOC );
+
+        QFile::remove( qsActionSummaryFileName );
+        QFile::remove( qsActionListFileName );
+
+        poLA->analyse();
         poOC->generateActionSummary();
 
         QStringList slSummaryContent;
         slSummaryContent << "nbGrenades OK: 2 FAILED: 0 TOTAL: 2";
         slSummaryContent << "nbManeuvers OK: 4 FAILED: 0 TOTAL: 4";
 
-        checkFileContents( qsActionSummary.toStdString(), slSummaryContent );
+        checkFileContents( qsActionSummaryFileName.toStdString(), slSummaryContent );
+
+        poOC->generateActionList();
+
+        QStringList slListContent;
+        QString qsListLine = "2010-04-09 13:50:01.000 HOLY_HAND_GRENADE OK type=\"combat\" ";
+        qsListLine += g_poPrefs->tempDir();
+        qsListLine += "/test2.log:5";
+        slListContent << qsListLine;
+
+        qsListLine = "2010-04-09 13:15:01.000 HOLY_HAND_GRENADE OK type=\"combat\" ";
+        qsListLine += g_poPrefs->tempDir();
+        qsListLine += "/test1.log:1";
+        slListContent << qsListLine;
+
+        qsListLine = "2010-04-09 13:50:00.000 NEW_TARGET OK subtype=\"targeting\" target=\"White Furry Rabbit\" type=\"intel\" ";
+        qsListLine += g_poPrefs->tempDir();
+        qsListLine += "/test2.log:4";
+        slListContent << qsListLine;
+
+        qsListLine = "2010-04-09 13:35:00.000 NEW_TARGET OK subtype=\"targeting\" target=\"White Furry Rabbit\" type=\"intel\" ";
+        qsListLine += g_poPrefs->tempDir();
+        qsListLine += "/test2.log:2";
+        slListContent << qsListLine;
+
+        checkFileContents( qsActionListFileName.toStdString(), slListContent );
 
         delete poLA;
         delete poOC;
