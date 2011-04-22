@@ -37,13 +37,22 @@ public:
         QString               qsTimeStamp;
         //! Converted time-stamp as a structure so it can be used for calculations
         cAction::tsTimeStamp  suTimeStamp;
-        //! List of
+        //! List of Captured Attriutes
         tmActionAttribs       maCapturedAttribs;
     } tsFoundPattern;
 
+    //! MultiMap container type for holding all the Found Patterns.
     typedef std::multimap<QString, tsFoundPattern> tmFoundPatternList;
+    //! Iterator type for accessing the list of Found Patterns.
     typedef tmFoundPatternList::const_iterator     tiFoundPatternList;
 
+    //! Default constructor to initialise member variables
+    /*! It creates the full path to the Input Files using the Input Diretory defined in the
+     *  Preferences and the p_qsPrefix parameters. This full Input Path can be used to create
+     *  a cLogDataSource instance. An empty cActionDefList is also created, the
+     *  cOutputCreator instance is received as a parameter, not created here. MIERT?
+these are all used by the cLogAnalyser to perform the full log analysis.
+     */
     cLogAnalyser( const QString &p_qsPrefix, const QString &p_qsFiles, const QString &p_qsActions, cOutputCreator *p_poOC ) throw();
     ~cLogAnalyser() throw();
 
