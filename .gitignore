@@ -3,8 +3,10 @@ lara.ini
 lara-build-desktop
 src/lara.pro.user
 laratest
+laratest.ini
 test/output
 test/laratest.pro.user
 laratest-build-desktop
 data/*.xml
 log/*.log
+html

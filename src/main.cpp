@@ -33,7 +33,7 @@ int main( int argc, char *argv[] )
     cFileWriter obFileWriter( cSeverity::NONE, "log/lara.log", cFileWriter::BACKUP );
     g_obLogger.registerWriter( &obFileWriter );
 
-    g_poPrefs  = new cPreferences( "lara", "0.3.3", &obConsoleWriter, &obFileWriter );
+    g_poPrefs  = new cPreferences( "lara", "1.0.0", &obConsoleWriter, &obFileWriter );
 
     g_obLogger << cSeverity::INFO
                << g_poPrefs->appName().toStdString() << " Version " << g_poPrefs->version().toStdString() << " started."

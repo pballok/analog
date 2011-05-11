@@ -68,9 +68,9 @@ cActionUpload::teUpload cAction::upload() const throw()
     return m_enUpload;
 }
 
-void cAction::addAttribute( const QString &p_qsTextName, const QString &p_qsTextValue ) throw()
+void cAction::addAttribute( const QString &p_qsAttribName, const QString &p_qsAttribValue ) throw()
 {
-    m_maAttribs.insert( pair<QString,QString>( p_qsTextName, p_qsTextValue ) );
+    m_maAttribs.insert( pair<QString,QString>( p_qsAttribName, p_qsAttribValue ) );
 }
 
 tiActionAttribs cAction::attributesBegin() const throw()

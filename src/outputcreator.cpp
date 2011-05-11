@@ -57,9 +57,24 @@ unsigned int cOutputCreator::fileId( const QString & p_qsFileName ) throw( cSevE
     return inIndex;
 }
 
-void cOutputCreator::addAction( const cAction *m_poAction ) throw( cSevException )
+void cOutputCreator::addAction( const cAction *p_poAction ) throw( cSevException )
 {
-    m_mmActionList.insert( pair<QString, cAction>(m_poAction->name(), *m_poAction ) );
+    cAction::tsTimeStamp suTimeStamp = p_poAction->timeStampStruct();
+
+    tm tmTime;
+    tmTime.tm_wday  = 0;
+    tmTime.tm_yday  = 0;
+    tmTime.tm_isdst = 0;
+    tmTime.tm_year  = suTimeStamp.uiYear - 1900;
+    tmTime.tm_mon   = suTimeStamp.uiMonth - 1;
+    tmTime.tm_mday  = suTimeStamp.uiDay;
+    tmTime.tm_hour  = suTimeStamp.uiHour;
+    tmTime.tm_min   = suTimeStamp.uiMinute;
+    tmTime.tm_sec   = suTimeStamp.uiSecond;
+    time_t  uiTime  = mktime( &tmTime );
+    unsigned long long ulTime = (unsigned long long)uiTime * 1000LL;
+    ulTime += suTimeStamp.uiMSecond;
+    m_mmActionList.insert( pair<unsigned long long, cAction>( ulTime, *p_poAction ) );
 }
 
 void cOutputCreator::addCountAction( const QString &p_qsCountName,
@@ -157,29 +172,47 @@ void cOutputCreator::generateActionSummary() const throw( cSevException )
     obActionSummaryFile.close();
 }
 
-void cOutputCreator::uploadActionSummary() throw( cSevException )
+unsigned long long cOutputCreator::uploadActionSummary() throw( cSevException )
 {
     cTracer  obTracer( &g_obLogger, "cOutputCreator::uploadActionSummary" );
 
-    if( !m_poDB->isOpen() ) return;
+    if( !m_poDB->isOpen() ) return 0;
 
     QStringList slColumns = m_poDB->columnList( "cyclerconfigs" );
     if( slColumns.empty() ) throw cSevException( cSeverity::ERROR, "DataBase: \"cyclerconfigs\" table does not exist" );
 
+    QString qsCellName = "";
     tiAttributes itAttrib = m_maAttributes.find( "cellName" );
-    if( itAttrib == m_maAttributes.end() ) throw cSevException( cSeverity::ERROR, "Could not find \"cellName\" attribute" );
-    QString qsCellName = itAttrib->second;
+    if( itAttrib == m_maAttributes.end() )
+    {
+        qsCellName = "UNKNOWN";
+        addAttribute( "cellName", qsCellName );
+    }
+    else qsCellName = itAttrib->second;
 
+    QString qsStartDate = "";
     itAttrib = m_maAttributes.find( "startDate" );
-    if( itAttrib == m_maAttributes.end() ) throw cSevException( cSeverity::ERROR, "Could not find \"startDate\" attribute" );
-    QString qsStartDate = itAttrib->second;
+    if( itAttrib == m_maAttributes.end() )
+    {
+        qsStartDate = QDateTime::currentDateTime().toString( "yyyy-MM-dd hh:mm:ss" );
+        addAttribute( "startDate", qsStartDate );
+    }
+    else qsStartDate = itAttrib->second;
 
+    QString qsEndDate = "";
     itAttrib = m_maAttributes.find( "endDate" );
-    if( itAttrib == m_maAttributes.end() ) throw cSevException( cSeverity::ERROR, "Could not find \"endDate\" attribute" );
-    QString qsEndDate = itAttrib->second;
+    if( itAttrib == m_maAttributes.end() )
+    {
+        qsEndDate = QDateTime::currentDateTime().toString( "yyyy-MM-dd hh:mm:ss" );
+        addAttribute( "endDate", qsEndDate );
+    }
+    else qsEndDate = itAttrib->second;
 
     itAttrib = m_maAttributes.find( "examName" );
-    if( itAttrib == m_maAttributes.end() ) throw cSevException( cSeverity::ERROR, "Could not find \"examName\" attribute" );
+    if( itAttrib == m_maAttributes.end() )
+    {
+        addAttribute( "examName", "UNKNOWN" );
+    }
 
     QString qsQuery = "SELECT cyclerconfigId FROM cyclerconfigs WHERE cellName =\"";
     qsQuery += qsCellName;
@@ -222,6 +255,8 @@ void cOutputCreator::uploadActionSummary() throw( cSevException )
     poQueryRes = m_poDB->executeQTQuery( qsQuery );
     m_ulBatchId = poQueryRes->lastInsertId().toULongLong();
     delete poQueryRes;
+
+    return m_ulBatchId;
 }
 
 void cOutputCreator::generateActionList() const throw( cSevException )
@@ -280,6 +315,8 @@ void cOutputCreator::uploadActionList() const throw( cSevException )
 
     for( tiActionList itAction = m_mmActionList.begin(); itAction != m_mmActionList.end(); itAction++ )
     {
+        g_obLogger << cSeverity::DEBUG << itAction->second.name().toStdString() << cLogMessage::EOM;
+
         if( itAction->second.upload() == cActionUpload::NEVER ) continue;
         if( itAction->second.upload() == cActionUpload::FAILED && itAction->second.result() != cActionResult::FAILED ) continue;
         if( itAction->second.upload() == cActionUpload::OK && itAction->second.result() != cActionResult::OK ) continue;
