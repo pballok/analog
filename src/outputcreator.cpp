@@ -59,7 +59,22 @@ unsigned int cOutputCreator::fileId( const QString & p_qsFileName ) throw( cSevE
 
 void cOutputCreator::addAction( const cAction *p_poAction ) throw( cSevException )
 {
-    m_mmActionList.insert( pair<QString, cAction>(p_poAction->name(), *p_poAction ) );
+    cAction::tsTimeStamp suTimeStamp = p_poAction->timeStampStruct();
+
+    tm tmTime;
+    tmTime.tm_wday  = 0;
+    tmTime.tm_yday  = 0;
+    tmTime.tm_isdst = 0;
+    tmTime.tm_year  = suTimeStamp.uiYear - 1900;
+    tmTime.tm_mon   = suTimeStamp.uiMonth - 1;
+    tmTime.tm_mday  = suTimeStamp.uiDay;
+    tmTime.tm_hour  = suTimeStamp.uiHour;
+    tmTime.tm_min   = suTimeStamp.uiMinute;
+    tmTime.tm_sec   = suTimeStamp.uiSecond;
+    time_t  uiTime  = mktime( &tmTime );
+    unsigned long long ulTime = (unsigned long long)uiTime * 1000LL;
+    ulTime += suTimeStamp.uiMSecond;
+    m_mmActionList.insert( pair<unsigned long long, cAction>( ulTime, *p_poAction ) );
 }
 
 void cOutputCreator::addCountAction( const QString &p_qsCountName,
@@ -300,7 +315,7 @@ void cOutputCreator::uploadActionList() const throw( cSevException )
 
     for( tiActionList itAction = m_mmActionList.begin(); itAction != m_mmActionList.end(); itAction++ )
     {
-        g_obLogger << cSeverity::DEBUG << itAction->first.toStdString() << cLogMessage::EOM;
+        g_obLogger << cSeverity::DEBUG << itAction->second.name().toStdString() << cLogMessage::EOM;
 
         if( itAction->second.upload() == cActionUpload::NEVER ) continue;
         if( itAction->second.upload() == cActionUpload::FAILED && itAction->second.result() != cActionResult::FAILED ) continue;

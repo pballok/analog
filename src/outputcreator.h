@@ -141,7 +141,11 @@ public:
 
 private:
 
-    //! Multi-map container to store all the Actions found during Log Analysis
+    //! Multimap container type to hold all the Actions found during log Analysis
+    typedef std::multimap<unsigned long long, cAction> tmActionList;
+    //! Const Iterator type for the multimap containing all the Actions
+    typedef tmActionList::const_iterator               tiActionList;
+    //! Multimap container to store all the Actions found during Log Analysis
     tmActionList        m_mmActionList;
 
     //! Structure to store tha CountAction result-pair

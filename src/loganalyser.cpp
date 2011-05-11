@@ -104,7 +104,7 @@ void cLogAnalyser::storePattern( const unsigned int p_uiFileId, cActionDefList::
 {
     cTracer  obTracer( &g_obLogger, "cLogAnalyser::storePattern", p_itPattern->name().toStdString() );
 
-    QString qsLogLine = p_qsLogLine.section( ':', 1 ); //Remove line number from front
+    QString qsLogLine = p_qsLogLine.section( ':', 1 ); // Remove line number from front
     qsLogLine.chop( 1 );                               // and the new line character from end
 
     QRegExp obTimeStampRegExp = m_poActionDefList->timeStampRegExp();

@@ -6,7 +6,9 @@
 
 #include "actiondef.h"
 
+//! Map type for storing Attributes of an Actions
 typedef std::map<QString,QString>        tmActionAttribs;
+//! Const Iterator type for map container storing Attributes of an Action
 typedef tmActionAttribs::const_iterator  tiActionAttribs;
 
 //! \brief Represents an Action that has been successfully identified in the Input Logs
@@ -211,7 +213,9 @@ private:
     tmActionAttribs          m_maAttribs;
 };
 
+//! Multimap type to store a list of Identified Actions
 typedef std::multimap<QString, cAction>  tmActionList;
+//! Const Iterator type for the miltimap container storing a list of Identified Actions
 typedef tmActionList::const_iterator     tiActionList;
 
 #endif // ACTION_H
