@@ -23,6 +23,7 @@ HEADERS = ../../qtframework/severity.h \
     ../src/logdatasource.h \
     ../src/outputcreator.h \
     ../src/loganalyser.h \
+    ../src/batchanalyser.h \
     unittest.h \
     actiondeftest.h \
     loganalysertest.h \
@@ -45,6 +46,7 @@ SOURCES = ../../qtframework/logger.cpp \
     ../src/logdatasource.cpp \
     ../src/outputcreator.cpp \
     ../src/loganalyser.cpp \
+    ../src/batchanalyser.cpp \
     laratest.cpp \
     unittest.cpp \
     actiondeftest.cpp \

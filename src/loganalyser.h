@@ -63,6 +63,8 @@ public:
      *  \param p_poOC Pointer to the cOutputCreator instance
      */
     cLogAnalyser( const QString &p_qsPrefix, const QString &p_qsFiles, const QString &p_qsActions, cOutputCreator *p_poOC ) throw();
+
+    //! \brief Destructor
     ~cLogAnalyser() throw();
 
     //! \brief Main function of the cLogAnalyser class, performs the full log analysis.
